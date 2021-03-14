@@ -1,13 +1,14 @@
 import random
 import string
 import time
+from math import sqrt
 from psutil import cpu_freq
 from Chromosome import Chromosome
 
 
 class SimpleGeneticAlgorithm:
     def __init__(self, pop_size, max_iter, elite_rate, mutation_rate, target, fitness_function=None,
-                 mating_function=None):
+                 mating_function=None, number_of_iterations=0, time_elapsed=0):
         # population size
         self.pop_size = pop_size
         # maximum iterations to run
@@ -30,9 +31,8 @@ class SimpleGeneticAlgorithm:
         self.fitness_function = fitness_function
         # mating function pointer
         self.mating_function = mating_function
-        # average fitness value of all the chromosomes
-        self.avg_fitness = 0
-
+        self.number_of_iterations = 0
+        self.time_elapsed = 0
         self.current_time = time.time()
 
     # initialize random chromosomes
@@ -43,14 +43,25 @@ class SimpleGeneticAlgorithm:
             self.population.append(chromosome)
         self.buffer = list(self.population)
 
-    # calculating the fitness of every chromosome in the population and the average fitness
+    # calculating the fitness of every chromosome in the population
     def calc_fitness(self):
-        self.avg_fitness = 0
+        avg_fitness = 0
+        standard_dev = 0
         for chromosome in self.population:
             self.fitness_function(chromosome, self.target)
-            self.avg_fitness += chromosome.fitness
-        self.avg_fitness /= len(self.population)
-        print(f"Avg fitness {self.avg_fitness}")
+        avg_fitness, standard_dev = self.calc_stats(avg_fitness, standard_dev)
+        print(f"Average fitness: {avg_fitness}")
+        print(f"Standard Deviation: {standard_dev}")
+
+    # calculate desired stats: currently generational average and standard deviation
+    def calc_stats(self, avg_fitness, standard_dev):
+        for chromosome in self.population:
+            avg_fitness += chromosome.fitness
+        avg_fitness /= len(self.population)
+        for chromosome in self.population:
+            standard_dev += ((chromosome.fitness - avg_fitness) ** 2) / self.pop_size
+        standard_dev = sqrt(standard_dev)
+        return avg_fitness, standard_dev
 
     # sorting population by non decreasing fitness
     def sort_by_fitness(self):
@@ -73,19 +84,25 @@ class SimpleGeneticAlgorithm:
         self.population = self.buffer
         self.buffer = temp
 
+    # returns the number of iterations and time elapsed for each run. used to evaluate statistics.
+    def get_stats(self):
+        return self.number_of_iterations, self.time_elapsed
+
     # run the algorithm until max iter or match was found
     def run(self):
         clock_speed = cpu_freq().current * (2 ** 20)
+        start_time = time.process_time()
         self.init_population()
         for i in range(self.max_iter):
+            self.number_of_iterations += 1
             self.calc_fitness()
             self.sort_by_fitness()
             print(f'Current Best: {self.population[0].data} , {self.population[0].fitness}')
-            print(f"Clock ticks {int((time.time() - self.current_time) * clock_speed)}")
+            print(f"Clock ticks: {int((time.time() - self.current_time) * clock_speed)}")
             self.current_time = time.time()
             if self.population[0].fitness == 0:
                 break
             self.mate()
             self.swap()
-        time_elapsed = time.process_time()
-        print(f"Time elapsed {time_elapsed}")
+        self.time_elapsed = round(time.process_time() - start_time, 2)
+        print(f"Time elapsed {self.time_elapsed}")
