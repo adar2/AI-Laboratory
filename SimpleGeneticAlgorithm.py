@@ -1,10 +1,12 @@
-from Chromosome import Chromosome
 import random
 import string
 
+from Chromosome import Chromosome
+
 
 class SimpleGeneticAlgorithm:
-    def __init__(self, pop_size, max_iter, elite_rate, mutation_rate, target,fitness_function=None,mating_function=None):
+    def __init__(self, pop_size, max_iter, elite_rate, mutation_rate, target, fitness_function=None,
+                 mating_function=None):
         self.pop_size = pop_size
         self.max_iter = max_iter
         self.elite_rate = elite_rate
@@ -28,16 +30,13 @@ class SimpleGeneticAlgorithm:
             self.fitness_function(citizen)
 
     def sort_by_fitness(self):
-        self.population.sort(key=lambda x : x.fitness)
+        self.population.sort(key=lambda x: x.fitness)
 
     def elitism(self):
-        for i in range(0,self.elite_rate*self.pop_size):
+        for i in range(0, self.elite_rate * self.pop_size):
             self.buffer.append(self.population[i])
 
-    def mutate(self):
-        elite_size = self.elite_rate*self.pop_size
+    def mate(self):
+        elite_size = self.elite_rate * self.pop_size
         target_size = len(self.target)
         self.mating_function(self.population, self.buffer, elite_size, target_size, self.mutation_rate)
-
-    def mate(self):
-        pass

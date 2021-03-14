@@ -1,5 +1,5 @@
-from random import randint, uniform, choice
 import string
+from random import randint, uniform, choice
 
 
 def mutate(chromosome, target_size, mutation_rate):
@@ -16,7 +16,7 @@ def single_point_crossover(population, buffer, elite_size, target_size, mutation
         index2 = randint(0, top_population)
         crossover_index = randint(0, target_size)
         buffer[i].data = population[index1][:crossover_index] + population[index2][crossover_index]
-        mutate(buffer[i], target_size,mutation_rate)
+        mutate(buffer[i], target_size, mutation_rate)
 
 
 def multi_point_crossover(population, buffer, elite_size, target_size, mutation_rate):
@@ -29,7 +29,7 @@ def multi_point_crossover(population, buffer, elite_size, target_size, mutation_
         buffer[i].data = population[index1][:crossover_index_1] \
                          + population[index2][crossover_index_1, crossover_index_2] \
                          + population[index1][crossover_index_2]
-        mutate(buffer[i], target_size,mutation_rate)
+        mutate(buffer[i], target_size, mutation_rate)
 
 
 def uniform_point_crossover(population, buffer, elite_size, target_size, mutation_rate):
@@ -40,4 +40,4 @@ def uniform_point_crossover(population, buffer, elite_size, target_size, mutatio
         for j in range(target_size):
             chosen_parent = choice([population[index1], population[index2]])
             buffer[i].data[j] = chosen_parent[j]
-        mutate(buffer[i], target_size,mutation_rate)
+        mutate(buffer[i], target_size, mutation_rate)
