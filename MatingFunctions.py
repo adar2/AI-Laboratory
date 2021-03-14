@@ -4,9 +4,9 @@ from random import randint, uniform, choice
 
 def mutate(chromosome, target_size, mutation_rate):
     if uniform(0, 1) < mutation_rate:
-        index = randint(0, target_size)
+        index = randint(0, target_size - 1)
         new_char = choice(string.printable)
-        chromosome.data[index] = new_char
+        chromosome.data = chromosome.data[:index] + new_char + chromosome.data[index + 1:]
 
 
 def single_point_crossover(population, buffer, elite_size, target_size, mutation_rate):
@@ -15,7 +15,7 @@ def single_point_crossover(population, buffer, elite_size, target_size, mutation
         index1 = randint(0, top_population)
         index2 = randint(0, top_population)
         crossover_index = randint(0, target_size)
-        buffer[i].data = population[index1][:crossover_index] + population[index2][crossover_index]
+        buffer[i].data = population[index1].data[:crossover_index] + population[index2].data[crossover_index:]
         mutate(buffer[i], target_size, mutation_rate)
 
 

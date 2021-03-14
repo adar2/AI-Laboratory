@@ -1,10 +1,8 @@
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from SimpleGeneticAlgorithm import SimpleGeneticAlgorithm
+from FitnessFunctions import absolute_distance_fitness
+from MatingFunctions import single_point_crossover
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    algo = SimpleGeneticAlgorithm(2048, 16384, .1, .25, "Hello world!", absolute_distance_fitness,
+                                  single_point_crossover)
+    algo.run()
