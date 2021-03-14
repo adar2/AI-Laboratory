@@ -24,11 +24,11 @@ def multi_point_crossover(population, buffer, elite_size, target_size, mutation_
     for i in range(elite_size, len(population)):
         index1 = randint(0, top_population)
         index2 = randint(0, top_population)
-        crossover_index_1 = randint(0, target_size)
-        crossover_index_2 = randint(0, target_size)
-        buffer[i].data = population[index1][:crossover_index_1] \
-                         + population[index2][crossover_index_1, crossover_index_2] \
-                         + population[index1][crossover_index_2]
+        crossover_index_1 = randint(0, target_size-1)
+        crossover_index_2 = randint(crossover_index_1, target_size-1)
+        buffer[i].data = population[index1].data[:crossover_index_1] \
+                         + population[index2].data[crossover_index_1:crossover_index_2] \
+                         + population[index1].data[crossover_index_2:]
         mutate(buffer[i], target_size, mutation_rate)
 
 
@@ -39,5 +39,6 @@ def uniform_point_crossover(population, buffer, elite_size, target_size, mutatio
         index2 = randint(0, top_population)
         for j in range(target_size):
             chosen_parent = choice([population[index1], population[index2]])
-            buffer[i].data[j] = chosen_parent[j]
+            buffer[i].data = buffer[i].data[:j] + chosen_parent.data[j] + buffer[i].data[j+1:]
+
         mutate(buffer[i], target_size, mutation_rate)
