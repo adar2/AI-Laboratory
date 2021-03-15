@@ -2,13 +2,15 @@ import random
 import string
 import time
 from math import sqrt
+
 from psutil import cpu_freq
+
 from Chromosome import Chromosome
 
 
 class SimpleGeneticAlgorithm:
     def __init__(self, pop_size, max_iter, elite_rate, mutation_rate, target, fitness_function=None,
-                 mating_function=None, number_of_iterations=0, time_elapsed=0):
+                 mating_function=None):
         # population size
         self.pop_size = pop_size
         # maximum iterations to run
@@ -39,7 +41,7 @@ class SimpleGeneticAlgorithm:
     def init_population(self):
         target_size = len(self.target)
         for i in range(self.pop_size):
-            chromosome = Chromosome("".join(random.choice(self.data) for _ in range(target_size)), 0)
+            chromosome = Chromosome("".join(random.choice(self.data) for _ in range(target_size)))
             self.population.append(chromosome)
         self.buffer = list(self.population)
 

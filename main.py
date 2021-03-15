@@ -1,8 +1,10 @@
-from SimpleGeneticAlgorithm import SimpleGeneticAlgorithm
-from FitnessFunctions import bullseye_fitness as bullseye
-from FitnessFunctions import absolute_distance_fitness as absolute
-from MatingFunctions import single_point_crossover as mating_func
 from matplotlib import pyplot as plt
+
+from FitnessFunctions import distance_fitness as absolute
+from FitnessFunctions import bullseye_fitness as bullseye
+from MatingFunctions import single_point_crossover as mating_func
+from SimpleGeneticAlgorithm import SimpleGeneticAlgorithm
+from PSO import ParticleSwarmOptimization
 
 
 def run_and_plot():
@@ -35,12 +37,6 @@ def run_and_plot():
 
 
 if __name__ == '__main__':
-    run_and_plot()
-
-
-
-
-
-
-
-
+    # run_and_plot()
+    p = ParticleSwarmOptimization(30, "Hello world!", .4, .9, 2, 2, 2000, absolute)
+    p.run()
