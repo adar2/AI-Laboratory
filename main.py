@@ -38,5 +38,5 @@ def run_and_plot():
 
 if __name__ == '__main__':
     # run_and_plot()
-    p = ParticleSwarmOptimization(2048, "Hello world!", .4, .9, 2, 2, 20000, absolute)
+    p = ParticleSwarmOptimization(30, "Hello world!", .4, .9, 2, 2, 300, absolute)
     p.run()

@@ -11,3 +11,6 @@ class Particle:
 
     def __str__(self):
         return ''.join(chr(i) for i in self.position)
+
+    def __repr__(self):
+        return ''.join(chr(i) for i in self.position)
