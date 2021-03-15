@@ -1,13 +1,13 @@
+from copy import deepcopy
+
 
 class Particle:
-    def __init__(self, data='', fitness=0):
-        self.data = data
+    def __init__(self, data, fitness=0):
+        self.position = list(ord(c) for c in data)
         self.fitness = fitness
-        self.coordinate_vector = None
-        self.personal_best = None
+        self.personal_best = deepcopy(self.position)
+        self.pb_fitness = fitness
         self.velocity = None
 
-    def calc_coordinate_vector(self):
-        self.coordinate_vector = list()
-        for char in self.data:
-            self.coordinate_vector.append(ord(char))
+    def __str__(self):
+        return ''.join(chr(i) for i in self.position)

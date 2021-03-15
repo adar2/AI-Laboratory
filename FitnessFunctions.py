@@ -7,7 +7,7 @@ def absolute_distance_fitness(chromosome, target):
 def distance_fitness(particle, target):
     particle.fitness = 0
     for i in range(len(target)):
-        particle.fitness += abs(particle.coordinate_vector[i] - target[i])
+        particle.fitness += abs(particle.position[i] - target[i])
 
 
 def bullseye_fitness(chromosome, target):
