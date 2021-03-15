@@ -1,71 +1,50 @@
 import string
 from random import random, choice, uniform
-
+import numpy as np
+from sys import maxsize
 from Particle import Particle
+import PSO_constants
 
 
 class ParticleSwarmOptimization:
-    def __init__(self, pop_size, target, inertia_min, inertia_max, c1, c2, max_iter, fitness_function=None):
-        self.pop_size = pop_size
-        self.population = list()
-        self.global_best = Particle()
-        self.data = string.printable
-        self.target = target
-        self.target_coordinate_vector = list(ord(self.target[i]) for i in range(len(self.target)))
-        self.c1 = c1
-        self.c2 = c2
-        self.inertia_max = inertia_max
-        self.inertia_min = inertia_min
-        self.inertia = uniform(self.inertia_min, self.inertia_max)
-        self.max_iter = max_iter
+    def __init__(self, target_size, fitness_function, population_size):
+        self.swarm = self.init_particles()
+        self.global_best_position = None
+        self.global_best_fitness = maxsize
+        self.is_solution_found = False
+        self.target_size = target_size
         self.fitness_function = fitness_function
+        self.population_size = population_size
+
+    def run(self, max_iterations):
+        descending_inertia = np.linspace(0.9, 0.4, max_iterations)
+        i = 0
+        while i < max_iterations and not self.is_solution_found:
+            for particle in self.swarm:
+                particle_velocity = self.calculate_particle_velocity(particle, descending_inertia[i])
+                particle.update_position(particle_velocity)
+                particle.update_fitness()
+                self.update_global_best(particle)
+                i += 1
 
     def init_particles(self):
-        target_size = len(self.target)
-        delta = abs(ord(self.data[0]) - ord(self.data[len(self.data) - 1]))
-        for i in range(self.pop_size):
-            particle = Particle("".join(choice(self.data) for _ in range(target_size)))
-            particle.calc_coordinate_vector()
-            self.fitness_function(particle, self.target_coordinate_vector)
-            particle.personal_best = Particle(particle.data, particle.fitness)
-            particle.personal_best.calc_coordinate_vector()
-            particle.velocity = list(int(uniform(-delta, delta)) for _ in range(target_size))
-            self.population.append(particle)
-        self.population.sort(key=lambda x: x.fitness)
-        self.global_best.data = self.population[0].data
-        self.global_best.fitness = self.population[0].fitness
-        self.global_best.calc_coordinate_vector()
+        printable_characters = tuple(c for c in string.printable if c not in ('\t', '\n', '\x0b', '\x0c', '\r'))
+        swarm = np.array(
+            [Particle(''.join(choice(printable_characters) for _ in range(self.target_size))) for _ in
+             range(self.population_size)])
+        for particle in swarm:
+            particle.update_fitness()
+            self.update_global_best(particle)
+        return swarm
 
-    def run(self):
-        target_size = len(self.target)
-        self.init_particles()
-        for i in range(self.max_iter):
-            print(f"Current Best {self.global_best.data} {self.global_best.fitness}")
-            for particle in self.population:
-                for dimension in range(target_size):
-                    particle.velocity[dimension] = self.inertia * particle.velocity[dimension] + \
-                                                   self.c1 * random() * (
-                                                           particle.personal_best.coordinate_vector[dimension]
-                                                           - particle.coordinate_vector[dimension]) + \
-                                                   self.c2 * random() * (self.global_best.coordinate_vector[dimension] -
-                                                                         particle.coordinate_vector[dimension])
-                    particle.coordinate_vector[dimension] = (particle.coordinate_vector[dimension] + int(
-                        random() * particle.velocity[dimension])) % 127
-                    if particle.coordinate_vector[dimension] < 32:
-                        particle.coordinate_vector[dimension] = particle.coordinate_vector[dimension] + (
-                                    32 - particle.coordinate_vector[dimension])
-                self.fitness_function(particle, self.target_coordinate_vector)
-                fitness = particle.fitness
-                if fitness < particle.personal_best.fitness:
-                    particle.personal_best.fitness = fitness
-                    particle.personal_best.data = particle.data
-                    particle.personal_best.calc_coordinate_vector()
-                    if fitness < self.global_best.fitness:
-                        self.global_best.data = particle.data
-                        self.global_best.fitness = fitness
-                        self.global_best.calc_coordinate_vector()
+    def update_global_best(self, particle):
+        # if particle.fitness < self.global_best_fitness:
+        raise NotImplementedError
 
-            if self.global_best.fitness == 0:
-                break
-            if self.inertia > self.inertia_min:
-                self.inertia -= .01
+    def calculate_particle_velocity(self, particle, current_inertia):
+        cognitive_component_random_value = random()
+        social_component_random_value = random()
+        inertia = current_inertia * particle.velocity
+        cognitive_component = PSO_constants.COGNITIVE * cognitive_component_random_value * (particle.personal_best - particle.position)
+        social_component = PSO_constants.SOCIAL * social_component_random_value * (self.global_best_position - particle.position)
+        return inertia + cognitive_component + social_component
