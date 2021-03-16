@@ -1,6 +1,7 @@
 import string
 from copy import deepcopy as dc
 from random import random, choice, uniform
+from time import process_time
 
 from Particle import Particle
 
@@ -20,6 +21,8 @@ class ParticleSwarmOptimization:
         self.inertia = uniform(self.min_inertia, self.max_inertia)
         self.max_iter = max_iter
         self.fitness_function = fitness_function
+        self.number_of_iterations = 0
+        self.time_elapsed = 0
 
     def init_particles(self):
         target_size = len(self.target)
@@ -34,9 +37,11 @@ class ParticleSwarmOptimization:
         self.global_best = (dc(self.population[0].position), dc(self.population[0].fitness))
 
     def run(self):
+        start_time = process_time()
         target_size = len(self.target)
         self.init_particles()
         for i in range(self.max_iter):
+            self.number_of_iterations = i
             print(f"Current Best {self.global_best[0]} {self.global_best[1]}")
             for j in range(len(self.population)):
                 particle = self.population[j]
@@ -56,6 +61,7 @@ class ParticleSwarmOptimization:
                     particle.personal_best = dc(particle.position)
                     if fitness < self.global_best[1]:
                         self.global_best = (dc(particle.position), dc(fitness))
+                self.time_elapsed = process_time() - start_time
 
             if self.global_best[1] == 0:
                 break
