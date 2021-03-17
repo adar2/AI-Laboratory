@@ -1,6 +1,8 @@
 import random
 import string
 import time
+import Constants
+
 from math import sqrt
 
 from psutil import cpu_freq
@@ -80,8 +82,12 @@ class SimpleGeneticAlgorithm:
     # call mating function to generate the remaining chromosomes for next generation
     def mate(self):
         eligible_parents = self.selection_function(self.population)
-        for i in range(100):
-            self.mating_function(random.choice(eligible_parents),random.choice(eligible_parents))
+        number_of_survivors = self.pop_size * Constants.SURVIVOR_RATE
+        for i in range(number_of_survivors, self.pop_size):
+            child = self.mating_function(random.choice(eligible_parents),random.choice(eligible_parents))
+            if random.random() < Constants.MUTATION_RATE:
+                self.mutation_function(child)
+            self.buffer[i] = child
 
     # set population as the next generation we've made
     def swap(self):
