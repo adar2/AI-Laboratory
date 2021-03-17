@@ -74,14 +74,8 @@ class SimpleGeneticAlgorithm:
     def sort_by_fitness(self):
         self.population.sort(key=lambda x: x.fitness)
 
-    # # copy the first elitism percentage of chromosomes from population to next generation
-    # def elitism(self):
-    #     for i in range(0, self.elite_rate * self.pop_size):
-    #         self.buffer.append(self.population[i])
-
     # call mating function to generate the remaining chromosomes for next generation
-    def mate(self):
-        eligible_parents = self.selection_function(self.population)
+    def mate(self, eligible_parents):
         number_of_survivors = self.pop_size * Constants.SURVIVOR_RATE
         for i in range(number_of_survivors, self.pop_size):
             child = self.mating_function(random.choice(eligible_parents),random.choice(eligible_parents))
@@ -111,9 +105,13 @@ class SimpleGeneticAlgorithm:
             print(f'Current Best: {self.population[0].data} , {self.population[0].fitness}')
             print(f"Clock ticks: {int((time.time() - self.current_time) * clock_speed)}")
             self.current_time = time.time()
+            # goal test
             if self.population[0].fitness == 0:
                 break
-            self.mate()
+            self.mate(self.select_parents())
             self.swap()
         self.time_elapsed = round(time.process_time() - start_time, 2)
         print(f"Time elapsed {self.time_elapsed}")
+
+    def select_parents(self):
+        return self.selection_function(self.population)
