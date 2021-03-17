@@ -3,8 +3,11 @@ from matplotlib import pyplot as plt
 from FitnessFunctions import distance_fitness as absolute
 from FitnessFunctions import bullseye_fitness as bullseye
 from MatingFunctions import single_point_crossover as mating_func
+from MutateFunctions import string_mutation as mutation_func
+from SelectionFunctions import truncation_selection as selection_func
 from SimpleGeneticAlgorithm import SimpleGeneticAlgorithm
 from PSO import ParticleSwarmOptimization
+from StringMatching import StringMatching
 
 
 def run_and_plot():
@@ -81,4 +84,8 @@ def plot_and_show_iterations(number_of_runs, number_of_iterations_PSO, number_of
 
 
 if __name__ == '__main__':
-    plot_compare_pso_GA()
+    # plot_compare_pso_GA()
+    problem = StringMatching("Hello world!")
+    bullseye_algo = SimpleGeneticAlgorithm(2048, 16384, problem, bullseye,
+                                           mating_func, mutation_func, selection_func)
+    bullseye_algo.run()

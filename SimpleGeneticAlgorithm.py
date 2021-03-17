@@ -11,14 +11,14 @@ from Chromosome import Chromosome
 
 
 class SimpleGeneticAlgorithm:
-    def __init__(self, pop_size, max_iter, target, problem, fitness_function=None,
+    def __init__(self, pop_size, max_iter, problem, fitness_function=None,
                  mating_function=None, mutation_function=None, selection_function=None):
         # population size
         self.pop_size = pop_size
         # maximum iterations to run
         self.max_iter = max_iter
         # target chromosome
-        self.target = target
+        self.target = problem.target
         # chromosome population list
         self.population = list()
         # chromosome next generation list
@@ -76,7 +76,7 @@ class SimpleGeneticAlgorithm:
 
     # call mating function to generate the remaining chromosomes for next generation
     def mate(self, eligible_parents):
-        number_of_survivors = self.pop_size * Constants.SURVIVOR_RATE
+        number_of_survivors = int(self.pop_size * Constants.SURVIVOR_RATE)
         for i in range(number_of_survivors, self.pop_size):
             child = self.mating_function(random.choice(eligible_parents),random.choice(eligible_parents))
             if random.random() < Constants.MUTATION_RATE:

@@ -5,12 +5,12 @@ from random import shuffle, choice
 
 class Chromosome:
     def __init__(self, problem, data=None):
+        self.fitness = 0
+        self.problem = problem
         if data is not None:
             self.data = data
         else:
             self.init_data()
-        self.fitness = 0
-        self.problem = problem
 
     def init_data(self):
         target_size = self.problem.get_target_size()
