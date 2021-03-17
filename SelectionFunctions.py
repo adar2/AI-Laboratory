@@ -48,3 +48,12 @@ def sus(population: list, offspring: int) -> list:
                 i = 0
         selected.append(population[i])
     return selected
+
+
+def tournament_selection(population: list, k: int, offspring: int) -> list:
+    selected = []
+    for i in range(offspring):
+        sample = random.sample(population, k)
+        sample.sort(key=lambda x: x.fitness)
+        selected.append(sample[0])
+    return selected
