@@ -9,16 +9,12 @@ from Chromosome import Chromosome
 
 
 class SimpleGeneticAlgorithm:
-    def __init__(self, pop_size, max_iter, elite_rate, mutation_rate, target, fitness_function=None,
-                 mating_function=None):
+    def __init__(self, pop_size, max_iter, target, problem, fitness_function=None,
+                 mating_function=None, mutation_function=None, selection_function=None):
         # population size
         self.pop_size = pop_size
         # maximum iterations to run
         self.max_iter = max_iter
-        # percentage of the top chromosome to copy to next generation
-        self.elite_rate = elite_rate
-        # probability of chromosome to mutate
-        self.mutation_rate = mutation_rate
         # target chromosome
         self.target = target
         # chromosome population list
@@ -27,21 +23,28 @@ class SimpleGeneticAlgorithm:
         self.buffer = None
         # best chromosome so far
         self.best = None
-        # the data from which the initial states are constructed from
-        self.data = string.printable
+        # the search space from which the initial states are constructed from
+        self.problem = problem
         # fitness function pointer
         self.fitness_function = fitness_function
         # mating function pointer
         self.mating_function = mating_function
+        # mutation function pointer
+        self.mutation_function = mutation_function
+        # selection function pointer
+        self.selection_function = selection_function
+        # number of iterations to complete
         self.number_of_iterations = 0
+        # time elapsed from the beginning of run
         self.time_elapsed = 0
+        # current time used for calculating the number of ticks of each iteration
         self.current_time = time.time()
 
     # initialize random chromosomes
     def init_population(self):
         target_size = len(self.target)
         for i in range(self.pop_size):
-            chromosome = Chromosome("".join(random.choice(self.data) for _ in range(target_size)))
+            chromosome = Chromosome(self.problem)
             self.population.append(chromosome)
         self.buffer = list(self.population)
 
@@ -69,16 +72,16 @@ class SimpleGeneticAlgorithm:
     def sort_by_fitness(self):
         self.population.sort(key=lambda x: x.fitness)
 
-    # copy the first elitism percentage of chromosomes from population to next generation
-    def elitism(self):
-        for i in range(0, self.elite_rate * self.pop_size):
-            self.buffer.append(self.population[i])
+    # # copy the first elitism percentage of chromosomes from population to next generation
+    # def elitism(self):
+    #     for i in range(0, self.elite_rate * self.pop_size):
+    #         self.buffer.append(self.population[i])
 
     # call mating function to generate the remaining chromosomes for next generation
     def mate(self):
-        elite_size = int(self.elite_rate * self.pop_size)
-        target_size = len(self.target)
-        self.mating_function(self.population, self.buffer, elite_size, target_size, self.mutation_rate)
+        eligible_parents = self.selection_function(self.population)
+        for i in range(100):
+            self.mating_function(random.choice(eligible_parents),random.choice(eligible_parents))
 
     # set population as the next generation we've made
     def swap(self):

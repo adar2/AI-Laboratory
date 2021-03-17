@@ -1,4 +1,8 @@
 class Chromosome:
-    def __init__(self, data, fitness=0):
-        self.data = data
-        self.fitness = fitness
+    def __init__(self, problem):
+        self.data = ''
+        self.fitness = 0
+        self.problem = problem
+
+    def init_data(self):
+        self.data = ''
