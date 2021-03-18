@@ -45,12 +45,14 @@ class SimpleGeneticAlgorithm:
         self.time_elapsed = 0
         # current time used for calculating the number of ticks of each iteration
         self.current_time = time.time()
+        # Denotes whether or not a solution was found
+        self.solved = False
 
     # initialize random chromosomes
     def init_population(self):
-        target_size = len(self.target)
         for i in range(self.pop_size):
             chromosome = Chromosome(self.problem)
+            chromosome.age = random.randint(0, Constants.MAX_RANDOM_AGE)
             self.population.append(chromosome)
         self.buffer = list(self.population)
 
@@ -59,7 +61,7 @@ class SimpleGeneticAlgorithm:
         avg_fitness = 0
         standard_dev = 0
         for chromosome in self.population:
-            self.fitness_function(chromosome, self.target)
+            self.fitness_function(chromosome)
         avg_fitness, standard_dev = self.calc_stats(avg_fitness, standard_dev)
         print(f"Average fitness: {avg_fitness}")
         print(f"Standard Deviation: {standard_dev}")
@@ -79,7 +81,9 @@ class SimpleGeneticAlgorithm:
         number_of_offsprings = self.pop_size - len(survivors)
         self.buffer = survivors
         for i in range(number_of_offsprings):
-            child = self.mating_function(random.choice(eligible_parents),random.choice(eligible_parents))
+            parent_1 = random.choice(eligible_parents)
+            parent_2 = random.choice(eligible_parents)
+            child = self.mating_function(parent_1, parent_2)
             if random.random() < Constants.MUTATION_RATE:
                 self.mutation_function(child)
             self.buffer.append(child)
@@ -102,18 +106,30 @@ class SimpleGeneticAlgorithm:
         for i in range(self.max_iter):
             self.number_of_iterations += 1
             self.calc_fitness()
-            print(f'Current Best: {self.population[0].data} , {self.population[0].fitness}')
+            current_best = min(self.population, key=lambda x: x.fitness)
+            print(f'Current Best: {current_best.data} , {current_best.fitness}')
             print(f"Clock ticks: {int((time.time() - self.current_time) * clock_speed)}")
             self.current_time = time.time()
             # goal test
-            if self.population[0].fitness == 0:
+            if current_best.fitness == 0:
+                self.solved = True
                 break
             eligible_parents = self.select_parents()
+            if eligible_parents is None:
+                continue
             survivors = self.survival_function(self.population)
             self.mate(eligible_parents, survivors)
             self.swap()
+            self.increase_age()
         self.time_elapsed = round(time.process_time() - start_time, 2)
         print(f"Time elapsed {self.time_elapsed}")
 
     def select_parents(self):
-        return self.selection_function(self.population)
+        old_enough_to_parent = [c for c in self.population if c.age >= Constants.MIN_PARENT_AGE]
+        if len(old_enough_to_parent) < 2:
+            return None
+        return self.selection_function(old_enough_to_parent)
+
+    def increase_age(self):
+        for chromosome in self.population:
+            chromosome.grow_old()

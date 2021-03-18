@@ -1,10 +1,10 @@
 from matplotlib import pyplot as plt
 from NQueens import NQueens
-from FitnessFunctions import pso_distance_fitness as absolute
-from FitnessFunctions import bullseye_fitness as bullseye
-from MatingFunctions import multi_point_crossover as mating_func
-from MutateFunctions import inversion_mutation as mutation_func
-from SelectionFunctions import truncation_selection as selection_func
+from FitnessFunctions import pso_distance_fitness as absolute, bullseye_fitness as bullseye
+from MatingFunctions import single_point_crossover as mating_func
+from MutateFunctions import string_mutation as mutation_func
+from SelectionFunctions import stochastic_tournament_selection as selection_func
+from SurvivalFunctions import survival_of_the_young as survival_func
 from GeneticAlgorithm import SimpleGeneticAlgorithm
 from PSO import ParticleSwarmOptimization
 from StringMatching import StringMatching
@@ -106,8 +106,13 @@ def mating_test(problem_type):
 
 if __name__ == '__main__':
     # plot_compare_pso_GA()
-    # problem = StringMatching("Hello world!")
-    # bullseye_algo = SimpleGeneticAlgorithm(2048, 16384, problem, bullseye,
-    #                                        mating_func, mutation_func, selection_func)
-    # bullseye_algo.run()
-    mating_test(NQueens)
+    success_counter = 0
+    for i in range(20):
+        problem = StringMatching("Hello world!")
+        bullseye_algo = SimpleGeneticAlgorithm(2048, 16384, problem, bullseye,
+                                               mating_func, mutation_func, selection_func, survival_func)
+        bullseye_algo.run()
+        if bullseye_algo.solved:
+            success_counter += 1
+    print(f"Success = {success_counter}")
+

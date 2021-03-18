@@ -24,8 +24,8 @@ def n_queens_conflicts_fitness(chromosome):
 
 
 def bullseye_fitness(chromosome):
-    chromosome.fitness = len(target) * 2
     target = chromosome.problem.target
+    chromosome.fitness = len(target) * 2
     BONUS_LEVEL_1 = 1
     BONUS_LEVEL_2 = 2
 
