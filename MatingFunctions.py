@@ -25,7 +25,7 @@ def uniform_point_crossover(parent_1: Chromosome, parent_2: Chromosome):
     child = Chromosome(parent_1.problem, parent_1.data)
     for j in range(target_size):
         chosen_parent = choice([parent_1, parent_2])
-        child.data = child.data[:j] + chosen_parent.data[j] + child.data[j + 1:]
+        child.data = child.data[:j] + [chosen_parent.data[j]] + child.data[j + 1:]
     return child
 
 

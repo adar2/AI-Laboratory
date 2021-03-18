@@ -1,13 +1,15 @@
 from matplotlib import pyplot as plt
-
+from NQueens import NQueens
 from FitnessFunctions import distance_fitness as absolute
 from FitnessFunctions import bullseye_fitness as bullseye
-from MatingFunctions import single_point_crossover as mating_func
-from MutateFunctions import string_mutation as mutation_func
+from MatingFunctions import multi_point_crossover as mating_func
+from MutateFunctions import inversion_mutation as mutation_func
 from SelectionFunctions import truncation_selection as selection_func
 from SimpleGeneticAlgorithm import SimpleGeneticAlgorithm
 from PSO import ParticleSwarmOptimization
 from StringMatching import StringMatching
+from Chromosome import Chromosome
+from numpy import copy
 
 
 def run_and_plot():
@@ -83,9 +85,29 @@ def plot_and_show_iterations(number_of_runs, number_of_iterations_PSO, number_of
     plt.show()
 
 
+def mutation_test(problem_type):
+    for i in range(10):
+        problem = problem_type(range(10))
+        chrom = Chromosome(problem)
+        before = copy(chrom.data)
+        mutation_func(chrom)
+        after = chrom.data
+        print(f'{before} -> {after}, len={len(after)}')
+
+
+def mating_test(problem_type):
+    for i in range(10):
+        problem = problem_type(range(10))
+        chrom_1 = Chromosome(problem)
+        chrom_2 = Chromosome(problem)
+        child = mating_func(chrom_1, chrom_2)
+        print(f'{chrom_1.data} + {chrom_2.data} = {child.data}, len={len(child.data)}')
+
+
 if __name__ == '__main__':
     # plot_compare_pso_GA()
-    problem = StringMatching("Hello world!")
-    bullseye_algo = SimpleGeneticAlgorithm(2048, 16384, problem, bullseye,
-                                           mating_func, mutation_func, selection_func)
-    bullseye_algo.run()
+    # problem = StringMatching("Hello world!")
+    # bullseye_algo = SimpleGeneticAlgorithm(2048, 16384, problem, bullseye,
+    #                                        mating_func, mutation_func, selection_func)
+    # bullseye_algo.run()
+    mating_test(NQueens)
