@@ -4,10 +4,22 @@ def absolute_distance_fitness(chromosome, target):
         chromosome.fitness += abs(ord(chromosome.data[i]) - ord(target[i]))
 
 
-def distance_fitness(particle, target):
+def pso_distance_fitness(particle, target):
     particle.fitness = 0
     for i in range(len(target)):
         particle.fitness += abs(particle.position[i] - target[i])
+
+
+def n_queens_conflicts_fitness(chromosome):
+    total_conflicts = 0
+    game_board = chromosome.data
+    for i in game_board:
+        for j in game_board:
+            if i == j:
+                continue
+            if abs(j - i) == abs(game_board.index(j) - game_board.index(i)):
+                total_conflicts += 1
+    chromosome.fitness = total_conflicts
 
 
 def bullseye_fitness(chromosome, target):

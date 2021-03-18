@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 from NQueens import NQueens
-from FitnessFunctions import distance_fitness as absolute
+from FitnessFunctions import pso_distance_fitness as absolute
 from FitnessFunctions import bullseye_fitness as bullseye
 from MatingFunctions import multi_point_crossover as mating_func
 from MutateFunctions import inversion_mutation as mutation_func
