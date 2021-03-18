@@ -1,5 +1,6 @@
-def absolute_distance_fitness(chromosome, target):
+def absolute_distance_fitness(chromosome):
     chromosome.fitness = 0
+    target = chromosome.problem.target
     for i in range(len(target)):
         chromosome.fitness += abs(ord(chromosome.data[i]) - ord(target[i]))
 
@@ -22,8 +23,9 @@ def n_queens_conflicts_fitness(chromosome):
     chromosome.fitness = total_conflicts
 
 
-def bullseye_fitness(chromosome, target):
+def bullseye_fitness(chromosome):
     chromosome.fitness = len(target) * 2
+    target = chromosome.problem.target
     BONUS_LEVEL_1 = 1
     BONUS_LEVEL_2 = 2
 

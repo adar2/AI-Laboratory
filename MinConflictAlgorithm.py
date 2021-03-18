@@ -1,4 +1,4 @@
-import random,time
+import random, time
 
 
 class MinConflictAlgorithm:
@@ -63,7 +63,7 @@ class MinConflictAlgorithm:
         # if the min number of conflicts that was achieved is less then the current conflicts size, do the swap
         if min_conflicts <= conflict_size:
             self.game_board[conflicted_index], self.game_board[minimize_index] = self.game_board[minimize_index], \
-                                                                             self.game_board[conflicted_index]
+                                                                                 self.game_board[conflicted_index]
 
     def run(self):
         # conflicted pieces list
@@ -99,8 +99,3 @@ class MinConflictAlgorithm:
                 conflicted.clear()
         self.elapsed = time.time() - self.elapsed
 
-
-if __name__ == '__main__':
-    q = MinConflictAlgorithm(10, 1000)
-    q.run()
-    print(f"{q.iterations} , {q.elapsed}")
