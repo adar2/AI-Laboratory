@@ -1,17 +1,19 @@
-from Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS
+import random
 from math import sqrt
 import numpy as np
-import random
+
+from Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS
 
 
 def get_fitness_proportional_distribution(population: list) -> list:
     # scaling done by applying sqrt function on the chromosomes fitness value
     result = []
     fitness_sum = 0
+    population.sort(key=lambda x: x.fitness)
     for chromosome in population:
-        fitness_sum += chromosome.fitness
+        fitness_sum += sqrt(chromosome.fitness)
     for chromosome in population:
-        probability = chromosome.fitness / fitness_sum
+        probability = sqrt(chromosome.fitness) / fitness_sum
         result.append(probability)
     result.reverse()
     result = list(np.cumsum(result))
@@ -27,7 +29,7 @@ def truncation_selection(population: list) -> list:
 def rws(population: list) -> list:
     selected = []
     fpd = get_fitness_proportional_distribution(population)
-    offspring = int(len(population)*PCT_OF_PARENT)
+    offspring = int(len(population) * PCT_OF_PARENT)
     for i in range(offspring):
         r = random.random()
         i = 0
@@ -70,6 +72,8 @@ def stochastic_tournament_selection(population: list) -> list:
     selected = []
     offspring = int(len(population) * PCT_OF_PARENT)
     participants = int(TOURNAMENT_PARTICIPANTS * len(population))
+    if participants < 2:
+        participants = 2
     for i in range(offspring):
         sample = random.sample(population, participants)
         fpd = get_fitness_proportional_distribution(sample)
