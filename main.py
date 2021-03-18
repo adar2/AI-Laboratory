@@ -5,7 +5,7 @@ from FitnessFunctions import bullseye_fitness as bullseye
 from MatingFunctions import multi_point_crossover as mating_func
 from MutateFunctions import inversion_mutation as mutation_func
 from SelectionFunctions import truncation_selection as selection_func
-from SimpleGeneticAlgorithm import SimpleGeneticAlgorithm
+from GeneticAlgorithm import SimpleGeneticAlgorithm
 from PSO import ParticleSwarmOptimization
 from StringMatching import StringMatching
 from Chromosome import Chromosome

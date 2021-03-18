@@ -12,7 +12,7 @@ from Chromosome import Chromosome
 
 class SimpleGeneticAlgorithm:
     def __init__(self, pop_size, max_iter, problem, fitness_function=None,
-                 mating_function=None, mutation_function=None, selection_function=None):
+                 mating_function=None, mutation_function=None, selection_function=None, survival_function=None):
         # population size
         self.pop_size = pop_size
         # maximum iterations to run
@@ -35,6 +35,8 @@ class SimpleGeneticAlgorithm:
         self.mutation_function = mutation_function
         # selection function pointer
         self.selection_function = selection_function
+        # survival function pointer
+        self.survival_function = survival_function
         # number of iterations to complete
         self.number_of_iterations = 0
         # time elapsed from the beginning of run
@@ -70,13 +72,9 @@ class SimpleGeneticAlgorithm:
         standard_dev = sqrt(standard_dev)
         return avg_fitness, standard_dev
 
-    # sorting population by non decreasing fitness
-    def sort_by_fitness(self):
-        self.population.sort(key=lambda x: x.fitness)
-
     # call mating function to generate the remaining chromosomes for next generation
-    def mate(self, eligible_parents):
-        number_of_survivors = int(self.pop_size * Constants.SURVIVOR_RATE)
+    def mate(self, eligible_parents, survivors):
+        number_of_survivors = int(self.pop_size * Constants.ELITE_RATE)
         for i in range(number_of_survivors, self.pop_size):
             child = self.mating_function(random.choice(eligible_parents),random.choice(eligible_parents))
             if random.random() < Constants.MUTATION_RATE:
@@ -101,14 +99,15 @@ class SimpleGeneticAlgorithm:
         for i in range(self.max_iter):
             self.number_of_iterations += 1
             self.calc_fitness()
-            self.sort_by_fitness()
             print(f'Current Best: {self.population[0].data} , {self.population[0].fitness}')
             print(f"Clock ticks: {int((time.time() - self.current_time) * clock_speed)}")
             self.current_time = time.time()
             # goal test
             if self.population[0].fitness == 0:
                 break
-            self.mate(self.select_parents())
+            eligible_parents = self.select_parents()
+            survivors = self.survival_function(self.population)
+            self.mate(eligible_parents, survivors)
             self.swap()
         self.time_elapsed = round(time.process_time() - start_time, 2)
         print(f"Time elapsed {self.time_elapsed}")
