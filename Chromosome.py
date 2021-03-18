@@ -5,8 +5,9 @@ from random import shuffle, choice
 
 class Chromosome:
     def __init__(self, problem, data=None):
-        self.fitness = 0
         self.problem = problem
+        self.fitness = 0
+        self.age = 0
         if data is not None:
             self.data = data
         else:

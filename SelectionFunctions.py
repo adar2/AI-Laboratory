@@ -4,6 +4,7 @@ import random
 
 
 def get_fitness_proportional_distribution(population: list) -> list:
+    # scaling should be done here if we want some kind of transformation
     result = []
     fitness_sum = 0
     for chromosome in population:
@@ -18,6 +19,7 @@ def get_fitness_proportional_distribution(population: list) -> list:
 
 def truncation_selection(population: list) -> list:
     truncate_size = int(len(population) * TRUNCATION_RATE)
+    stochastic_tournament_selection(population, 5, 5)
     return population[:truncate_size]
 
 
@@ -50,10 +52,19 @@ def sus(population: list, offspring: int) -> list:
     return selected
 
 
-def tournament_selection(population: list, k: int, offspring: int) -> list:
+def deterministic_tournament_selection(population: list, k: int, offspring: int) -> list:
     selected = []
     for i in range(offspring):
         sample = random.sample(population, k)
         sample.sort(key=lambda x: x.fitness)
         selected.append(sample[0])
+    return selected
+
+
+def stochastic_tournament_selection(population: list, k: int, offspring: int) -> list:
+    selected = []
+    for i in range(offspring):
+        sample = random.sample(population, k)
+        fpd = get_fitness_proportional_distribution(sample)
+        selected.append(random.choices(sample, fpd))
     return selected
