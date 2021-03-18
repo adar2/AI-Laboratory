@@ -1,10 +1,10 @@
-import random
+import random,time
 
 
 class MinConflictAlgorithm:
-    '''
+    """
         the number i represents queen number i which stands on column i, the position in the list represents the row of the queen
-    '''
+    """
 
     def __init__(self, size, max_iter):
         # size of the board and number of queens
@@ -13,6 +13,10 @@ class MinConflictAlgorithm:
         self.max_iter = max_iter
         # iterations counter
         self.iterations = 0
+        # time elapsed for the algorithm to terminate
+        self.elapsed = time.time()
+        # did we solve the problem or not
+        self.solved = False
         # list which represents the game board , initialized with numbers [0 to size -1]
         self.game_board = [i for i in range(self.size)]
         # shuffle the game board inorder to start from random arrangement
@@ -65,9 +69,11 @@ class MinConflictAlgorithm:
         # conflicted pieces list
         conflicted = []
         # iterate until max iterations reached
-        for _ in range(self.max_iter):
+        for self.iterations in range(self.max_iter):
             # if we have no conflicts were done
             if self.check_goal_state():
+                self.solved = True
+                self.elapsed = time.time() - self.elapsed
                 print(f"Solution Found : {self.game_board}")
                 return
             # total number of conflicts in the current game board
@@ -91,8 +97,10 @@ class MinConflictAlgorithm:
                 # try to swap between elements to minimize current conflicts
                 self.minimize_conflict(random_conflict, total_conflicts)
                 conflicted.clear()
+        self.elapsed = time.time() - self.elapsed
 
 
 if __name__ == '__main__':
-    q = MinConflictAlgorithm(50, 1000)
+    q = MinConflictAlgorithm(10, 1000)
     q.run()
+    print(f"{q.iterations} , {q.elapsed}")
