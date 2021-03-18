@@ -9,6 +9,8 @@ from psutil import cpu_freq
 
 from Chromosome import Chromosome
 
+from numpy import copy
+
 
 class SimpleGeneticAlgorithm:
     def __init__(self, pop_size, max_iter, problem, fitness_function=None,
@@ -74,12 +76,13 @@ class SimpleGeneticAlgorithm:
 
     # call mating function to generate the remaining chromosomes for next generation
     def mate(self, eligible_parents, survivors):
-        number_of_survivors = int(self.pop_size * Constants.ELITE_RATE)
-        for i in range(number_of_survivors, self.pop_size):
+        number_of_offsprings = self.pop_size - len(survivors)
+        self.buffer = survivors
+        for i in range(number_of_offsprings):
             child = self.mating_function(random.choice(eligible_parents),random.choice(eligible_parents))
             if random.random() < Constants.MUTATION_RATE:
                 self.mutation_function(child)
-            self.buffer[i] = child
+            self.buffer.append(child)
 
     # set population as the next generation we've made
     def swap(self):
