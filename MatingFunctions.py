@@ -30,19 +30,20 @@ def uniform_point_crossover(parent_1: Chromosome, parent_2: Chromosome):
 
 
 def ordered_crossover(parent_1: Chromosome, parent_2: Chromosome):
-    child_data = [None] * 10
     target_size = len(parent_1.data)
+    parent_2_clone = deepcopy(parent_2)
+    child_data = [None] * target_size
     start_index = randint(0, target_size - 1)
     end_index = randint(start_index, target_size - 1)
     for i in range(start_index, end_index + 1):
         child_data[i] = parent_1.data[i]
-    for item in parent_2.data:
+    for item in range(len(child_data)):
         if item in child_data:
-            parent_2.data.remove(item)
+            parent_2_clone.data.remove(item)
     for i in range(len(child_data)):
         if child_data[i] is None:
-            child_data[i] = parent_2.data[0]
-            del parent_2.data[0]
+            child_data[i] = parent_2_clone.data[0]
+            del parent_2_clone.data[0]
     return Chromosome(parent_1.problem, child_data)
 
 

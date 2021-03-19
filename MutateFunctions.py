@@ -20,6 +20,8 @@ def displacement_mutation(chromosome):
     start_index = randint(0, target_size - 1)
     end_index = randint(start_index, target_size - 1)
     displaced_items = chromosome.data[start_index:end_index + 1]
+    if len(displaced_items) == target_size:
+        return
     del chromosome.data[start_index:end_index + 1]
     insertion_index = randint(0, len(chromosome.data)-1)
     chromosome.data = chromosome.data[:insertion_index] + displaced_items + chromosome.data[insertion_index:]

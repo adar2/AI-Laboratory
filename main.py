@@ -1,10 +1,11 @@
 from matplotlib import pyplot as plt
 from NQueens import NQueens
-from FitnessFunctions import pso_distance_fitness as absolute, bullseye_fitness as bullseye
-from MatingFunctions import single_point_crossover as mating_func
-from MutateFunctions import string_mutation as mutation_func
-from SelectionFunctions import sus as selection_func
-from SurvivalFunctions import survival_of_the_young as survival_func
+from FitnessFunctions import pso_distance_fitness as absolute, bullseye_fitness as bullseye, \
+    n_queens_conflicts_fitness as nqueens_fitness
+from MatingFunctions import ordered_crossover as mating_func
+from MutateFunctions import insertion_mutation as mutation_func
+from SelectionFunctions import deterministic_tournament_selection as selection_func
+from SurvivalFunctions import survival_of_the_elite as survival_func
 from GeneticAlgorithm import SimpleGeneticAlgorithm
 from PSO import ParticleSwarmOptimization
 from StringMatching import StringMatching
@@ -108,11 +109,10 @@ if __name__ == '__main__':
     # plot_compare_pso_GA()
     success_counter = 0
     for i in range(5):
-        problem = StringMatching("Hello world!")
-        bullseye_algo = SimpleGeneticAlgorithm(2048, 16384, problem, bullseye,
-                                               mating_func, mutation_func, selection_func, survival_func)
-        bullseye_algo.run()
-        if bullseye_algo.solved:
+        problem = NQueens([1, 2, 3, 4, 5, 6, 7, 8])
+        algo = SimpleGeneticAlgorithm(2048, 16384, problem, nqueens_fitness,
+                                      mating_func, mutation_func, selection_func, survival_func)
+        algo.run()
+        if algo.solved:
             success_counter += 1
     print(f"Success = {success_counter}")
-
