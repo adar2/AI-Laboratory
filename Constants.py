@@ -1,3 +1,4 @@
+from psutil import cpu_freq
 MUTATION_RATE = 0.3
 ELITE_RATE = 0.1
 TRUNCATION_RATE = 0.5
@@ -10,3 +11,5 @@ PCT_OF_PARENT = 0.3
 TOURNAMENT_PARTICIPANTS = 0.05
 
 EXP_COEFFICIENT = 10
+
+CLOCK_RATE = cpu_freq().current * (2 ** 20)

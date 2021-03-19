@@ -1,15 +1,9 @@
 import random
-import string
 import time
-import Constants
-
 from math import sqrt
 
-from psutil import cpu_freq
-
+import Constants
 from Chromosome import Chromosome
-
-from numpy import copy
 
 
 class SimpleGeneticAlgorithm:
@@ -53,6 +47,8 @@ class SimpleGeneticAlgorithm:
         for i in range(self.pop_size):
             chromosome = Chromosome(self.problem)
             chromosome.age = random.randint(0, Constants.MAX_RANDOM_AGE)
+            if chromosome.age >= Constants.MIN_PARENT_AGE:
+                chromosome.fit_to_be_parent = True
             self.population.append(chromosome)
         self.buffer = list(self.population)
 
@@ -100,18 +96,17 @@ class SimpleGeneticAlgorithm:
 
     # run the algorithm until max iter or match was found
     def run(self):
-        clock_speed = cpu_freq().current * (2 ** 20)
-        start_time = time.process_time()
+        start_time = time.time()
         self.init_population()
         for i in range(self.max_iter):
             self.number_of_iterations += 1
             self.calc_fitness()
-            current_best = min(self.population, key=lambda x: x.fitness)
-            print(f'Current Best: {current_best.data} , {current_best.fitness}')
-            print(f"Clock ticks: {int((time.time() - self.current_time) * clock_speed)}")
+            self.best = min(self.population, key=lambda x: x.fitness)
+            print(f'Current Best: {self.best.data} , {self.best.fitness}')
+            print(f"Clock ticks: {int((time.time() - self.current_time) * Constants.CLOCK_RATE)}")
             self.current_time = time.time()
             # goal test
-            if current_best.fitness == 0:
+            if self.best.fitness == 0:
                 self.solved = True
                 break
             eligible_parents = self.select_parents()
@@ -121,11 +116,11 @@ class SimpleGeneticAlgorithm:
             self.mate(eligible_parents, survivors)
             self.swap()
             self.increase_age()
-        self.time_elapsed = round(time.process_time() - start_time, 2)
+        self.time_elapsed = round(time.time() - start_time, 2)
         print(f"Time elapsed {self.time_elapsed}")
 
     def select_parents(self):
-        old_enough_to_parent = [c for c in self.population if c.age >= Constants.MIN_PARENT_AGE]
+        old_enough_to_parent = [c for c in self.population if c.fit_to_be_parent]
         if len(old_enough_to_parent) < 2:
             return None
         return self.selection_function(old_enough_to_parent)

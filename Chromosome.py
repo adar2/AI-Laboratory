@@ -13,7 +13,6 @@ class Chromosome:
             self.data = data
         else:
             self.init_data()
-        self.age = 0
         self.fit_to_be_parent = False
 
     def init_data(self):
