@@ -2,7 +2,7 @@ import random
 from math import sqrt
 import numpy as np
 
-from Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS
+from Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS,EXP_COEFFICIENT
 
 
 def get_fitness_proportional_distribution(population: list) -> list:
@@ -11,12 +11,12 @@ def get_fitness_proportional_distribution(population: list) -> list:
     fitness_sum = 0
     population.sort(key=lambda x: x.fitness)
     for chromosome in population:
-        fitness_sum += sqrt(chromosome.fitness)
+        fitness_sum += EXP_COEFFICIENT**(-chromosome.fitness)
     for chromosome in population:
-        probability = sqrt(chromosome.fitness) / fitness_sum
+        probability = EXP_COEFFICIENT**(-chromosome.fitness) / fitness_sum
         result.append(probability)
-    result.reverse()
-    result = list(np.cumsum(result))
+    # result.reverse()
+    # result = list(np.cumsum(result))
     return result
 
 
@@ -29,6 +29,7 @@ def truncation_selection(population: list) -> list:
 def rws(population: list) -> list:
     selected = []
     fpd = get_fitness_proportional_distribution(population)
+    fpd = list(np.cumsum(fpd))
     offspring = int(len(population) * PCT_OF_PARENT)
     for i in range(offspring):
         r = random.random()
@@ -44,6 +45,7 @@ def sus(population: list) -> list:
     population_size = len(population)
     offspring = int(population_size * PCT_OF_PARENT)
     fpd = get_fitness_proportional_distribution(population)
+    fpd = list(np.cumsum(fpd))
     step = 1 / offspring
     start = random.uniform(0, step)
     points = [start + i * step for i in range(offspring)]

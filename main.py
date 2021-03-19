@@ -3,7 +3,7 @@ from NQueens import NQueens
 from FitnessFunctions import pso_distance_fitness as absolute, bullseye_fitness as bullseye
 from MatingFunctions import single_point_crossover as mating_func
 from MutateFunctions import string_mutation as mutation_func
-from SelectionFunctions import stochastic_tournament_selection as selection_func
+from SelectionFunctions import sus as selection_func
 from SurvivalFunctions import survival_of_the_young as survival_func
 from GeneticAlgorithm import SimpleGeneticAlgorithm
 from PSO import ParticleSwarmOptimization
@@ -107,7 +107,7 @@ def mating_test(problem_type):
 if __name__ == '__main__':
     # plot_compare_pso_GA()
     success_counter = 0
-    for i in range(20):
+    for i in range(5):
         problem = StringMatching("Hello world!")
         bullseye_algo = SimpleGeneticAlgorithm(2048, 16384, problem, bullseye,
                                                mating_func, mutation_func, selection_func, survival_func)
