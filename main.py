@@ -109,7 +109,7 @@ if __name__ == '__main__':
     # plot_compare_pso_GA()
     success_counter = 0
     for i in range(5):
-        problem = NQueens([1, 2, 3, 4, 5, 6, 7, 8])
+        problem = NQueens(8)
         algo = SimpleGeneticAlgorithm(2048, 16384, problem, nqueens_fitness,
                                       mating_func, mutation_func, selection_func, survival_func)
         algo.run()

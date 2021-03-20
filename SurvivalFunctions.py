@@ -10,8 +10,8 @@ def survival_of_the_young(population: list) -> list:
     return survivors
 
 
-def survival_of_the_elite(population: list) -> list:
+def survival_of_the_elite(population: list, elite_rate: float) -> list:
     survivors = list(copy(population))
     survivors.sort(key=lambda x: x.fitness)
-    chromosomes_to_keep = int(ELITE_RATE * len(population))
+    chromosomes_to_keep = int(elite_rate * len(population))
     return survivors[:chromosomes_to_keep]

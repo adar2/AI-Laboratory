@@ -8,7 +8,8 @@ from Chromosome import Chromosome
 
 class SimpleGeneticAlgorithm:
     def __init__(self, pop_size, max_iter, problem, fitness_function=None,
-                 mating_function=None, mutation_function=None, selection_function=None, survival_function=None):
+                 mating_function=None, mutation_function=None, selection_function=None, survival_function=None,
+                 mutation_rate=Constants.MUTATION_RATE, elite_rate=Constants.ELITE_RATE):
         # population size
         self.pop_size = pop_size
         # maximum iterations to run
@@ -41,6 +42,8 @@ class SimpleGeneticAlgorithm:
         self.current_time = time.time()
         # Denotes whether or not a solution was found
         self.solved = False
+        self.mutation_rate = mutation_rate
+        self.elite_rate = elite_rate
 
     # initialize random chromosomes
     def init_population(self):
@@ -112,7 +115,7 @@ class SimpleGeneticAlgorithm:
             eligible_parents = self.select_parents()
             if eligible_parents is None:
                 continue
-            survivors = self.survival_function(self.population)
+            survivors = self.survival_function(self.population, self.elite_rate)
             self.mate(eligible_parents, survivors)
             self.swap()
             self.increase_age()
