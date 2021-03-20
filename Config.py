@@ -4,6 +4,7 @@ from GeneticAlgorithm import SimpleGeneticAlgorithm
 from PSO import ParticleSwarmOptimization
 from StringMatching import StringMatching
 from NQueens import NQueens
+from KnapSack import KnapSack
 import Constants
 
 
@@ -12,8 +13,8 @@ def init_config():
         "ALGORITHM": "GA",
         "POP_SIZE": "2048",
         "MAX_ITER": "16368",
-        "PROBLEM": "STRING_MATCHING",
-        "TARGET": "Hello world!",
+        "PROBLEM": "KNAPSACK",
+        "TARGET": "[165, [23, 31, 29, 44, 53, 38, 63, 85, 89, 82], [92, 57, 49, 68, 60, 43, 67, 84, 87, 72]]",
         "FITNESS_FUNC": "ABSOLUTE_DISTANCE_FITNESS",
         "MATING_FUNC": "ORDERED_CROSSOVER",
         "MUTATION_FUNC": "STRING_MUTATION",
@@ -52,6 +53,11 @@ def get_algorithm():
         problem = StringMatching(str(target))
     elif problem == 'NQueens':
         problem = NQueens(int(target))
+    elif problem == 'KNAPSACK':
+        capacity = target[0]
+        weights = target[1]
+        profits = target[2]
+        problem = KnapSack(capacity, weights, profits)
     if algorithm == 'GA':
         return SimpleGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
                                       mating_func, mutation_func, selection_func, survival_func)

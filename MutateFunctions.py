@@ -1,4 +1,4 @@
-from random import randint, choice
+from random import randint, choice, random
 
 
 def string_mutation(chromosome):
@@ -21,6 +21,15 @@ def flip_mutation(chromosome):
         chromosome.data[rnd_index] = 0
     else:
         chromosome.data[rnd_index] = 1
+
+
+def stochastic_flip_mutation(chromosome):
+    for i in range(len(chromosome.data)):
+        if random() <= 0.1:
+            if chromosome.data[i]:
+                chromosome.data[i] = 0
+            else:
+                chromosome.data[i] = 1
 
 
 def displacement_mutation(chromosome):

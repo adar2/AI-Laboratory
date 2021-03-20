@@ -112,9 +112,10 @@ if __name__ == '__main__':
     from FitnessFunctions import knapsack_closest_fitness as knapsack
     from MatingFunctions import single_point_crossover as single
     from MutateFunctions import flip_mutation as flip
-    problem = KnapSack(165, [23, 31, 29, 44, 53, 38, 63, 85, 89, 82], [92, 57, 49, 68, 60, 43, 67, 84, 87, 72])
-    algo = SimpleGeneticAlgorithm(200, 1000, problem, knapsack,
-                                  single, flip, selection_func, survival_func)
-    algo.run()
-    # algo = get_algorithm()
+    # p2 = KnapSack()
+    # problem = KnapSack(165, [23, 31, 29, 44, 53, 38, 63, 85, 89, 82], [92, 57, 49, 68, 60, 43, 67, 84, 87, 72])
+    # algo = SimpleGeneticAlgorithm(200, 1000, problem, knapsack,
+    #                               single, flip, selection_func, survival_func)
     # algo.run()
+    algo = get_algorithm()
+    algo.run()
