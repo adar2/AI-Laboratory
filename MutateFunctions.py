@@ -15,6 +15,14 @@ def exchange_mutation(chromosome):
     chromosome.data[index1], chromosome.data[index2] = chromosome.data[index2], chromosome.data[index1]
 
 
+def flip_mutation(chromosome):
+    rnd_index = randint(0, len(chromosome.data) - 1)
+    if chromosome.data[rnd_index]:
+        chromosome.data[rnd_index] = 0
+    else:
+        chromosome.data[rnd_index] = 1
+
+
 def displacement_mutation(chromosome):
     target_size = len(chromosome.data)
     start_index = randint(0, target_size - 1)
@@ -23,7 +31,7 @@ def displacement_mutation(chromosome):
     if len(displaced_items) == target_size:
         return
     del chromosome.data[start_index:end_index + 1]
-    insertion_index = randint(0, len(chromosome.data)-1)
+    insertion_index = randint(0, len(chromosome.data) - 1)
     chromosome.data = chromosome.data[:insertion_index] + displaced_items + chromosome.data[insertion_index:]
 
 

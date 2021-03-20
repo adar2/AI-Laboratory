@@ -1,7 +1,7 @@
 import random
 import time
 from math import sqrt
-
+from KnapSack import KnapSack
 import Constants
 from Chromosome import Chromosome
 
@@ -14,8 +14,6 @@ class SimpleGeneticAlgorithm:
         self.pop_size = pop_size
         # maximum iterations to run
         self.max_iter = max_iter
-        # target chromosome
-        self.target = problem.target
         # chromosome population list
         self.population = list()
         # chromosome next generation list
@@ -97,6 +95,18 @@ class SimpleGeneticAlgorithm:
     def get_stats(self):
         return self.number_of_iterations, self.time_elapsed
 
+    # check whether 90% of the population has the same fitness as optimal solution indicator
+    def knapsack_check(self) -> bool:
+        fitness_dict = {}
+        for chromosome in self.population:
+            if chromosome.fitness not in fitness_dict.keys():
+                fitness_dict[chromosome.fitness] = 0
+            fitness_dict[chromosome.fitness] += 1
+        for key in fitness_dict.keys():
+            if fitness_dict[key] >= 0.9 * len(self.population):
+                return True
+        return False
+
     # run the algorithm until max iter or match was found
     def run(self):
         start_time = time.time()
@@ -109,9 +119,14 @@ class SimpleGeneticAlgorithm:
             print(f"Clock ticks: {int((time.time() - self.current_time) * Constants.CLOCK_RATE)}")
             self.current_time = time.time()
             # goal test
-            if self.best.fitness == 0:
-                self.solved = True
-                break
+            if isinstance(self.problem, KnapSack):
+                if self.knapsack_check():
+                    self.solved = True
+                    break
+            else:
+                if self.best.fitness == 0:
+                    self.solved = True
+                    break
             eligible_parents = self.select_parents()
             if eligible_parents is None:
                 continue

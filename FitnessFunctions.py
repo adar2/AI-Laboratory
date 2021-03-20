@@ -1,3 +1,7 @@
+from KnapSack import KnapSack
+import random
+
+
 def absolute_distance_fitness(chromosome):
     chromosome.fitness = 0
     target = chromosome.problem.target
@@ -21,6 +25,15 @@ def n_queens_conflicts_fitness(chromosome):
             if abs(j - i) == abs(game_board.index(j) - game_board.index(i)):
                 total_conflicts += 1
     chromosome.fitness = total_conflicts
+
+
+def knapsack_closest_fitness(chromosome):
+    capacity = chromosome.problem.get_capacity()
+    max_sum = chromosome.problem.get_max_value()
+    while chromosome.problem.calc_capacity(chromosome.data) > capacity:
+        rnd_index = random.randint(0, len(chromosome.data) - 1)
+        chromosome.data[rnd_index] = 0
+    chromosome.fitness = max_sum - chromosome.problem.calc_knapsack_value(chromosome.data)
 
 
 def bullseye_fitness(chromosome):

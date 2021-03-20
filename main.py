@@ -12,6 +12,7 @@ from StringMatching import StringMatching
 from Chromosome import Chromosome
 from copy import copy
 from Config import get_algorithm
+from KnapSack import KnapSack
 
 
 def run_and_plot():
@@ -108,14 +109,12 @@ def mating_test(problem_type):
 
 if __name__ == '__main__':
     # plot_compare_pso_GA()
-    # success_counter = 0
-    # for i in range(5):
-    #     problem = NQueens([1, 2, 3, 4, 5, 6, 7, 8])
-    #     algo = SimpleGeneticAlgorithm(2048, 16384, problem, nqueens_fitness,
-    #                                   mating_func, mutation_func, selection_func, survival_func)
-    #     algo.run()
-    #     if algo.solved:
-    #         success_counter += 1
-    # print(f"Success = {success_counter}")
-    algo = get_algorithm()
+    from FitnessFunctions import knapsack_closest_fitness as knapsack
+    from MatingFunctions import single_point_crossover as single
+    from MutateFunctions import flip_mutation as flip
+    problem = KnapSack(165, [23, 31, 29, 44, 53, 38, 63, 85, 89, 82], [92, 57, 49, 68, 60, 43, 67, 84, 87, 72])
+    algo = SimpleGeneticAlgorithm(200, 1000, problem, knapsack,
+                                  single, flip, selection_func, survival_func)
     algo.run()
+    # algo = get_algorithm()
+    # algo.run()

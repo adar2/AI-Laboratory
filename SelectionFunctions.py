@@ -6,7 +6,7 @@ from Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS,EX
 
 
 def get_fitness_proportional_distribution(population: list) -> list:
-    # scaling done by applying sqrt function on the chromosomes fitness value TODO
+    # scaling done by applying sqrt function on the chromosomes fitness value
     result = []
     fitness_sum = 0
     population.sort(key=lambda x: x.fitness)
@@ -15,8 +15,6 @@ def get_fitness_proportional_distribution(population: list) -> list:
     for chromosome in population:
         probability = EXP_COEFFICIENT**(-chromosome.fitness) / fitness_sum
         result.append(probability)
-    # result.reverse() TODO: ?
-    # result = list(np.cumsum(result))
     return result
 
 
@@ -63,6 +61,8 @@ def deterministic_tournament_selection(population: list) -> list:
     selected = []
     offspring = int(len(population) * PCT_OF_PARENT)
     participants = int(TOURNAMENT_PARTICIPANTS * len(population))
+    if participants < 2:
+        participants = 2
     for i in range(offspring):
         sample = random.sample(population, participants)
         sample.sort(key=lambda x: x.fitness)

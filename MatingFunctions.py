@@ -62,10 +62,13 @@ def __generate_offsprings(num_1, num_2, parent_1, parent_2):
     parent_2_num_1_index = parent_1.data.index(num_1)
     parent_2_num_2_index = parent_1.data.index(num_2)
     offspring_1_data = deepcopy(parent_1.data)
-    offspring_1_data[parent_1_num_1_index], offspring_1_data[parent_1_num_2_index] = offspring_1_data[parent_1_num_2_index], \
-                                                                                     offspring_1_data[parent_1_num_1_index]
+    offspring_1_data[parent_1_num_1_index], offspring_1_data[parent_1_num_2_index] = offspring_1_data[
+                                                                                         parent_1_num_2_index], \
+                                                                                     offspring_1_data[
+                                                                                         parent_1_num_1_index]
     offspring_2_data = deepcopy(parent_2.data)
-    offspring_2_data[parent_2_num_1_index], offspring_2_data[parent_2_num_2_index] = offspring_2_data[parent_2_num_2_index], \
+    offspring_2_data[parent_2_num_1_index], offspring_2_data[parent_2_num_2_index] = offspring_2_data[
+                                                                                         parent_2_num_2_index], \
                                                                                      offspring_2_data[
                                                                                          parent_2_num_1_index]
     return offspring_1_data, offspring_2_data
