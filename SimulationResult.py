@@ -1,0 +1,32 @@
+from Simulations import get_func_name, mean
+
+
+class SimulationResult:
+
+    def __init__(self, size, problem, fitness_function,
+                 mating_function, mutation_function, selection_function, survival_function,
+                 mutation_rate, elite_rate, iterations, runtimes) -> None:
+        self.selection_function = selection_function
+        self.survival_function = survival_function
+        self.elite_rate = elite_rate
+        self.mutation_function = mutation_function
+        self.mutation_rate = mutation_rate
+        self.mating_function = mating_function
+        self.fitness_function = fitness_function
+        self.size = size
+        self.problem = problem
+        self.iterations_mean = mean(iterations)
+        self.iterations_data = iterations
+        self.runtime_mean = mean(runtimes)
+        self.runtime_data = runtimes
+
+
+    def __str__(self) -> str:
+        return f'Population Size: {self.size}\n' \
+               f'Elite Pct: {self.elite_rate} \n' \
+               f'Mutation Rate: {self.mutation_rate} \n' \
+               f'Selection Strategy: {get_func_name(self.selection_function)} \n' \
+               f'Survival Strategy: {get_func_name(self.survival_function)} \n' \
+               f'Mutation Strategy: {get_func_name(self.mutation_function)} \n' \
+               f'Fitness Function: {get_func_name(self.fitness_function)} \n' \
+               f'Mating Strategy: {get_func_name(self.mating_function)}'

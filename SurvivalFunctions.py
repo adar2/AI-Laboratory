@@ -2,7 +2,7 @@ from Constants import OLD_AGE, ELITE_RATE
 from numpy import copy
 
 
-def survival_of_the_young(population: list) -> list:
+def survival_of_the_young(population: list, elite_rate: float) -> list:
     survivors = []
     for chromosome in population:
         if chromosome.age < OLD_AGE:
