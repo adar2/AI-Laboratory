@@ -7,14 +7,15 @@
 # - Survival Function
 # - Mating Function
 # - Mutation Function
-from Constants import MUTATION_RATE, ELITE_RATE
 from SimulationResult import SimulationResult
 from SurvivalFunctions import survival_of_the_elite, survival_of_the_young
 from GeneticAlgorithm import SimpleGeneticAlgorithm
-from MutateFunctions import string_mutation
-from MatingFunctions import single_point_crossover, uniform_point_crossover, multi_point_crossover
+from MutateFunctions import string_mutation, inversion_mutation, exchange_mutation, insertion_mutation, displacement_mutation
+from MatingFunctions import single_point_crossover, uniform_point_crossover, multi_point_crossover, ordered_crossover, \
+    partially_matched_crossover
 from StringMatching import StringMatching
-from FitnessFunctions import bullseye_fitness
+from NQueens import NQueens
+from FitnessFunctions import bullseye_fitness, n_queens_conflicts_fitness
 import SelectionFunctions
 from matplotlib import pyplot as plt
 from statistics import mean
@@ -64,7 +65,7 @@ def plot_list_runtime(results_list):
     plt.show()
 
 
-def plot_list(Y_axis_parameter, results_list):
+def plot_results_list(Y_axis_parameter, results_list):
     if Y_axis_parameter == "Iterations":
         plot_list_iterations(results_list)
     else:
@@ -104,26 +105,28 @@ def update_best(result, best_runtime, best_iterations):
 
 
 def print_results(results_list):
-    i = 0
+    i = 1
     for result in results_list:
         print(f"Number {i}:")
         print(result)
+        i += 1
 
 
-def string_matching_sensitivity_comparison():
+def create_simulation_report():
     # prepare run parameters
-    pop_sizes = [256, 512, 1024, 2048, 4096, 8192]
+    pop_sizes = [256, 512, 1024]
     mutation_rates = [0.25, 0.5, 0.75]
     selection_functions = [SelectionFunctions.truncation_selection, SelectionFunctions.stochastic_tournament_selection,
-                           SelectionFunctions.deterministic_tournament_selection, SelectionFunctions.rws, SelectionFunctions.sus]
-    mating_functions = [single_point_crossover, multi_point_crossover, uniform_point_crossover]
+                           SelectionFunctions.rws, SelectionFunctions.sus]
+    mating_functions = [ordered_crossover, partially_matched_crossover]
+    mutation_functions = [exchange_mutation, insertion_mutation, inversion_mutation, displacement_mutation]
     survival_functions = [survival_of_the_elite, survival_of_the_young]
     elite_rates = [0.6, 0.8, 0.9]
-    problem = StringMatching("Ronnie And Adar")
+    problem = NQueens(8)
 
     # prepare excel workbook
     workbook = xlwt.Workbook()
-    stats = workbook.add_sheet('Stats')
+    stats = workbook.add_sheet('NQueens_Stats')
     stats.write(0, 0, 'Algorithm')
     stats.write(0, 1, 'Population Size')
     stats.write(0, 2, 'Mutation Rate')
@@ -145,32 +148,33 @@ def string_matching_sensitivity_comparison():
         for mutation_rate in mutation_rates:
             for selection_function in selection_functions:
                 for mating_function in mating_functions:
-                    for survival_function in survival_functions:
-                        for elite_rate in elite_rates:
-                            algo = SimpleGeneticAlgorithm(size, 16000, problem, bullseye_fitness,
-                                                          mating_function, string_mutation, selection_function, survival_function,
-                                                          mutation_rate, elite_rate)
-                            iterations_performance = []
-                            runtime_performance = []
-                            success_counter = 0
-                            current_line += 2
-                            for i in range(10):
-                                algo.run()
-                                if algo.solved:
-                                    success_counter += 1
-                                    iterations, time = algo.get_stats()
-                                    iterations_performance.append(iterations)
-                                    runtime_performance.append(time)
+                    for mutation_function in mutation_functions:
+                        for survival_function in survival_functions:
+                            for elite_rate in elite_rates:
+                                algo = SimpleGeneticAlgorithm(size, 16000, problem, n_queens_conflicts_fitness,
+                                                              mating_function, mutation_function, selection_function,
+                                                              survival_function,
+                                                              mutation_rate, elite_rate)
+                                iterations_performance = []
+                                runtime_performance = []
+                                success_counter = 0
+                                for i in range(10):
+                                    algo.run()
+                                    if algo.solved:
+                                        success_counter += 1
+                                        iterations, time = algo.get_stats()
+                                        iterations_performance.append(iterations)
+                                        runtime_performance.append(time)
 
-                            result = SimulationResult(size, problem, bullseye_fitness, mating_function, string_mutation,
-                                                      selection_function, survival_function, mutation_rate, elite_rate,
-                                                      iterations_performance, runtime_performance)
-                            update_best(result, best_runtime, best_iterations)
-                            add_results_to_sheet(stats, current_line, size, mating_function, selection_function, survival_function,
-                                                 mutation_rate, elite_rate,
-                                                 iterations_performance, runtime_performance, success_counter)
-                            current_line += 1
-    workbook.save('Simulation Report')
+                                result = SimulationResult(size, problem, bullseye_fitness, mating_function, string_mutation,
+                                                          selection_function, survival_function, mutation_rate, elite_rate,
+                                                          iterations_performance, runtime_performance)
+                                update_best(result, best_runtime, best_iterations)
+                                add_results_to_sheet(stats, current_line, size, mating_function, selection_function, survival_function,
+                                                     mutation_rate, elite_rate,
+                                                     iterations_performance, runtime_performance, success_counter)
+                                current_line += 1
+    workbook.save('Simulation Report.xls')
     best_iterations.sort(key=lambda x: x.iterations_mean)
     best_runtime.sort(key=lambda x: x.runtime_mean)
     print("Best Iterations:")
@@ -178,8 +182,8 @@ def string_matching_sensitivity_comparison():
     print("Best Runtime:")
     print_results(best_runtime)
 
-    plot_list("Iterations", best_iterations)
-    plot_list("Runtime", best_iterations)
+    plot_results_list("Iterations", best_iterations)
+    plot_results_list("Runtime", best_iterations)
 
 
 def get_func_name(function):
@@ -193,4 +197,5 @@ def get_func_name(function):
 
 
 if __name__ == '__main__':
-    string_matching_sensitivity_comparison()
+    create_simulation_report()
+    pass
