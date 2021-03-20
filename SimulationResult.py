@@ -1,4 +1,4 @@
-from Simulations import get_func_name, mean
+from statistics import mean
 
 
 class SimulationResult:
@@ -20,13 +20,21 @@ class SimulationResult:
         self.runtime_mean = mean(runtimes)
         self.runtime_data = runtimes
 
-
     def __str__(self) -> str:
         return f'Population Size: {self.size}\n' \
                f'Elite Pct: {self.elite_rate} \n' \
                f'Mutation Rate: {self.mutation_rate} \n' \
-               f'Selection Strategy: {get_func_name(self.selection_function)} \n' \
-               f'Survival Strategy: {get_func_name(self.survival_function)} \n' \
-               f'Mutation Strategy: {get_func_name(self.mutation_function)} \n' \
-               f'Fitness Function: {get_func_name(self.fitness_function)} \n' \
-               f'Mating Strategy: {get_func_name(self.mating_function)}'
+               f'Selection Strategy: {self.get_func_name(self.selection_function)} \n' \
+               f'Survival Strategy: {self.get_func_name(self.survival_function)} \n' \
+               f'Mutation Strategy: {self.get_func_name(self.mutation_function)} \n' \
+               f'Fitness Function: {self.get_func_name(self.fitness_function)} \n' \
+               f'Mating Strategy: {self.get_func_name(self.mating_function)}'
+
+    def get_func_name(self, function):
+        name = function.__name__
+        name = name.replace('_', ' ')
+        if name == "survival of the elite":
+            name = "elitism"
+        elif name == "survival of the young":
+            name = "age-based"
+        return name
