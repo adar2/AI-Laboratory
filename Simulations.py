@@ -110,7 +110,7 @@ def print_results(results_list):
         print(result)
 
 
-def sensitivity_comparison():
+def string_matching_sensitivity_comparison():
     # prepare run parameters
     pop_sizes = [256, 512, 1024, 2048, 4096, 8192]
     mutation_rates = [0.25, 0.5, 0.75]
@@ -171,7 +171,7 @@ def sensitivity_comparison():
                                                  iterations_performance, runtime_performance, success_counter)
                             current_line += 1
     workbook.save('Simulation Report')
-    best_iterations.sort(key=lambda x: x.iterations_mean_mean)
+    best_iterations.sort(key=lambda x: x.iterations_mean)
     best_runtime.sort(key=lambda x: x.runtime_mean)
     print("Best Iterations:")
     print_results(best_iterations)
@@ -193,4 +193,4 @@ def get_func_name(function):
 
 
 if __name__ == '__main__':
-    sensitivity_comparison()
+    string_matching_sensitivity_comparison()

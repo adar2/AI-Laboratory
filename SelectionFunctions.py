@@ -6,7 +6,7 @@ from Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS,EX
 
 
 def get_fitness_proportional_distribution(population: list) -> list:
-    # scaling done by applying sqrt function on the chromosomes fitness value
+    # scaling done by applying sqrt function on the chromosomes fitness value TODO
     result = []
     fitness_sum = 0
     population.sort(key=lambda x: x.fitness)
@@ -15,7 +15,7 @@ def get_fitness_proportional_distribution(population: list) -> list:
     for chromosome in population:
         probability = EXP_COEFFICIENT**(-chromosome.fitness) / fitness_sum
         result.append(probability)
-    # result.reverse()
+    # result.reverse() TODO: ?
     # result = list(np.cumsum(result))
     return result
 
