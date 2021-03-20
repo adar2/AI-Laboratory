@@ -32,7 +32,8 @@ class MinConflictAlgorithm:
                     return False
         return True
 
-    # given an index of the game board list,  finds other index which swapping between those minimize the number of conflicts
+    # given an index of the game board list,  finds other index which swapping between those minimize the number of
+    # conflicts
     def minimize_conflict(self, conflicted_index, conflict_size):
         # min number of conflicts
         min_conflicts = float('inf')
@@ -53,7 +54,8 @@ class MinConflictAlgorithm:
                         continue
                     if abs(k - j) == abs(self.game_board.index(k) - self.game_board.index(j)):
                         total_conflicts += 1
-            # if the number of conflicts is less then the min conflicts so far than save the number of conflicts and the swap caused it
+            # if the number of conflicts is less then the min conflicts so far than save the number of conflicts and
+            # the swap caused it
             if total_conflicts < min_conflicts:
                 min_conflicts = total_conflicts
                 minimize_index = i

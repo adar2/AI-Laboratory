@@ -10,7 +10,8 @@ from GeneticAlgorithm import SimpleGeneticAlgorithm
 from PSO import ParticleSwarmOptimization
 from StringMatching import StringMatching
 from Chromosome import Chromosome
-from numpy import copy
+from copy import copy
+from Config import get_algorithm
 
 
 def run_and_plot():
@@ -107,12 +108,14 @@ def mating_test(problem_type):
 
 if __name__ == '__main__':
     # plot_compare_pso_GA()
-    success_counter = 0
-    for i in range(5):
-        problem = NQueens(8)
-        algo = SimpleGeneticAlgorithm(2048, 16384, problem, nqueens_fitness,
-                                      mating_func, mutation_func, selection_func, survival_func)
-        algo.run()
-        if algo.solved:
-            success_counter += 1
-    print(f"Success = {success_counter}")
+    # success_counter = 0
+    # for i in range(5):
+    #     problem = NQueens([1, 2, 3, 4, 5, 6, 7, 8])
+    #     algo = SimpleGeneticAlgorithm(2048, 16384, problem, nqueens_fitness,
+    #                                   mating_func, mutation_func, selection_func, survival_func)
+    #     algo.run()
+    #     if algo.solved:
+    #         success_counter += 1
+    # print(f"Success = {success_counter}")
+    algo = get_algorithm()
+    algo.run()

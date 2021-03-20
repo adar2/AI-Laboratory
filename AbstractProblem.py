@@ -8,7 +8,7 @@ class AbstractProblem(ABC):
         self.unique = unique
 
     def get_target_size(self):
-        if isinstance(self.target, str):
+        if isinstance(self.target, str) or isinstance(self.target, list):
             return len(self.target)
         elif isinstance(self.target, int):
             return self.target
