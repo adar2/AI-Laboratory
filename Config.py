@@ -6,6 +6,11 @@ from StringMatching import StringMatching
 from NQueens import NQueens
 from KnapSack import KnapSack
 import Constants
+import FitnessFunctions
+import MatingFunctions
+import MutateFunctions
+import SelectionFunctions
+import SurvivalFunctions
 
 
 def init_config():
@@ -42,7 +47,7 @@ def init_config():
                 notes += f"// {c.upper()}\n"
     with open('config.json', 'w') as f:
         json.dump(config, f)
-        f.write(notes)
+        f.write('\n' + notes)
 
 
 def get_config():
