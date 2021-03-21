@@ -5,7 +5,7 @@ import numpy as np
 from Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS,EXP_COEFFICIENT
 
 
-def get_fitness_proportional_distribution(population: list) -> list:
+def __get_fitness_proportional_distribution(population: list) -> list:
     # scaling done by applying sqrt function on the chromosomes fitness value
     result = []
     fitness_sum = 0
@@ -24,9 +24,9 @@ def truncation_selection(population: list) -> list:
     return population[:truncate_size]
 
 
-def rws(population: list) -> list:
+def roulette_wheel_selection(population: list) -> list:
     selected = []
-    fpd = get_fitness_proportional_distribution(population)
+    fpd = __get_fitness_proportional_distribution(population)
     fpd = list(np.cumsum(fpd))
     offspring = int(len(population) * PCT_OF_PARENT)
     for i in range(offspring):
@@ -38,11 +38,11 @@ def rws(population: list) -> list:
     return selected
 
 
-def sus(population: list) -> list:
+def stochastic_universal_sampling_selection(population: list) -> list:
     selected = []
     population_size = len(population)
     offspring = int(population_size * PCT_OF_PARENT)
-    fpd = get_fitness_proportional_distribution(population)
+    fpd = __get_fitness_proportional_distribution(population)
     fpd = list(np.cumsum(fpd))
     step = 1 / offspring
     start = random.uniform(0, step)
@@ -78,6 +78,6 @@ def stochastic_tournament_selection(population: list) -> list:
         participants = 2
     for i in range(offspring):
         sample = random.sample(population, participants)
-        fpd = get_fitness_proportional_distribution(sample)
+        fpd = __get_fitness_proportional_distribution(sample)
         selected.append(random.choices(sample, fpd)[0])
     return selected

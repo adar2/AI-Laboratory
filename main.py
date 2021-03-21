@@ -13,6 +13,7 @@ from Chromosome import Chromosome
 from copy import copy
 from Config import get_algorithm
 from KnapSack import KnapSack
+from MinConflictAlgorithm import MinConflictAlgorithm
 
 
 def run_and_plot():
@@ -104,7 +105,7 @@ def mating_test(problem_type):
         chrom_1 = Chromosome(problem)
         chrom_2 = Chromosome(problem)
         child = mating_func(chrom_1, chrom_2)
-        print(f'{chrom_1.data} + {chrom_2.data} = {child.data}, len={len(child.data)}')
+        print(f'{chrom_1.data} + {chrom_2.data} = {child.search_space}, len={len(child.search_space)}')
 
 
 if __name__ == '__main__':
@@ -112,10 +113,19 @@ if __name__ == '__main__':
     from FitnessFunctions import knapsack_closest_fitness as knapsack
     from MatingFunctions import single_point_crossover as single
     from MutateFunctions import flip_mutation as flip
+
     # p2 = KnapSack()
     # problem = KnapSack(165, [23, 31, 29, 44, 53, 38, 63, 85, 89, 82], [92, 57, 49, 68, 60, 43, 67, 84, 87, 72])
     # algo = SimpleGeneticAlgorithm(200, 1000, problem, knapsack,
     #                               single, flip, selection_func, survival_func)
     # algo.run()
-    algo = get_algorithm()
-    algo.run()
+    # algo = get_algorithm()
+    # algo.run()
+    success = 0
+    total = 0
+    for i in range(100):
+        algo = MinConflictAlgorithm(8, 2000)
+        algo.run()
+        if algo.solved:
+            success += 1
+    print(success / 100)

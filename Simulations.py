@@ -117,7 +117,7 @@ def create_simulation_report():
     pop_sizes = [256, 512, 1024]
     mutation_rates = [0.25, 0.5, 0.75]
     selection_functions = [SelectionFunctions.truncation_selection, SelectionFunctions.stochastic_tournament_selection,
-                           SelectionFunctions.rws, SelectionFunctions.sus]
+                           SelectionFunctions.roulette_wheel_selection, SelectionFunctions.stochastic_universal_sampling_selection]
     mating_functions = [ordered_crossover, partially_matched_crossover]
     mutation_functions = [exchange_mutation, insertion_mutation, inversion_mutation, displacement_mutation]
     survival_functions = [survival_of_the_elite, survival_of_the_young]
