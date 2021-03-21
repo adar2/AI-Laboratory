@@ -43,3 +43,6 @@ class KnapSack(AbstractProblem):
     # returns list of tuples each tuple represents (item value,item weight)
     def get_search_space(self):
         return [(self.profits[i], self.weights[i]) for i in range(len(self.profits))]
+
+    def printable_data(self, data: list):
+        return ''.join(f'{c},' for c in data)

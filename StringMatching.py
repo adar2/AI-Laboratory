@@ -14,3 +14,6 @@ class StringMatching(AbstractProblem):
 
     def get_search_space(self):
         return self.search_space
+
+    def printable_data(self, data: list):
+        return ''.join(c for c in data)

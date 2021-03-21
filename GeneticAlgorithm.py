@@ -17,7 +17,7 @@ class SimpleGeneticAlgorithm:
         # chromosome population list
         self.population = list()
         # chromosome next generation list
-        self.buffer = None
+        self.buffer = list()
         # best chromosome so far
         self.best = None
         # the search space from which the initial states are constructed from
@@ -117,7 +117,7 @@ class SimpleGeneticAlgorithm:
             self.number_of_iterations += 1
             self.calc_fitness()
             self.best = min(self.population, key=lambda x: x.fitness)
-            print(f'Current Best: {self.best.data} , {self.best.fitness}')
+            print(f'Current Best: {self.problem.printable_data(self.best.data)} , {self.best.fitness}')
             print(f"Clock ticks: {int((time.time() - self.current_time) * Constants.CLOCK_RATE)}")
             self.current_time = time.time()
             # goal test

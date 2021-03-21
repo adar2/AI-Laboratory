@@ -1,5 +1,6 @@
-from random import randint, choice, uniform
 from copy import deepcopy
+from random import randint, choice
+
 from Chromosome import Chromosome
 
 

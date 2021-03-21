@@ -8,3 +8,7 @@ class AbstractProblem(ABC):
     @abstractmethod
     def get_search_space(self):
         raise NotImplementedError
+
+    @abstractmethod
+    def printable_data(self, data: list):
+        raise NotImplementedError
