@@ -2,7 +2,6 @@ import string
 from copy import deepcopy as dc
 from random import random, choice, uniform
 import time
-
 from Particle import Particle
 
 
@@ -15,7 +14,7 @@ class ParticleSwarmOptimization:
         # swarm global best, tuple (global_best_position,global_best_fitness)
         self.global_best = (None, None)
         # search space is printable ascii characters without /t/n/r
-        self.search_space = dc(string.printable[:-6])
+        self.search_space = dc(string.printable[:-5])
         # the swarm target
         self.target = target
         # position vector of the target

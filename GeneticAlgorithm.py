@@ -115,7 +115,7 @@ class SimpleGeneticAlgorithm:
             self.number_of_iterations += 1
             self.calc_fitness()
             self.best = min(self.population, key=lambda x: x.fitness)
-            print(f'Current Best: {self.best.search_space} , {self.best.fitness}')
+            print(f'Current Best: {self.best.data} , {self.best.fitness}')
             print(f"Clock ticks: {int((time.time() - self.current_time) * Constants.CLOCK_RATE)}")
             self.current_time = time.time()
             # goal test

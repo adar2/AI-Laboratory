@@ -1,5 +1,6 @@
-from Constants import OLD_AGE, ELITE_RATE
 from numpy import copy
+
+from Constants import OLD_AGE
 
 
 def survival_of_the_young(population: list, elite_rate: float) -> list:

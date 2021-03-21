@@ -5,7 +5,7 @@ def absolute_distance_fitness(chromosome):
     chromosome.fitness = 0
     target = chromosome.problem.target
     for i in range(len(target)):
-        chromosome.fitness += abs(ord(chromosome.search_space[i]) - ord(target[i]))
+        chromosome.fitness += abs(ord(chromosome.data[i]) - ord(target[i]))
 
 
 def pso_distance_fitness(particle, target):
@@ -16,7 +16,7 @@ def pso_distance_fitness(particle, target):
 
 def n_queens_conflicts_fitness(chromosome):
     total_conflicts = 0
-    game_board = chromosome.search_space
+    game_board = chromosome.data
     for i in game_board:
         for j in game_board:
             if i == j:
@@ -29,10 +29,10 @@ def n_queens_conflicts_fitness(chromosome):
 def knapsack_closest_fitness(chromosome):
     capacity = chromosome.problem.get_capacity()
     max_sum = chromosome.problem.get_max_value()
-    while chromosome.problem.calc_capacity(chromosome.search_space) > capacity:
-        rnd_index = random.randint(0, len(chromosome.search_space) - 1)
-        chromosome.search_space[rnd_index] = 0
-    chromosome.fitness = max_sum - chromosome.problem.calc_knapsack_value(chromosome.search_space)
+    while chromosome.problem.calc_capacity(chromosome.data) > capacity:
+        rnd_index = random.randint(0, len(chromosome.data) - 1)
+        chromosome.data[rnd_index] = 0
+    chromosome.fitness = max_sum - chromosome.problem.calc_knapsack_value(chromosome.data)
 
 
 def bullseye_fitness(chromosome):
@@ -43,8 +43,8 @@ def bullseye_fitness(chromosome):
 
     target_hash = create_char_dict_from_collection(target)
 
-    for i in range(len(chromosome.search_space)):
-        current_char = chromosome.search_space[i]
+    for i in range(len(chromosome.data)):
+        current_char = chromosome.data[i]
         if current_char in target_hash.keys():
             if target[i] == current_char:
                 chromosome.fitness -= BONUS_LEVEL_2

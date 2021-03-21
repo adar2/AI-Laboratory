@@ -57,16 +57,16 @@ def partially_matched_crossover(parent_1: Chromosome, parent_2: Chromosome):
 
 
 def __generate_offsprings(num_1, num_2, parent_1, parent_2):
-    parent_1_num_1_index = parent_1.search_space.index(num_1)
-    parent_1_num_2_index = parent_1.search_space.index(num_2)
-    parent_2_num_1_index = parent_1.search_space.index(num_1)
-    parent_2_num_2_index = parent_1.search_space.index(num_2)
-    offspring_1_data = deepcopy(parent_1.search_space)
+    parent_1_num_1_index = parent_1.data.index(num_1)
+    parent_1_num_2_index = parent_1.data.index(num_2)
+    parent_2_num_1_index = parent_1.data.index(num_1)
+    parent_2_num_2_index = parent_1.data.index(num_2)
+    offspring_1_data = deepcopy(parent_1.data)
     offspring_1_data[parent_1_num_1_index], offspring_1_data[parent_1_num_2_index] = offspring_1_data[
                                                                                          parent_1_num_2_index], \
                                                                                      offspring_1_data[
                                                                                          parent_1_num_1_index]
-    offspring_2_data = deepcopy(parent_2.search_space)
+    offspring_2_data = deepcopy(parent_2.data)
     offspring_2_data[parent_2_num_1_index], offspring_2_data[parent_2_num_2_index] = offspring_2_data[
                                                                                          parent_2_num_2_index], \
                                                                                      offspring_2_data[
