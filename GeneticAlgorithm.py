@@ -45,6 +45,8 @@ class SimpleGeneticAlgorithm:
 
     # initialize random chromosomes
     def init_population(self):
+        self.population.clear()
+        self.buffer.clear()
         for i in range(self.pop_size):
             chromosome = Chromosome(self.problem)
             chromosome.age = random.randint(0, Constants.MAX_RANDOM_AGE)

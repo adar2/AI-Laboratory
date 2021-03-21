@@ -19,6 +19,8 @@ class MinConflictAlgorithm:
         self.solved = False
         # list which represents the game board , initialized with numbers [0 to size -1]
         self.game_board = [i for i in range(self.size)]
+
+    def init_game_board(self):
         # shuffle the game board inorder to start from random arrangement
         random.shuffle(self.game_board)
 
@@ -68,6 +70,7 @@ class MinConflictAlgorithm:
                                                                                  self.game_board[conflicted_index]
 
     def run(self):
+        self.init_game_board()
         # conflicted pieces list
         conflicted = []
         # iterate until max iterations reached
@@ -100,4 +103,3 @@ class MinConflictAlgorithm:
                 self.minimize_conflict(random_conflict, total_conflicts)
                 conflicted.clear()
         self.time_elapsed = time.time() - self.time_elapsed
-
