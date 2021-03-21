@@ -15,9 +15,21 @@ class SimulationResult:
         self.fitness_function = fitness_function
         self.size = size
         self.problem = problem
-        self.iterations_mean = mean(iterations)
+        if iterations is not None:
+            if len(iterations) > 0:
+                self.iterations_mean = mean(iterations)
+            else:
+                self.iterations_mean = 0
+        else:
+            self.iterations_mean = 0
         self.iterations_data = iterations
-        self.runtime_mean = mean(runtimes)
+        if runtimes is not None:
+            if len(runtimes) > 0:
+                self.runtime_mean = mean(runtimes)
+            else:
+                self.runtime_mean = 0
+        else:
+            self.runtime_mean = 0
         self.runtime_data = runtimes
 
     def __str__(self) -> str:

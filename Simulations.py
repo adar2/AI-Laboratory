@@ -19,6 +19,7 @@ from FitnessFunctions import bullseye_fitness, n_queens_conflicts_fitness
 import SelectionFunctions
 from matplotlib import pyplot as plt
 from statistics import mean
+from MinConflictAlgorithm import MinConflictAlgorithm
 import xlwt
 
 
@@ -82,8 +83,10 @@ def add_results_to_sheet(stats, line, size, mating_function, selection_function,
     stats.write(line, 5, get_func_name(mating_function))
     stats.write(line, 6, get_func_name(survival_function))
     stats.write(line, 7, f"{success_counter * 10}%")
-    stats.write(line, 8, round(mean(iterations_performance), 2))
-    stats.write(line, 9, round(mean(runtime_performance), 2))
+    if len(iterations_performance) > 0:
+        stats.write(line, 8, round(mean(iterations_performance), 2))
+    if len(runtime_performance) > 0:
+        stats.write(line, 9, round(mean(runtime_performance), 2))
 
 
 def update_best(result, best_runtime, best_iterations):
@@ -112,8 +115,59 @@ def print_results(results_list):
         i += 1
 
 
+def compare_nqueens_GA_minconflicts():
+    nqueens_for_ga = NQueens(8)
+    runs = range(100)
+    ga_1_runtimes = []
+    ga_2_runtimes = []
+    minconf_runtimes = []
+    ga_1_sucess_counter = 0
+    ga_2_sucess_counter = 0
+    minconf_sucess_counter = 0
+    for run in runs:
+        ga_1 = SimpleGeneticAlgorithm(256, 200, nqueens_for_ga, n_queens_conflicts_fitness, ordered_crossover, displacement_mutation,
+                                    SelectionFunctions.sus, survival_of_the_elite, 0.25, 0.6)
+        ga_2 = SimpleGeneticAlgorithm(256, 200, nqueens_for_ga, n_queens_conflicts_fitness, ordered_crossover, displacement_mutation,
+                                      SelectionFunctions.stochastic_tournament_selection, survival_of_the_elite, 0.25, 0.8)
+        ga_1.run()
+        ga_2.run()
+        minconf = MinConflictAlgorithm(8, 200)
+        minconf.run()
+        if ga_1.solved:
+            ga_1_sucess_counter += 1
+        ga_1_runtimes.append(ga_1.time_elapsed)
+        if ga_2.solved:
+            ga_2_sucess_counter += 1
+        ga_2_runtimes.append(ga_2.time_elapsed)
+        minconf_runtimes.append(minconf.time_elapsed)
+        if minconf.solved:
+            minconf_sucess_counter += 1
+    print(f'GA1 solved {ga_1_sucess_counter}, GA2 solved {ga_2_sucess_counter}, MinConf solved {minconf_sucess_counter}')
+    plt.plot(runs, ga_1_runtimes)
+    plt.plot(runs, ga_2_runtimes)
+    plt.plot(runs, minconf_runtimes)
+    plt.legend(['Configuration 1', 'Configuration 2', 'Min Conflicts'])
+    plt.title("Comparison between GA and Min Conflicts (8-Queens)")
+    plt.xlabel("Runs")
+    plt.ylabel("Runtime in sec")
+    plt.show()
+
+    fig = plt.figure()
+    ax = fig.add_axes([0, 0, 1, 1])
+    langs = ['Config 1', 'Config 2', 'Min Conflicts']
+    success = [ga_1_sucess_counter, ga_2_sucess_counter, minconf_sucess_counter]
+    plt.bar(langs, success)
+    plt.xlabel('Algorithms')
+    plt.ylabel('Number Of Successes')
+    plt.title('Successes out of 100 runs')
+    plt.show()
+
+
+
+
 def create_simulation_report():
     # prepare run parameters
+    # ** complete parameters for N-Queens**
     pop_sizes = [256, 512, 1024]
     mutation_rates = [0.25, 0.5, 0.75]
     selection_functions = [SelectionFunctions.truncation_selection, SelectionFunctions.stochastic_tournament_selection,
@@ -124,9 +178,18 @@ def create_simulation_report():
     elite_rates = [0.6, 0.8, 0.9]
     problem = NQueens(8)
 
+    # pop_sizes = [1024]
+    # mutation_rates = [0.25, 0.5, 0.75]
+    # selection_functions = [SelectionFunctions.truncation_selection]
+    # mating_functions = [ordered_crossover, partially_matched_crossover]
+    # mutation_functions = [exchange_mutation, insertion_mutation, inversion_mutation, displacement_mutation]
+    # survival_functions = [survival_of_the_elite]
+    # elite_rates = [0.6, 0.8]
+    # problem = NQueens(8)
+
     # prepare excel workbook
     workbook = xlwt.Workbook()
-    stats = workbook.add_sheet('NQueens_Stats')
+    stats = workbook.add_sheet('NQueens_Stats_1')
     stats.write(0, 0, 'Algorithm')
     stats.write(0, 1, 'Population Size')
     stats.write(0, 2, 'Mutation Rate')
@@ -151,7 +214,7 @@ def create_simulation_report():
                     for mutation_function in mutation_functions:
                         for survival_function in survival_functions:
                             for elite_rate in elite_rates:
-                                algo = SimpleGeneticAlgorithm(size, 16000, problem, n_queens_conflicts_fitness,
+                                algo = SimpleGeneticAlgorithm(size, 5000, problem, n_queens_conflicts_fitness,
                                                               mating_function, mutation_function, selection_function,
                                                               survival_function,
                                                               mutation_rate, elite_rate)
@@ -166,7 +229,8 @@ def create_simulation_report():
                                         iterations_performance.append(iterations)
                                         runtime_performance.append(time)
 
-                                result = SimulationResult(size, problem, bullseye_fitness, mating_function, string_mutation,
+                                result = SimulationResult(size, problem, n_queens_conflicts_fitness, mating_function,
+                                                          mutation_function,
                                                           selection_function, survival_function, mutation_rate, elite_rate,
                                                           iterations_performance, runtime_performance)
                                 update_best(result, best_runtime, best_iterations)
@@ -197,5 +261,5 @@ def get_func_name(function):
 
 
 if __name__ == '__main__':
-    create_simulation_report()
+    compare_nqueens_GA_minconflicts()
     pass

@@ -14,7 +14,7 @@ class MinConflictAlgorithm:
         # iterations counter
         self.iterations = 0
         # time elapsed for the algorithm to terminate
-        self.elapsed = time.time()
+        self.time_elapsed = time.time()
         # did we solve the problem or not
         self.solved = False
         # list which represents the game board , initialized with numbers [0 to size -1]
@@ -75,7 +75,7 @@ class MinConflictAlgorithm:
             # if we have no conflicts were done
             if self.check_goal_state():
                 self.solved = True
-                self.elapsed = time.time() - self.elapsed
+                self.time_elapsed = time.time() - self.time_elapsed
                 print(f"Solution Found : {self.game_board}")
                 return
             # total number of conflicts in the current game board
@@ -99,5 +99,5 @@ class MinConflictAlgorithm:
                 # try to swap between elements to minimize current conflicts
                 self.minimize_conflict(random_conflict, total_conflicts)
                 conflicted.clear()
-        self.elapsed = time.time() - self.elapsed
+        self.time_elapsed = time.time() - self.time_elapsed
 
