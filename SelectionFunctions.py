@@ -11,9 +11,9 @@ def __get_fitness_proportional_distribution(population: list) -> list:
     fitness_sum = 0
     population.sort(key=lambda x: x.fitness)
     for chromosome in population:
-        fitness_sum += EXP_COEFFICIENT**(-chromosome.fitness)
+        fitness_sum += EXP_COEFFICIENT**(-sqrt(chromosome.fitness))
     for chromosome in population:
-        probability = EXP_COEFFICIENT**(-chromosome.fitness) / fitness_sum
+        probability = EXP_COEFFICIENT**(-sqrt(chromosome.fitness)) / fitness_sum
         result.append(probability)
     return result
 
