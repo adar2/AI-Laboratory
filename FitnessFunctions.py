@@ -1,4 +1,5 @@
 import random
+from Chromosome import Chromosome
 
 
 def absolute_distance_fitness(chromosome):
@@ -12,6 +13,10 @@ def pso_distance_fitness(particle, target):
     particle.fitness = 0
     for i in range(len(target)):
         particle.fitness += abs(particle.position[i] - target[i])
+
+
+def CVRP_fitness(chromosome:Chromosome):
+
 
 
 def n_queens_conflicts_fitness(chromosome):

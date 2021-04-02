@@ -46,20 +46,7 @@ class Chromosome:
         elif isinstance(self.problem, CVRP):
             self.generate_truck_partition(search_space)
 
-    def generate_truck_partition(self, locations: list):
-        self.problem.get_search_space()
-        self.data = [[]]
-        index = 0
-        current_capacity = 0
-        for item in locations:
-            self.data[index].append(item)
-            current_capacity += item[DEMAND]
-            if current_capacity > self.problem.capacity:
-                self.data[index].remove(item)
-                index += 1
-                self.data.append([])
-                self.data[index].append(item)
-                current_capacity = item[DEMAND]
+
 
     # increase the chromosome age and check if its old enough to be parent
     def grow_old(self):
