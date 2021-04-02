@@ -1,4 +1,6 @@
 from random import shuffle, choice, random
+from Constants import DEMAND, COORDINATES
+from CVRP import CVRP
 from Constants import MIN_PARENT_AGE
 from KnapSack import KnapSack
 from NQueens import NQueens
@@ -41,9 +43,32 @@ class Chromosome:
                     self.data.append(1)
                 else:
                     self.data.append(0)
+        elif isinstance(self.problem, CVRP):
+            self.generate_truck_partition(search_space)
+
+    def generate_truck_partition(self, locations: list):
+        self.problem.get_search_space()
+        self.data = [[]]
+        index = 0
+        current_capacity = 0
+        for item in locations:
+            self.data[index].append(item)
+            current_capacity += item[DEMAND]
+            if current_capacity > self.problem.capacity:
+                self.data[index].remove(item)
+                index += 1
+                self.data.append([])
+                self.data[index].append(item)
+                current_capacity = item[DEMAND]
 
     # increase the chromosome age and check if its old enough to be parent
     def grow_old(self):
         self.age += 1
         if self.age >= MIN_PARENT_AGE:
             self.fit_to_be_parent = True
+
+
+if __name__ == '__main__':
+    problem = CVRP(4, [((1, 1), 2), ((2, 2), 3), ((3, 3,), 4)])
+    c = Chromosome(problem)
+    print(c)

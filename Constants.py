@@ -16,3 +16,6 @@ INERTIA_MAX = 0.9
 C1 = 2
 C2 = 2
 CLOCK_RATE = cpu_freq().current * (2 ** 20)
+
+COORDINATES = 0
+DEMAND = 1
