@@ -1,5 +1,11 @@
 import random
+from math import sqrt
 from Chromosome import Chromosome
+
+
+def __euc_distance(cords_a: tuple, cords_b: tuple):
+    X, Y = 0, 1
+    return sqrt((cords_a[X] - cords_b[X]) ** 2 + (cords_a[Y] - cords_b[Y]) ** 2)
 
 
 def absolute_distance_fitness(chromosome):
@@ -15,8 +21,17 @@ def pso_distance_fitness(particle, target):
         particle.fitness += abs(particle.position[i] - target[i])
 
 
-def CVRP_fitness(chromosome:Chromosome):
-
+def CVRP_fitness(chromosome: Chromosome):
+    trucks = chromosome.problem.generate_truck_partition(chromosome.data)
+    storage = chromosome.problem.get_search_space()[0]
+    sum = 0
+    COORDINATES = 0
+    for truck in trucks:
+        sum += __euc_distance(storage[COORDINATES], truck[0][COORDINATES])
+        for i in range(len(truck) - 1):
+            sum += __euc_distance(truck[i][COORDINATES], truck[i + 1][COORDINATES])
+        sum += __euc_distance(truck[-1][COORDINATES], storage[COORDINATES])
+    chromosome.fitness = sum
 
 
 def n_queens_conflicts_fitness(chromosome):

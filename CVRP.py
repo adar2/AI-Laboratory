@@ -12,7 +12,7 @@ class CVRP(AbstractProblem):
         return self.locations
 
     def printable_data(self, data: list):
-        pass
+        return data
 
     def generate_truck_partition(self, locations: list):
         data = [[]]

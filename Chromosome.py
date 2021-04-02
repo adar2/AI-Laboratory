@@ -5,10 +5,11 @@ from Constants import MIN_PARENT_AGE
 from KnapSack import KnapSack
 from NQueens import NQueens
 from StringMatching import StringMatching
+from AbstractProblem import AbstractProblem
 
 
 class Chromosome:
-    def __init__(self, problem, data=None):
+    def __init__(self, problem: AbstractProblem, data=None):
         # problem to solve
         self.problem = problem
         # chromosome data fitness
@@ -44,9 +45,8 @@ class Chromosome:
                 else:
                     self.data.append(0)
         elif isinstance(self.problem, CVRP):
-            self.generate_truck_partition(search_space)
-
-
+            self.data = search_space[1:]
+            shuffle(self.data)
 
     # increase the chromosome age and check if its old enough to be parent
     def grow_old(self):
