@@ -2,9 +2,9 @@ from Config import get_algorithm
 from GeneticAlgorithm import SimpleGeneticAlgorithm
 from CVRP import CVRP
 from FitnessFunctions import CVRP_fitness as fitness_func
-from MatingFunctions import partially_matched_crossover as mating_func
-from MutateFunctions import exchange_mutation as mutation_func
-from SelectionFunctions import truncation_selection as selection_func
+from MatingFunctions import ordered_crossover as mating_func
+from MutateFunctions import inversion_mutation as mutation_func
+from SelectionFunctions import deterministic_tournament_selection as selection_func
 from SurvivalFunctions import survival_of_the_elite as survival_func
 
 if __name__ == '__main__':

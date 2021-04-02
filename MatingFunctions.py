@@ -38,9 +38,12 @@ def ordered_crossover(parent_1: Chromosome, parent_2: Chromosome):
     end_index = randint(start_index, target_size - 1)
     for i in range(start_index, end_index + 1):
         child_data[i] = parent_1.data[i]
-    for item in range(len(child_data)):
+    items_to_remove = []
+    for item in parent_2_clone.data:
         if item in child_data:
-            parent_2_clone.data.remove(item)
+            items_to_remove.append(item)
+    parent_2_clone.data = [item for item in parent_2_clone.data if item not in items_to_remove]
+    # TODO: make sure it still works for NQUEENS problem
     for i in range(len(child_data)):
         if child_data[i] is None:
             child_data[i] = parent_2_clone.data[0]
