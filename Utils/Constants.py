@@ -1,4 +1,5 @@
 from psutil import cpu_freq
+
 MUTATION_RATE = 0.3
 ELITE_RATE = 0.1
 TRUNCATION_RATE = 0.5
@@ -20,8 +21,6 @@ CLOCK_RATE = cpu_freq().current * (2 ** 20)
 COORDINATES = 0
 DEMAND = 1
 
-ANNEALING_ALPHA = 0.95
-#for Tabu Search
+ANNEALING_ALPHA = 0.99
+# for Tabu Search
 INITIAL_TABU_TENURE = 10
-
-ANNEALING_ALPHA = 0.9

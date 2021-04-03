@@ -14,8 +14,8 @@ class SimAnneal(BaseIterativeLocalSearch):
         super().__init__(problem, max_iter)
         self.temperature = temperature
 
-    def neighbour_config(self, current_config):
-        neighbourhood = random_move_neighborhood(current_config)
+    def neighbour_config(self):
+        neighbourhood = random_move_neighborhood(self.current_config)
         return choice(neighbourhood)
 
     def calc_temp(self) -> float:
@@ -23,24 +23,28 @@ class SimAnneal(BaseIterativeLocalSearch):
 
     def run(self):
         self.current_config = self.init_config()
+        self.current_config_cost = self.cost(self.current_config)
         self.best_config = self.current_config
+        self.best_config_cost = self.current_config_cost
         for i in range(self.max_iter):
-            print(f"best config : {self.best_config} , cost: {self.cost(self.best_config)}")
-            self.proposed_config = self.neighbour_config(self.current_config)
+            print(f"best config cost: {self.best_config_cost}")
+            self.proposed_config = self.neighbour_config()
             self.temperature = self.calc_temp()
             improvement_delta = self.cost(self.proposed_config) - self.cost(self.current_config)
             if improvement_delta <= 0:
                 self.current_config = self.proposed_config
-                if self.cost(self.current_config) < self.cost(self.best_config):
+                self.current_config_cost = self.cost(self.current_config)
+                if self.current_config_cost < self.best_config_cost:
                     self.best_config = self.current_config
-            elif e ** ((-improvement_delta) / self.temperature) > random():
+                    self.best_config_cost = self.current_config_cost
+            elif e ** (-(improvement_delta / self.temperature)) > random():
                 self.current_config = self.proposed_config
         return self.best_config, self.cost(self.best_config)
 
 
 if __name__ == '__main__':
-    max_i = 100
+    max_i = 5000
     capacity, locations = parse_cvrp_file(getcwd() + '\E-n22-k4.txt')
     p = CVRP(capacity, locations)
-    s = SimAnneal(p, max_i, 1000)
+    s = SimAnneal(p, max_i, 2000)
     s.run()
