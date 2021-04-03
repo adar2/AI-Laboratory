@@ -33,11 +33,11 @@ class SimAnneal(BaseIterativeLocalSearch):
                     self.best_config = self.current_config
             elif e ** ((-improvement_delta) / self.temperature) > random():
                 self.current_config = self.proposed_config
-        # return self.best_config, self.cost(self.best_config)
+        return self.best_config, self.cost(self.best_config)
 
 
 if __name__ == '__main__':
     max_i = 100
     p = CVRP(10, [((0, 0), 0), ((0, 10), 3), ((-10, 10,), 3), ((0, -10), 3), ((10, -10), 3)])
-    s = SimAnneal(p, max_i, 10000)
+    s = SimAnneal(p, max_i, 1000)
     s.run()

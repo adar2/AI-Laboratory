@@ -20,4 +20,4 @@ CLOCK_RATE = cpu_freq().current * (2 ** 20)
 COORDINATES = 0
 DEMAND = 1
 
-ANNEALING_ALPHA = 0.9
+ANNEALING_ALPHA = 0.95
