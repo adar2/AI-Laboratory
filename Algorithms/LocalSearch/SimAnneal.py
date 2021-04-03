@@ -5,6 +5,8 @@ from Utils.Constants import ANNEALING_ALPHA
 from Algorithms.LocalSearch.Neighborhood import random_move_neighborhood
 from random import choice, random
 from math import e
+from Utils.CVRPFileParsing import parse_cvrp_file
+from os import getcwd
 
 
 class SimAnneal(BaseIterativeLocalSearch):
@@ -38,6 +40,7 @@ class SimAnneal(BaseIterativeLocalSearch):
 
 if __name__ == '__main__':
     max_i = 100
-    p = CVRP(10, [((0, 0), 0), ((0, 10), 3), ((-10, 10,), 3), ((0, -10), 3), ((10, -10), 3)])
+    capacity, locations = parse_cvrp_file(getcwd() + '\E-n22-k4.txt')
+    p = CVRP(capacity, locations)
     s = SimAnneal(p, max_i, 1000)
     s.run()
