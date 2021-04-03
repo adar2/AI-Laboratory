@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from Problems.AbstractProblem import AbstractProblem
-from Algorithms.GeneticAlgorithm.FitnessFunctions import euc_distance, cvrp_path_cost
+from Utils.UtilFunctions import euc_distance, cvrp_path_cost
 
 
 class BaseIterativeLocalSearch(ABC):
@@ -33,7 +33,7 @@ class BaseIterativeLocalSearch(ABC):
         return config
 
     @abstractmethod
-    def neighbour_config(self) -> list:
+    def neighbour_config(self, current_config) -> list:
         raise NotImplementedError
 
     def cost(self, config) -> float:

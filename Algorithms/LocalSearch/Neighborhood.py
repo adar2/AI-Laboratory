@@ -39,7 +39,8 @@ def random_move_neighborhood(solution: list) -> list:
     for i in range(3):
         moves = [__relocate, __exchange]
         selected_move = choice(moves)
-        neighborhood.append(selected_move(solution, customer))
+        for item in selected_move(solution, customer):
+            neighborhood.append(item)
         new_customer = choice(solution)
         while new_customer == customer:
             new_customer = choice(solution)
