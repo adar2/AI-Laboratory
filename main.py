@@ -16,7 +16,7 @@ if __name__ == '__main__':
     # ***Testing Configuration***
     pop_size = 100
     max_iter = 100
-    problem = CVRP(10, [((0, 0), 0), ((0, 10), 3), ((-10, 10,), 3), ((0,-10),3),((10,-10),3)])
+    problem = CVRP(10, [((0, 0), 0), ((0, 10), 3), ((-10, 10,), 3), ((0, -10), 3), ((10, -10), 3)])
 
     algo = SimpleGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
                                   mating_func, mutation_func, selection_func, survival_func)
