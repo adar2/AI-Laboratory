@@ -19,5 +19,11 @@ if __name__ == '__main__':
     max_iter = 100
     capacity, locations = parse_cvrp_file(getcwd() + '\E-n22-k4.txt')
     problem = CVRP(capacity, locations)
-    algo = TabuSearch(problem,max_iter)
-    algo.run()
+    best_count = 0
+    for i in range(100):
+        algo = TabuSearch(problem,max_iter)
+        cost = algo.run()
+        if cost == 375:
+            best_count += 1
+    print(f"Best: {best_count} times")
+

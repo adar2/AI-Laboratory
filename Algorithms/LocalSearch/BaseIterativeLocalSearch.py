@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from Problems.AbstractProblem import AbstractProblem
 from Utils.UtilFunctions import euc_distance, cvrp_path_cost
+from Utils.Constants import DEMAND, COORDINATES
 
 
 class BaseIterativeLocalSearch(ABC):
@@ -13,6 +14,7 @@ class BaseIterativeLocalSearch(ABC):
         self.best_config = None
         self.proposed_config = None
         self.best_config_cost = None
+        self.cities_dict = self.__generate_cities_dict()
 
     def init_config(self):
         COORDINATES = 0
@@ -44,3 +46,9 @@ class BaseIterativeLocalSearch(ABC):
     @abstractmethod
     def run(self):
         raise NotImplementedError
+
+    def __generate_cities_dict(self):
+        cities = {}
+        for i in range(len(self.problem.get_search_space())):
+            cities[(self.problem.get_search_space()[i][COORDINATES])] = i
+        return cities

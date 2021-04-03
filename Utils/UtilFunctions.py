@@ -17,4 +17,4 @@ def cvrp_path_cost(problem: AbstractProblem, config):
         for i in range(len(truck) - 1):
             sum += euc_distance(truck[i][COORDINATES], truck[i + 1][COORDINATES])
         sum += euc_distance(truck[-1][COORDINATES], storage[COORDINATES])
-    return sum
+    return int(sum)
