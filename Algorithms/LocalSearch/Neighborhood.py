@@ -2,8 +2,7 @@ from random import choice
 from copy import deepcopy
 
 
-def __relocate(solution: list) -> list:
-    customer = choice(solution)
+def __relocate(solution: list, customer: tuple) -> list:
     customer_index = solution.index(customer)
     results = []
     for i in range(len(solution)):
@@ -23,9 +22,8 @@ def __switch(solution: list, index_1: int, index_2: int) -> any:
     solution[index_1], solution[index_2] = solution[index_2], solution[index_1]
 
 
-def __exchange(solution: list) -> list:
+def __exchange(solution: list, customer : tuple) -> list:
     results = []
-    customer = choice(solution)
     customer_index = solution.index(customer)
     for i in range(len(solution)):
         temp_solution = deepcopy(solution)
@@ -36,7 +34,13 @@ def __exchange(solution: list) -> list:
 
 
 def random_move_neighborhood(solution: list) -> list:
-    moves = [__relocate, __exchange]
-    selected_move = choice(moves)
-    neighborhood = selected_move(solution)
+    neighborhood = []
+    customer = choice(solution)
+    for i in range(3):
+        moves = [__relocate, __exchange]
+        selected_move = choice(moves)
+        neighborhood.append(selected_move(solution, customer))
+        new_customer = choice(solution)
+        while new_customer == customer:
+            new_customer = choice(solution)
     return neighborhood
