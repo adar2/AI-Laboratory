@@ -9,8 +9,10 @@ class BaseIterativeLocalSearch(ABC):
         self.problem = problem
         self.max_iter = max_iter
         self.current_config = None
+        self.current_config_cost = None
         self.best_config = None
         self.proposed_config = None
+        self.best_config_cost = None
 
     def init_config(self):
         COORDINATES = 0
@@ -33,7 +35,7 @@ class BaseIterativeLocalSearch(ABC):
         return config
 
     @abstractmethod
-    def neighbour_config(self, current_config) -> list:
+    def neighbour_config(self) -> list:
         raise NotImplementedError
 
     def cost(self, config) -> float:
