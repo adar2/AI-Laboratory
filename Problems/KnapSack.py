@@ -1,4 +1,4 @@
-from AbstractProblem import AbstractProblem
+from Problems.AbstractProblem import AbstractProblem
 
 
 class KnapSack(AbstractProblem):

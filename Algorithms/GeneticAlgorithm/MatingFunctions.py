@@ -1,7 +1,7 @@
 from copy import deepcopy
 from random import randint, choice
 
-from Chromosome import Chromosome
+from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
 
 
 def single_point_crossover(parent_1: Chromosome, parent_2: Chromosome):

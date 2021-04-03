@@ -2,7 +2,7 @@ import random
 from math import sqrt
 import numpy as np
 
-from Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS,EXP_COEFFICIENT
+from Utils.Constants import TRUNCATION_RATE, PCT_OF_PARENT, TOURNAMENT_PARTICIPANTS,EXP_COEFFICIENT
 
 
 def __get_fitness_proportional_distribution(population: list) -> list:

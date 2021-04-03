@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from AbstractProblem import AbstractProblem
-from FitnessFunctions import euc_distance, cvrp_path_cost
+from Problems.AbstractProblem import AbstractProblem
+from Algorithms.GeneticAlgorithm.FitnessFunctions import euc_distance, cvrp_path_cost
 
 
 class BaseIterativeLocalSearch(ABC):

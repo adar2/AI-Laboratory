@@ -1,7 +1,6 @@
-from AbstractProblem import AbstractProblem
+from Problems.AbstractProblem import AbstractProblem
 from BaseIterativeLocalSearch import BaseIterativeLocalSearch
-from random import shuffle
-from CVRP import CVRP
+from Problems.CVRP import CVRP
 
 
 class SimAnneal(BaseIterativeLocalSearch):

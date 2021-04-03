@@ -1,5 +1,5 @@
-from AbstractProblem import AbstractProblem
-from Constants import DEMAND
+from Problems.AbstractProblem import AbstractProblem
+from Utils.Constants import DEMAND
 
 
 class CVRP(AbstractProblem):

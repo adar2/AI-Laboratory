@@ -1,7 +1,7 @@
 import random
 from math import sqrt
-from Chromosome import Chromosome
-from AbstractProblem import AbstractProblem
+from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
+from Problems.AbstractProblem import AbstractProblem
 
 
 def euc_distance(cords_a: tuple, cords_b: tuple):

@@ -8,18 +8,17 @@
 # - Mating Function
 # - Mutation Function
 from SimulationResult import SimulationResult
-from SurvivalFunctions import survival_of_the_elite, survival_of_the_young
-from GeneticAlgorithm import SimpleGeneticAlgorithm
-from MutateFunctions import string_mutation, inversion_mutation, exchange_mutation, insertion_mutation, displacement_mutation
-from MatingFunctions import single_point_crossover, uniform_point_crossover, multi_point_crossover, ordered_crossover, \
+from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite, survival_of_the_young
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
+from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation, exchange_mutation, insertion_mutation, displacement_mutation
+from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover, \
     partially_matched_crossover
-from StringMatching import StringMatching
-from NQueens import NQueens
-from FitnessFunctions import bullseye_fitness, n_queens_conflicts_fitness
-import SelectionFunctions
+from Problems.NQueens import NQueens
+from Algorithms.GeneticAlgorithm.FitnessFunctions import n_queens_conflicts_fitness
+from Algorithms.GeneticAlgorithm import SelectionFunctions
 from matplotlib import pyplot as plt
 from statistics import mean
-from MinConflictAlgorithm import MinConflictAlgorithm
+from Algorithms.MinConflicts.MinConflictAlgorithm import MinConflictAlgorithm
 import xlwt
 
 
@@ -126,7 +125,7 @@ def compare_nqueens_GA_minconflicts():
     minconf_sucess_counter = 0
     for run in runs:
         ga_1 = SimpleGeneticAlgorithm(256, 200, nqueens_for_ga, n_queens_conflicts_fitness, ordered_crossover, displacement_mutation,
-                                    SelectionFunctions.sus, survival_of_the_elite, 0.25, 0.6)
+                                      SelectionFunctions.stochastic_tournament_selection, survival_of_the_elite, 0.25, 0.6)
         ga_2 = SimpleGeneticAlgorithm(256, 200, nqueens_for_ga, n_queens_conflicts_fitness, ordered_crossover, displacement_mutation,
                                       SelectionFunctions.stochastic_tournament_selection, survival_of_the_elite, 0.25, 0.8)
         ga_1.run()

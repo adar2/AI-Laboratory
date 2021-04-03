@@ -1,11 +1,10 @@
-from Config import get_algorithm
-from GeneticAlgorithm import SimpleGeneticAlgorithm
-from CVRP import CVRP
-from FitnessFunctions import CVRP_fitness as fitness_func
-from MatingFunctions import ordered_crossover as mating_func
-from MutateFunctions import inversion_mutation as mutation_func
-from SelectionFunctions import deterministic_tournament_selection as selection_func
-from SurvivalFunctions import survival_of_the_elite as survival_func
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
+from Problems.CVRP import CVRP
+from Algorithms.GeneticAlgorithm.FitnessFunctions import CVRP_fitness as fitness_func
+from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover as mating_func
+from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation as mutation_func
+from Algorithms.GeneticAlgorithm.SelectionFunctions import deterministic_tournament_selection as selection_func
+from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite as survival_func
 
 if __name__ == '__main__':
     # ***Release Configuration***

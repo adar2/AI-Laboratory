@@ -1,11 +1,10 @@
 from random import shuffle, choice, random
-from Constants import DEMAND, COORDINATES
-from CVRP import CVRP
-from Constants import MIN_PARENT_AGE
-from KnapSack import KnapSack
-from NQueens import NQueens
-from StringMatching import StringMatching
-from AbstractProblem import AbstractProblem
+from Problems.CVRP import CVRP
+from Utils.Constants import MIN_PARENT_AGE
+from Problems.KnapSack import KnapSack
+from Problems.NQueens import NQueens
+from Problems.StringMatching import StringMatching
+from Problems.AbstractProblem import AbstractProblem
 
 
 class Chromosome:

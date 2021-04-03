@@ -1,9 +1,9 @@
 import random
 import time
 from math import sqrt
-from KnapSack import KnapSack
-import Constants
-from Chromosome import Chromosome
+from Problems.KnapSack import KnapSack
+from Utils import Constants
+from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
 
 
 class SimpleGeneticAlgorithm:

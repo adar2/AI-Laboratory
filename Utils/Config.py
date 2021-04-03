@@ -1,16 +1,11 @@
 import json
 import os.path
-from GeneticAlgorithm import SimpleGeneticAlgorithm
-from PSO import ParticleSwarmOptimization
-from StringMatching import StringMatching
-from NQueens import NQueens
-from KnapSack import KnapSack
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
+from Algorithms.PSO.PSO import ParticleSwarmOptimization
+from Problems.StringMatching import StringMatching
+from Problems.NQueens import NQueens
+from Problems.KnapSack import KnapSack
 import Constants
-import FitnessFunctions
-import MatingFunctions
-import MutateFunctions
-import SelectionFunctions
-import SurvivalFunctions
 
 
 def init_config():
