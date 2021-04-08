@@ -17,7 +17,6 @@ class TabuSearch(BaseIterativeLocalSearch):
             hash_key.append(self.cities_dict[location[COORDINATES]])
         return tuple(hash_key)
 
-
     def run(self):
         self.current_config = self.init_config()
         self.current_config_cost = self.cost(self.current_config)

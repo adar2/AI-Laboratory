@@ -43,7 +43,7 @@ class SimAnneal(BaseIterativeLocalSearch):
 
 
 if __name__ == '__main__':
-    max_i = 5000
+    max_i = 3
     capacity, locations = parse_cvrp_file(getcwd() + '\E-n22-k4.txt')
     p = CVRP(capacity, locations)
     s = SimAnneal(p, max_i, 2000)
