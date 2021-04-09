@@ -34,6 +34,9 @@ def add_ga_run():
     ga_sheet.write(line, 5, ga_algo.time_elapsed)
 
 
+def add_ts_run():
+    pass
+
 
 if __name__ == '__main__':
     # files = ['\E-n22-k4.txt','\E-n33-k4.txt', '\E-n51-k5.txt', '\E-n76-k8.txt', '\E-n76-k10.txt', '\E-n101-k8.txt',
@@ -64,6 +67,7 @@ if __name__ == '__main__':
         for j in range(2):
             add_ga_run()
             line += 1
+            add_ts_run()
         workbook.save("CVRP_Simulation_GA.xls")
 
 
