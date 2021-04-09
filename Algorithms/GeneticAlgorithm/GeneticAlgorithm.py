@@ -35,13 +35,14 @@ class SimpleGeneticAlgorithm:
         # number of iterations to complete
         self.number_of_iterations = 0
         # time elapsed from the beginning of run
-        self.time_elapsed = 0
+        self.elapsed_time = 0
         # current time used for calculating the number of ticks of each iteration
         self.current_time = time.time()
         # Denotes whether or not a solution was found
         self.solved = False
         self.mutation_rate = mutation_rate
         self.elite_rate = elite_rate
+        self.clock_ticks = 0
 
     # initialize random chromosomes
     def init_population(self):
@@ -95,7 +96,7 @@ class SimpleGeneticAlgorithm:
 
     # returns the number of iterations and time elapsed for each run. used to evaluate statistics.
     def get_stats(self):
-        return self.number_of_iterations, self.time_elapsed
+        return self.number_of_iterations, self.elapsed_time
 
     # check whether 90% of the population has the same fitness as optimal solution indicator
     def knapsack_check(self) -> bool:
@@ -137,8 +138,9 @@ class SimpleGeneticAlgorithm:
             self.mate(eligible_parents, survivors)
             self.swap()
             self.increase_age()
-        self.time_elapsed = round(time.time() - start_time, 2)
-        print(f"Time elapsed {self.time_elapsed}")
+        self.elapsed_time = round(time.time() - start_time, 2)
+        self.clock_ticks = self.elapsed_time*Constants.CLOCK_RATE
+        print(f"Time elapsed {self.elapsed_time}")
         return self.best
 
     # select parents using the selection function between all the chromosomes old enough to parent

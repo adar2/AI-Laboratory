@@ -2,7 +2,7 @@ from Algorithms.LocalSearch.BaseIterativeLocalSearch import BaseIterativeLocalSe
 from Problems.AbstractProblem import AbstractProblem
 from Algorithms.LocalSearch.TabuList import TabuList
 from Algorithms.LocalSearch.Neighborhood import random_move_neighborhood as get_neighborhood
-from Utils.Constants import INITIAL_TABU_TENURE, COORDINATES, DEMAND
+from Utils.Constants import INITIAL_TABU_TENURE, COORDINATES, CLOCK_RATE
 from time import process_time
 
 
@@ -48,6 +48,7 @@ class TabuSearch(BaseIterativeLocalSearch):
             self.tabu_list.update()
         print(f'Final Cost: {self.best_config_cost}')
         self.elapsed_time = round(process_time()-start_time, 2)
+        self.clock_ticks = self.elapsed_time*CLOCK_RATE
         return self.best_config_cost
 
     def neighbour_config(self) -> list:

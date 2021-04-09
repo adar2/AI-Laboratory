@@ -1,7 +1,8 @@
 import random
-
+import time
 from Utils.Constants import COORDINATES, DEMAND, ACO_ALPHA, ACO_BETA, ACO_TAU, ACO_RO, ACO_SIGMA
 from Utils.UtilFunctions import euc_distance
+from Utils.Constants import CLOCK_RATE
 
 
 class ACO:
@@ -31,6 +32,9 @@ class ACO:
                       city2 in self.cities}
         # remove the depot city index from the cities dict
         self.cities.pop(1)
+        # time elapsed from the beginning of run
+        self.elapsed_time = 0
+        self.clock_ticks = 0
 
     # calculate each city probability to be chosen next by the formula
     def __get_probabilities(self, city_index, cities):
@@ -99,12 +103,13 @@ class ACO:
             for path in paths:
                 for i in range(len(path) - 1):
                     self.pheromones[(min(path[i], path[i + 1]), max(path[i], path[i + 1]))] = (ACO_SIGMA - (
-                                elite_ant + 1) / current_cost ** (
+                            elite_ant + 1) / current_cost ** (
                                                                                                        elite_ant + 1)) + \
                                                                                               self.pheromones[(
-                                                                                              min(path[i], path[i + 1]),
-                                                                                              max(path[i],
-                                                                                                  path[i + 1]))]
+                                                                                                  min(path[i],
+                                                                                                      path[i + 1]),
+                                                                                                  max(path[i],
+                                                                                                      path[i + 1]))]
         return self.best_solution
 
     # print solution by the requested format
@@ -118,6 +123,7 @@ class ACO:
 
     # run the algorithm
     def run(self):
+        start_time = time.time()
         for i in range(self.max_iter):
             self.solutions = list()
             for _ in range(self.number_of_ants):
@@ -125,4 +131,7 @@ class ACO:
                 self.solutions.append((solution, self.calc_solution_cost(solution, self.edges)))
             self.best_solution = self.update_pheromone()
             self.print_solution()
+        self.elapsed_time = round(time.time() - start_time, 2)
+        self.clock_ticks = self.elapsed_time * CLOCK_RATE
+        print(f"Time elapsed {self.elapsed_time}")
         return self.best_solution

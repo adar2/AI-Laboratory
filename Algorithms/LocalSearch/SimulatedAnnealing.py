@@ -1,10 +1,10 @@
 from math import e
 from random import choice, random
-
+import time
 from Algorithms.LocalSearch.Neighborhood import random_move_neighborhood
 from Algorithms.LocalSearch.BaseIterativeLocalSearch import BaseIterativeLocalSearch
 from Problems.AbstractProblem import AbstractProblem
-from Utils.Constants import ANNEALING_ALPHA,SA_TEMPERATURE
+from Utils.Constants import ANNEALING_ALPHA, SA_TEMPERATURE,CLOCK_RATE
 
 
 class SimulatedAnnealing(BaseIterativeLocalSearch):
@@ -20,12 +20,15 @@ class SimulatedAnnealing(BaseIterativeLocalSearch):
         return self.temperature * ANNEALING_ALPHA
 
     def run(self):
+        start_time = time.time()
         self.current_config = self.init_config()
         self.current_config_cost = self.cost(self.current_config)
         self.best_config = self.current_config
         self.best_config_cost = self.current_config_cost
         for i in range(self.max_iter):
-            print(f"Best config cost: {self.best_config_cost} , {self.problem.printable_data(self.best_config)}")
+            print(f"Best Config: {self.problem.printable_data(self.best_config)}")
+            print(f"Best Config Cost: {self.best_config_cost}")
+            print("-----------------")
             self.proposed_config = self.neighbour_config()
             self.temperature = self.calc_temp()
             improvement_delta = self.cost(self.proposed_config) - self.cost(self.current_config)
@@ -37,5 +40,7 @@ class SimulatedAnnealing(BaseIterativeLocalSearch):
                     self.best_config_cost = self.current_config_cost
             elif e ** (-(improvement_delta / self.temperature)) > random():
                 self.current_config = self.proposed_config
+        self.elapsed_time = round(time.time() - start_time, 2)
+        self.clock_ticks = self.elapsed_time*CLOCK_RATE
+        print(f"Time elapsed {self.elapsed_time}")
         return self.best_config, self.cost(self.best_config)
-
