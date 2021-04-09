@@ -24,3 +24,11 @@ DEMAND = 1
 ANNEALING_ALPHA = 0.99
 # for Tabu Search
 INITIAL_TABU_TENURE = 10
+
+# ACO parameters
+# parameters explained in lab report
+ACO_ALPHA = 2
+ACO_BETA = 5
+ACO_SIGMA = 3
+ACO_RO = 0.8
+ACO_TAU = 80
