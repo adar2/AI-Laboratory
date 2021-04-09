@@ -132,7 +132,7 @@ class SimpleGeneticAlgorithm:
                     self.solved = True
                     break
             eligible_parents = self.select_parents()
-            if eligible_parents is None:
+            if eligible_parents is None or len(eligible_parents) == 0:
                 continue
             survivors = self.survival_function(self.population, self.elite_rate)
             self.mate(eligible_parents, survivors)
