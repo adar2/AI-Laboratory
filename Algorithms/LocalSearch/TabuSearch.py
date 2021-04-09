@@ -3,6 +3,7 @@ from Problems.AbstractProblem import AbstractProblem
 from Algorithms.LocalSearch.TabuList import TabuList
 from Algorithms.LocalSearch.Neighborhood import random_move_neighborhood as get_neighborhood
 from Utils.Constants import INITIAL_TABU_TENURE, COORDINATES, DEMAND
+from time import process_time
 
 
 class TabuSearch(BaseIterativeLocalSearch):
@@ -23,6 +24,7 @@ class TabuSearch(BaseIterativeLocalSearch):
         self.tabu_list = TabuList(len(self.current_config) / 10, INITIAL_TABU_TENURE)
         self.best_config = self.current_config
         self.best_config_cost = self.cost(self.best_config)
+        start_time = process_time()
         for i in range(self.max_iter):
             print(f"Best Config: {self.problem.printable_data(self.best_config)}")
             print(f"Best Config Cost: {self.best_config_cost}")
@@ -40,11 +42,12 @@ class TabuSearch(BaseIterativeLocalSearch):
             self.tabu_list.add(current_config_hash_key)
             if improvement_delta >= 0:
                 self.tabu_list.capacity += 1
-            elif abs(improvement_delta) > 0.1 * previous_config_cost:
+            elif abs(improvement_delta) > 0.05 * previous_config_cost:
                 self.tabu_list.capacity -= 1
                 self.tabu_list.tenure += 1
             self.tabu_list.update()
         print(f'Final Cost: {self.best_config_cost}')
+        self.elapsed_time = round(process_time()-start_time, 2)
         return self.best_config_cost
 
     def neighbour_config(self) -> list:

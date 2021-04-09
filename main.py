@@ -2,7 +2,7 @@ from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
 from Problems.CVRP import CVRP
 from Problems.NQueens import NQueens
 from Algorithms.LocalSearch.TabuSearch import TabuSearch
-from Algorithms.GeneticAlgorithm.FitnessFunctions import CVRP_fitness as fitness_func, n_queens_conflicts_fitness as nqueens_fitness
+from Algorithms.GeneticAlgorithm.FitnessFunctions import CVRP_fitness as fitness_func
 from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover as mating_func
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation as mutation_func
 from Algorithms.GeneticAlgorithm.SelectionFunctions import deterministic_tournament_selection as selection_func
@@ -55,6 +55,9 @@ if __name__ == '__main__':
     #     costs += algo.run()[1]
     # print(f"AVG RESULT: {costs/5}")
     # input('Please press any key to exit...')
+
+    #CVRP Simulated Annealing Test
+
 
 
 

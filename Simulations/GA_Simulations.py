@@ -7,7 +7,7 @@
 # - Survival Function
 # - Mating Function
 # - Mutation Function
-from SimulationResult import SimulationResult
+from GASimulationResult import GASimulationResult
 from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite, survival_of_the_young
 from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation, exchange_mutation, insertion_mutation, displacement_mutation
@@ -228,10 +228,10 @@ def create_simulation_report():
                                         iterations_performance.append(iterations)
                                         runtime_performance.append(time)
 
-                                result = SimulationResult(size, problem, n_queens_conflicts_fitness, mating_function,
-                                                          mutation_function,
-                                                          selection_function, survival_function, mutation_rate, elite_rate,
-                                                          iterations_performance, runtime_performance)
+                                result = GASimulationResult(size, problem, n_queens_conflicts_fitness, mating_function,
+                                                            mutation_function,
+                                                            selection_function, survival_function, mutation_rate, elite_rate,
+                                                            iterations_performance, runtime_performance)
                                 update_best(result, best_runtime, best_iterations)
                                 add_results_to_sheet(stats, current_line, size, mating_function, selection_function, survival_function,
                                                      mutation_rate, elite_rate,

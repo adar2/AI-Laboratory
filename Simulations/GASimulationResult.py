@@ -1,7 +1,7 @@
 from statistics import mean
 
 
-class SimulationResult:
+class GASimulationResult:
 
     def __init__(self, size, problem, fitness_function,
                  mating_function, mutation_function, selection_function, survival_function,
