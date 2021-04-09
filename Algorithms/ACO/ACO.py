@@ -1,28 +1,38 @@
 import random
-from os import getcwd
+
 from Utils.Constants import COORDINATES, DEMAND, ACO_ALPHA, ACO_BETA, ACO_TAU, ACO_RO, ACO_SIGMA
-from Problems.CVRP import CVRP
-from Utils.CVRPFileParsing import parse_cvrp_file
 from Utils.UtilFunctions import euc_distance
 
 
 class ACO:
     def __init__(self, problem, max_iter, number_of_ants):
+        # algorithm problem
         self.problem = problem
+        # maximum iterations
         self.max_iter = max_iter
+        # number of ants in colony
         self.number_of_ants = number_of_ants
+        # ants solutions list
         self.solutions = list()
+        # dictionary of cities where the key is the index of the city and the value is the city coordinates
         self.cities = {}
+        # dictionary of cities demands where the city index is the key and the demand is the value
         self.demands = {}
+        # colony best solution tuple (solution, solution cost)
         self.best_solution = None
+        # init the dictionaries
         for i in range(len(self.problem.get_search_space())):
             self.cities[i + 1] = self.problem.get_search_space()[i][COORDINATES]
             self.demands[i + 1] = self.problem.get_search_space()[i][DEMAND]
+        # dictionary of pheromones where the key is the edge (i,j) and the value is 1
         self.pheromones = {(city1, city2): 1 for city1 in self.cities for city2 in self.cities if city1 != city2}
+        # dictionary of costs where the key is the edge (i,j) and the value is the distance between city i and city j
         self.edges = {(city1, city2): euc_distance(self.cities[city1], self.cities[city2]) for city1 in self.cities for
                       city2 in self.cities}
+        # remove the depot city index from the cities dict
         self.cities.pop(1)
 
+    # calculate each city probability to be chosen next by the formula
     def __get_probabilities(self, city_index, cities):
         probabilities = list(
             ((self.pheromones[(min(other_city_index, city_index), max(other_city_index, city_index))]) ** ACO_ALPHA) * (
@@ -33,6 +43,7 @@ class ACO:
         probabilities = [prob / prob_sum for prob in probabilities]
         return probabilities
 
+    # generate ant solution using the probability function
     def find_solution(self):
         solution = list()
         cities = self.cities.copy()
@@ -55,6 +66,7 @@ class ACO:
             solution.append(path)
         return solution
 
+    # calculate an ant solution cost
     def calc_solution_cost(self, solution, edges):
         solution_cost = 0
         depot = 1
@@ -66,6 +78,7 @@ class ACO:
             solution_cost += edges[(min(last_city, depot), max(last_city, depot))]
         return solution_cost
 
+    # update the pheromone dictionary by the formula
     def update_pheromone(self):
         avg = sum((solution[1] for solution in self.solutions)) / len(self.solutions)
         self.pheromones = {city_index: (ACO_RO + ACO_TAU / avg) * pheromone_value for (city_index, pheromone_value) in
@@ -94,6 +107,7 @@ class ACO:
                                                                                                   path[i + 1]))]
         return self.best_solution
 
+    # print solution by the requested format
     def print_solution(self):
         print(f"Cost : {int(self.best_solution[1])}")
         for truck in self.best_solution[0]:
@@ -102,6 +116,7 @@ class ACO:
                 print(city_index, end=',')
             print('1')
 
+    # run the algorithm
     def run(self):
         for i in range(self.max_iter):
             self.solutions = list()
