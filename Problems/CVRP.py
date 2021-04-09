@@ -18,10 +18,12 @@ class CVRP(AbstractProblem):
         # convert city coordinates to city index
         for truck in trucks:
             printable_trucks_list.append([self.cities_dict[city[COORDINATES]] for city in truck])
-        # add depot at the beginning of first truck's route and at the end of the last truck's route
-        if printable_trucks_list[0][0] != 0:
-            printable_trucks_list[0].insert(0, 0)
-        printable_trucks_list[-1].append(0)
+        # add depot at the beginning and end of every truck's route
+        for printable_truck in printable_trucks_list:
+            if printable_truck[0] !=0:
+                printable_truck.insert(0,0)
+            if printable_truck[-1] != 0:
+                printable_truck.append(0)
         # construct final printable format
         printable_data = ""
         for i in range(len(printable_trucks_list)):

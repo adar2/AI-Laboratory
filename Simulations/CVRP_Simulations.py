@@ -15,4 +15,4 @@ from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite 
 if __name__ == '__main__':
     files = ['\E-n22-k4.txt', '\E-n22-k5.txt', '\E-n33-k4.txt', '\E-n51-k5.txt', '\E-n76-k8.txt', '\E-n76-k10.txt', '\E-n101-k8.txt',
              '\E-n101-k14.txt']
-    
+    optimal_costs = [375,835,]
