@@ -13,7 +13,6 @@ from Utils.Config import get_algorithm
 # TODO:
 # - Excel comparison
 # - Lots of BS for the report
-# - add to run config
 
 if __name__ == '__main__':
     # ***Release Configuration***
