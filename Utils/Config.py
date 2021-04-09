@@ -2,10 +2,23 @@ import json
 import os.path
 from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
 from Algorithms.PSO.PSO import ParticleSwarmOptimization
+from Algorithms.ACO.ACO import ACO
+from Algorithms.LocalSearch.TabuSearch import TabuSearch
+from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
 from Problems.StringMatching import StringMatching
 from Problems.NQueens import NQueens
 from Problems.KnapSack import KnapSack
-import Constants
+from Problems.CVRP import CVRP
+from Utils.CVRPFileParsing import parse_cvrp_file
+import Utils.Constants as Constants
+
+
+def importer(name):
+    components = name.split('.')
+    mod = __import__(components[0])
+    for comp in components[1:]:
+        mod = getattr(mod, comp)
+    return mod
 
 
 def init_config():
@@ -53,7 +66,7 @@ def get_config():
         return json.loads(clean_json)
 
 
-def get_algorithm():
+def get_algorithm(project_path):
     try:
         config = get_config()
         algorithm = config['ALGORITHM']
@@ -62,15 +75,16 @@ def get_algorithm():
         problem = config['PROBLEM']
         target = config['TARGET']
         fitness_func = config['FITNESS_FUNC']
-        fitness_func = getattr(__import__('FitnessFunctions'), fitness_func.lower())
+        importer('Algorithms.GeneticAlgorithm.FitnessFunctions')
+        fitness_func = getattr(importer('Algorithms.GeneticAlgorithm.FitnessFunctions'), fitness_func.lower())
         mating_func = config['MATING_FUNC']
-        mating_func = getattr(__import__('MatingFunctions'), mating_func.lower())
+        mating_func = getattr(importer('Algorithms.GeneticAlgorithm.MatingFunctions'), mating_func.lower())
         mutation_func = config['MUTATION_FUNC']
-        mutation_func = getattr(__import__('MutateFunctions'), mutation_func.lower())
+        mutation_func = getattr(importer('Algorithms.GeneticAlgorithm.MutateFunctions'), mutation_func.lower())
         selection_func = config['SELECTION_FUNC']
-        selection_func = getattr(__import__('SelectionFunctions'), selection_func.lower())
+        selection_func = getattr(importer('Algorithms.GeneticAlgorithm.SelectionFunctions'), selection_func.lower())
         survival_func = config['SURVIVAL_FUNC']
-        survival_func = getattr(__import__('SurvivalFunctions'), survival_func.lower())
+        survival_func = getattr(importer('Algorithms.GeneticAlgorithm.SurvivalFunctions'), survival_func.lower())
         if problem == 'STRING_MATCHING':
             problem = StringMatching(str(target))
         elif problem == 'NQUEENS':
@@ -80,6 +94,9 @@ def get_algorithm():
             weights = target[1]
             profits = target[2]
             problem = KnapSack(capacity, weights, profits)
+        elif problem == "CVRP":
+            capacity, locations = parse_cvrp_file(project_path + '\\' + target)
+            problem = CVRP(capacity, locations)
         else:
             raise KeyError
         if algorithm == 'GA':
@@ -88,6 +105,12 @@ def get_algorithm():
         elif algorithm == 'PSO':
             return ParticleSwarmOptimization(pop_size, str(target), Constants.INERTIA_MIN, Constants.INERTIA_MAX,
                                              Constants.C1, Constants.C2, max_iter, fitness_func)
+        elif algorithm == 'ACO':
+            return ACO(problem, max_iter, pop_size)
+        elif algorithm == 'TABU_SEARCH':
+            return TabuSearch(problem, max_iter)
+        elif algorithm == 'Simulated_Annealing':
+            return SimulatedAnnealing(problem, max_iter)
         else:
             raise KeyError
     except KeyError as e:

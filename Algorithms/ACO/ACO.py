@@ -24,8 +24,11 @@ class ACO:
         self.cities.pop(1)
 
     def __get_probabilities(self, city_index, cities):
-        probabilities = list(((self.pheromones[(min(other_city_index, city_index), max(other_city_index, city_index))]) ** ACO_ALPHA) * (
-                (1 / self.edges[(min(other_city_index, city_index), max(other_city_index, city_index))]) ** ACO_BETA) for other_city_index in cities)
+        probabilities = list(
+            ((self.pheromones[(min(other_city_index, city_index), max(other_city_index, city_index))]) ** ACO_ALPHA) * (
+                    (1 / self.edges[
+                        (min(other_city_index, city_index), max(other_city_index, city_index))]) ** ACO_BETA) for
+            other_city_index in cities)
         prob_sum = sum(probabilities)
         probabilities = [prob / prob_sum for prob in probabilities]
         return probabilities
@@ -65,14 +68,16 @@ class ACO:
 
     def update_pheromone(self):
         avg = sum((solution[1] for solution in self.solutions)) / len(self.solutions)
-        self.pheromones = {city_index: (ACO_RO + ACO_TAU / avg) * pheromone_value for (city_index, pheromone_value) in self.pheromones.items()}
+        self.pheromones = {city_index: (ACO_RO + ACO_TAU / avg) * pheromone_value for (city_index, pheromone_value) in
+                           self.pheromones.items()}
         self.solutions.sort(key=lambda x: x[1])
         if self.best_solution is not None:
             if self.solutions[0][1] < self.best_solution[1]:
                 self.best_solution = self.solutions[0]
             for path in self.best_solution[0]:
                 for i in range(len(path) - 1):
-                    self.pheromones[(min(path[i], path[i + 1]), max(path[i], path[i + 1]))] += ACO_SIGMA / self.best_solution[1]
+                    self.pheromones[(min(path[i], path[i + 1]), max(path[i], path[i + 1]))] += ACO_SIGMA / \
+                                                                                               self.best_solution[1]
         else:
             self.best_solution = self.solutions[0]
         for elite_ant in range(ACO_SIGMA):
@@ -80,9 +85,22 @@ class ACO:
             current_cost = self.solutions[elite_ant][1]
             for path in paths:
                 for i in range(len(path) - 1):
-                    self.pheromones[(min(path[i], path[i + 1]), max(path[i], path[i + 1]))] = (ACO_SIGMA - (elite_ant + 1) / current_cost ** (
-                            elite_ant + 1)) + self.pheromones[(min(path[i], path[i + 1]), max(path[i], path[i + 1]))]
+                    self.pheromones[(min(path[i], path[i + 1]), max(path[i], path[i + 1]))] = (ACO_SIGMA - (
+                                elite_ant + 1) / current_cost ** (
+                                                                                                       elite_ant + 1)) + \
+                                                                                              self.pheromones[(
+                                                                                              min(path[i], path[i + 1]),
+                                                                                              max(path[i],
+                                                                                                  path[i + 1]))]
         return self.best_solution
+
+    def print_solution(self):
+        print(f"Cost : {int(self.best_solution[1])}")
+        for truck in self.best_solution[0]:
+            print(f"Truck{self.best_solution[0].index(truck) + 1}: 1", end=',')
+            for city_index in truck:
+                print(city_index, end=',')
+            print('1')
 
     def run(self):
         for i in range(self.max_iter):
@@ -91,13 +109,5 @@ class ACO:
                 solution = self.find_solution()
                 self.solutions.append((solution, self.calc_solution_cost(solution, self.edges)))
             self.best_solution = self.update_pheromone()
-            print(str(i) + ":\t" + str(int(self.best_solution[1])))
+            self.print_solution()
         return self.best_solution
-
-
-if __name__ == '__main__':
-    max_i = 3
-    capacity, locations = parse_cvrp_file(getcwd() + '\E-n22-k4.txt')
-    p = CVRP(capacity, locations)
-    s = ACO(p, 1000, 22)
-    s.run()

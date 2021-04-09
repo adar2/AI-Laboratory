@@ -21,10 +21,11 @@ CLOCK_RATE = cpu_freq().current * (2 ** 20)
 COORDINATES = 0
 DEMAND = 1
 
-ANNEALING_ALPHA = 0.99
+ANNEALING_ALPHA = 0.98
 # for Tabu Search
 INITIAL_TABU_TENURE = 10
-
+# Simulated Annealing Parameters
+SA_TEMPERATURE = 2000
 # ACO parameters
 # parameters explained in lab report
 ACO_ALPHA = 2

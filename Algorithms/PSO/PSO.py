@@ -2,7 +2,7 @@ import string
 from copy import deepcopy as dc
 from random import random, choice, uniform
 import time
-from Particle import Particle
+from Algorithms.PSO.Particle import Particle
 
 
 class ParticleSwarmOptimization:
