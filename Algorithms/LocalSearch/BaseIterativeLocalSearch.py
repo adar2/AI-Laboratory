@@ -14,6 +14,7 @@ class BaseIterativeLocalSearch(ABC):
         self.best_config = None
         self.proposed_config = None
         self.best_config_cost = None
+        self.elapsed_time = None
 
 
     def init_config(self):
