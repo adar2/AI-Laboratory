@@ -5,7 +5,7 @@ from Utils.UtilFunctions import cvrp_path_cost
 
 def absolute_distance_fitness(chromosome):
     chromosome.fitness = 0
-    target = chromosome.problem.target
+    target = chromosome.cvrp_problem.target
     for i in range(len(target)):
         chromosome.fitness += abs(ord(chromosome.data[i]) - ord(target[i]))
 
@@ -33,16 +33,16 @@ def n_queens_conflicts_fitness(chromosome):
 
 
 def knapsack_closest_fitness(chromosome):
-    capacity = chromosome.problem.get_capacity()
-    max_sum = chromosome.problem.get_max_value()
-    while chromosome.problem.calc_capacity(chromosome.data) > capacity:
+    capacity = chromosome.cvrp_problem.get_capacity()
+    max_sum = chromosome.cvrp_problem.get_max_value()
+    while chromosome.cvrp_problem.calc_capacity(chromosome.data) > capacity:
         rnd_index = random.randint(0, len(chromosome.data) - 1)
         chromosome.data[rnd_index] = 0
-    chromosome.fitness = max_sum - chromosome.problem.calc_knapsack_value(chromosome.data)
+    chromosome.fitness = max_sum - chromosome.cvrp_problem.calc_knapsack_value(chromosome.data)
 
 
 def bullseye_fitness(chromosome):
-    target = chromosome.problem.target
+    target = chromosome.cvrp_problem.target
     chromosome.fitness = len(target) * 2
     BONUS_LEVEL_1 = 1
     BONUS_LEVEL_2 = 2

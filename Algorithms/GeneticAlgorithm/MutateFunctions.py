@@ -4,7 +4,7 @@ from random import randint, choice, random
 def string_mutation(chromosome):
     target_size = len(chromosome.data)
     index = randint(0, target_size - 1)
-    new_char = [choice(chromosome.problem.search_space)]
+    new_char = [choice(chromosome.cvrp_problem.search_space)]
     chromosome.data = chromosome.data[:index] + new_char + chromosome.data[index + 1:]
 
 

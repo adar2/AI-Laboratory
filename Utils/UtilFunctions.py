@@ -1,4 +1,4 @@
-from Problems.AbstractProblem import AbstractProblem
+from Problems.CVRP import AbstractProblem, CVRP
 from math import sqrt
 
 
@@ -7,7 +7,7 @@ def euc_distance(cords_a: tuple, cords_b: tuple):
     return sqrt((cords_a[X] - cords_b[X]) ** 2 + (cords_a[Y] - cords_b[Y]) ** 2)
 
 
-def cvrp_path_cost(problem: AbstractProblem, config):
+def cvrp_path_cost(problem: CVRP, config):
     trucks = problem.generate_truck_partition(config)
     storage = problem.get_search_space()[0]
     sum = 0

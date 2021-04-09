@@ -14,7 +14,7 @@ class BaseIterativeLocalSearch(ABC):
         self.best_config = None
         self.proposed_config = None
         self.best_config_cost = None
-        self.cities_dict = self.__generate_cities_dict()
+
 
     def init_config(self):
         COORDINATES = 0
@@ -47,8 +47,4 @@ class BaseIterativeLocalSearch(ABC):
     def run(self):
         raise NotImplementedError
 
-    def __generate_cities_dict(self):
-        cities = {}
-        for i in range(len(self.problem.get_search_space())):
-            cities[(self.problem.get_search_space()[i][COORDINATES])] = i
-        return cities
+

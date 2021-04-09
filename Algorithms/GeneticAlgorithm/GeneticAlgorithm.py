@@ -117,7 +117,8 @@ class SimpleGeneticAlgorithm:
             self.number_of_iterations += 1
             self.calc_fitness()
             self.best = min(self.population, key=lambda x: x.fitness)
-            print(f'Current Best: {self.problem.printable_data(self.best.data)} , {self.best.fitness}')
+            print(f'Current Best: {self.problem.printable_data(self.best.data)}')
+            print(f'Current Best Fitness: {self.best.fitness}')
             print(f"Clock ticks: {int((time.time() - self.current_time) * Constants.CLOCK_RATE)}")
             self.current_time = time.time()
             # goal test
@@ -138,7 +139,7 @@ class SimpleGeneticAlgorithm:
             self.increase_age()
         self.time_elapsed = round(time.time() - start_time, 2)
         print(f"Time elapsed {self.time_elapsed}")
-        return self.best.fitness
+        return self.best
 
     # select parents using the selection function between all the chromosomes old enough to parent
     def select_parents(self):

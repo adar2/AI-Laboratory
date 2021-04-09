@@ -14,7 +14,7 @@ class TabuSearch(BaseIterativeLocalSearch):
         # convert to tuple of (x,y,demand)
         hash_key = []
         for location in config:
-            hash_key.append(self.cities_dict[location[COORDINATES]])
+            hash_key.append(self.problem.cities_dict[location[COORDINATES]])
         return tuple(hash_key)
 
     def run(self):
@@ -24,7 +24,9 @@ class TabuSearch(BaseIterativeLocalSearch):
         self.best_config = self.current_config
         self.best_config_cost = self.cost(self.best_config)
         for i in range(self.max_iter):
-            print(f"best config : {self.best_config} , cost: {self.best_config_cost}")
+            print(f"Best Config: {self.problem.printable_data(self.best_config)}")
+            print(f"Best Config Cost: {self.best_config_cost}")
+            print("-----------------")
             self.proposed_config = self.neighbour_config()
             proposed_config_cost = self.cost(self.proposed_config)
             previous_config_cost = self.current_config_cost
