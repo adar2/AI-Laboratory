@@ -138,6 +138,7 @@ class SimpleGeneticAlgorithm:
             self.increase_age()
         self.time_elapsed = round(time.time() - start_time, 2)
         print(f"Time elapsed {self.time_elapsed}")
+        return self.best.fitness
 
     # select parents using the selection function between all the chromosomes old enough to parent
     def select_parents(self):

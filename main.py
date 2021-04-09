@@ -8,6 +8,16 @@ from Algorithms.GeneticAlgorithm.SelectionFunctions import deterministic_tournam
 from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite as survival_func
 from Utils.CVRPFileParsing import parse_cvrp_file, getcwd
 
+# TODO:
+# - Add (think about) more Heurisitics
+# - Test with all testing files (will probably work)
+# - Retest NQueens (OX mating function of GA)
+# - Print Correct output with seperation of trucks
+# - Excel comparison
+# - Lots of BS for the report
+# - add to run config
+
+
 if __name__ == '__main__':
     # ***Release Configuration***
     # algo = get_algorithm()
@@ -19,11 +29,14 @@ if __name__ == '__main__':
     max_iter = 100
     capacity, locations = parse_cvrp_file(getcwd() + '\E-n22-k4.txt')
     problem = CVRP(capacity, locations)
-    best_count = 0
-    for i in range(100):
-        algo = TabuSearch(problem,max_iter)
+    costs = []
+    for i in range (20):
+        algo = SimpleGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
+                                      mating_func, mutation_func, selection_func, survival_func)
         cost = algo.run()
-        if cost == 375:
-            best_count += 1
-    print(f"Best: {best_count} times")
+        costs.append(cost)
+    print(costs)
+    print(f"Best: {min(costs)}")
+
+
 
