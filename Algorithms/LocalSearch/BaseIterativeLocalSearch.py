@@ -16,9 +16,7 @@ class BaseIterativeLocalSearch(ABC):
         self.best_config_cost = None
         self.elapsed_time = None
 
-
     def init_config(self):
-        COORDINATES = 0
         config = []
         search_space = self.problem.get_search_space()
         current_location = search_space[0]
@@ -47,5 +45,3 @@ class BaseIterativeLocalSearch(ABC):
     @abstractmethod
     def run(self):
         raise NotImplementedError
-
-
