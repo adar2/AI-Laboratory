@@ -4,7 +4,7 @@ from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
 from Algorithms.ACO.ACO import ACO
 from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
-from Algorithms.GeneticAlgorithm.FitnessFunctions import CVRP_fitness as fitness_func
+from Algorithms.GeneticAlgorithm.FitnessFunctions import cvrp_fitness as fitness_func
 from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover as mating_func
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation as mutation_func
 from Algorithms.GeneticAlgorithm.SelectionFunctions import deterministic_tournament_selection as selection_func
@@ -26,10 +26,11 @@ if __name__ == '__main__':
     max_iter = 1000
     cvrp_problem = CVRP(capacity, locations)
     ts_algo = TabuSearch(cvrp_problem, max_iter)
-    ts_algo.run()
+    sa_algo = SimulatedAnnealing(cvrp_problem,max_iter)
+    sa_algo.run()
     print("^^^^^^^^^^^^^^^^^^^^^^^")
     print("^^^^^^^^^^^^^^^^^^^^^^^")
-    print(ts_algo.best_config_cost)
-    print(ts_algo.iterations_costs)
+    print(sa_algo.best_config_cost)
+    print(sa_algo.iterations_costs)
     print(
-        f"Iterations: {len(ts_algo.iterations_costs)}\n Last Change: Iteration number {detect_finding_iteration(ts_algo.iterations_costs)}")
+        f"Iterations: {len(sa_algo.iterations_costs)}\n Last Change: Iteration number {detect_finding_iteration(sa_algo.iterations_costs)}")
