@@ -43,6 +43,7 @@ class SimpleGeneticAlgorithm:
         self.mutation_rate = mutation_rate
         self.elite_rate = elite_rate
         self.clock_ticks = 0
+        self.iterations_costs = []
 
     # initialize random chromosomes
     def init_population(self):
@@ -124,6 +125,7 @@ class SimpleGeneticAlgorithm:
             print(f'Current Best: {self.problem.printable_data(self.best.data)}')
             print(f'Current Best Fitness: {self.best.fitness}')
             print(f"Clock ticks: {int((time.time() - self.current_time) * CLOCK_RATE)}")
+            self.iterations_costs.append(self.best.fitness)
             self.current_time = time.time()
             if last_best is None:
                 last_best = self.best.fitness
