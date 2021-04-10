@@ -70,7 +70,6 @@ def add_aco_run():
     aco_sheet.write(line, 5, aco_algo.elapsed_time)
     aco_sheet.write(line, 6, aco_algo.clock_ticks)
 
-
 if __name__ == '__main__':
     files = ['\E-n22-k4.txt','\E-n33-k4.txt', '\E-n51-k5.txt', '\E-n76-k8.txt', '\E-n76-k10.txt', '\E-n101-k8.txt',
              '\E-n101-k14.txt']

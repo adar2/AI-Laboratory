@@ -35,6 +35,7 @@ class ACO:
         # time elapsed from the beginning of run
         self.elapsed_time = 0
         self.clock_ticks = 0
+        self.iterations_cost = []
 
     # calculate each city probability to be chosen next by the formula
     def __get_probabilities(self, city_index, cities):
@@ -142,6 +143,7 @@ class ACO:
                 stuck_counter = 0
             if (stuck_counter/self.max_iter) >= STUCK_PCT:
                 break
+            self.iterations_cost.append(int(self.best_solution[1]))
         self.elapsed_time = round(time.time() - start_time, 2)
         self.clock_ticks = self.elapsed_time * CLOCK_RATE
         print(f"Time elapsed {self.elapsed_time}")

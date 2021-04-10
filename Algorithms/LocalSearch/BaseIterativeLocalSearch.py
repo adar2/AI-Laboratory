@@ -16,6 +16,10 @@ class BaseIterativeLocalSearch(ABC):
         self.best_config_cost = None
         self.elapsed_time = None
         self.clock_ticks = None
+        self.iterations_costs = []
+        self.is_stuck = False
+        self.last_config_cost = None
+        self.iterations_stuck = 0
 
     def init_config(self):
         config = []
