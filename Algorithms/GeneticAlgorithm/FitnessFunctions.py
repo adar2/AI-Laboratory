@@ -16,7 +16,7 @@ def pso_distance_fitness(particle, target):
         particle.fitness += abs(particle.position[i] - target[i])
 
 
-def CVRP_fitness(chromosome: Chromosome):
+def cvrp_fitness(chromosome: Chromosome):
     chromosome.fitness = cvrp_path_cost(chromosome.problem, chromosome.data)
 
 

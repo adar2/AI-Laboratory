@@ -1,6 +1,6 @@
 import random
 import time
-from Utils.Constants import COORDINATES, DEMAND, ACO_ALPHA, ACO_BETA, ACO_TAU, ACO_RO, ACO_SIGMA
+from Utils.Constants import COORDINATES, DEMAND, ACO_ALPHA, ACO_BETA, ACO_TAU, ACO_RO, ACO_SIGMA,STUCK_PCT
 from Utils.UtilFunctions import euc_distance
 from Utils.Constants import CLOCK_RATE
 
@@ -123,6 +123,8 @@ class ACO:
 
     # run the algorithm
     def run(self):
+        last_best = None
+        stuck_counter = 0
         start_time = time.time()
         for i in range(self.max_iter):
             self.solutions = list()
@@ -131,6 +133,15 @@ class ACO:
                 self.solutions.append((solution, self.calc_solution_cost(solution, self.edges)))
             self.best_solution = self.update_pheromone()
             self.print_solution()
+            if last_best is None:
+                last_best = self.best_solution[1]
+            if last_best == self.best_solution[1]:
+                stuck_counter += 1
+            else:
+                last_best = self.best_solution[1]
+                stuck_counter = 0
+            if (stuck_counter/self.max_iter) >= STUCK_PCT:
+                break
         self.elapsed_time = round(time.time() - start_time, 2)
         self.clock_ticks = self.elapsed_time * CLOCK_RATE
         print(f"Time elapsed {self.elapsed_time}")

@@ -4,7 +4,7 @@ from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
 from Algorithms.ACO.ACO import ACO
 from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
-from Algorithms.GeneticAlgorithm.FitnessFunctions import CVRP_fitness as fitness_func
+from Algorithms.GeneticAlgorithm.FitnessFunctions import cvrp_fitness as fitness_func
 from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover as mating_func
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation as mutation_func
 from Algorithms.GeneticAlgorithm.SelectionFunctions import deterministic_tournament_selection as selection_func

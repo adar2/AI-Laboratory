@@ -2,14 +2,14 @@ import random
 import time
 from math import sqrt
 from Problems.KnapSack import KnapSack
-from Utils import Constants
+from Utils.Constants import MUTATION_RATE,ELITE_RATE,STUCK_PCT,MAX_RANDOM_AGE,MIN_PARENT_AGE,CLOCK_RATE
 from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
 
 
 class SimpleGeneticAlgorithm:
     def __init__(self, pop_size, max_iter, problem, fitness_function=None,
                  mating_function=None, mutation_function=None, selection_function=None, survival_function=None,
-                 mutation_rate=Constants.MUTATION_RATE, elite_rate=Constants.ELITE_RATE):
+                 mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
         # population size
         self.pop_size = pop_size
         # maximum iterations to run
@@ -50,8 +50,8 @@ class SimpleGeneticAlgorithm:
         self.buffer.clear()
         for i in range(self.pop_size):
             chromosome = Chromosome(self.problem)
-            chromosome.age = random.randint(0, Constants.MAX_RANDOM_AGE)
-            if chromosome.age >= Constants.MIN_PARENT_AGE:
+            chromosome.age = random.randint(0,MAX_RANDOM_AGE)
+            if chromosome.age >= MIN_PARENT_AGE:
                 chromosome.fit_to_be_parent = True
             self.population.append(chromosome)
         self.buffer = list(self.population)
@@ -84,7 +84,7 @@ class SimpleGeneticAlgorithm:
             parent_1 = random.choice(eligible_parents)
             parent_2 = random.choice(eligible_parents)
             child = self.mating_function(parent_1, parent_2)
-            if random.random() < Constants.MUTATION_RATE:
+            if random.random() < MUTATION_RATE:
                 self.mutation_function(child)
             self.buffer.append(child)
 
@@ -112,23 +112,33 @@ class SimpleGeneticAlgorithm:
 
     # run the algorithm until max iter or match was found
     def run(self):
+        last_best = None
+        stuck_counter = 0
         start_time = time.time()
         self.init_population()
         for i in range(self.max_iter):
+            print(f"current iteration : {i + 1}")
             self.number_of_iterations += 1
             self.calc_fitness()
             self.best = min(self.population, key=lambda x: x.fitness)
             print(f'Current Best: {self.problem.printable_data(self.best.data)}')
             print(f'Current Best Fitness: {self.best.fitness}')
-            print(f"Clock ticks: {int((time.time() - self.current_time) * Constants.CLOCK_RATE)}")
+            print(f"Clock ticks: {int((time.time() - self.current_time) * CLOCK_RATE)}")
             self.current_time = time.time()
+            if last_best is None:
+                last_best = self.best.fitness
+            if last_best == self.best.fitness:
+                stuck_counter += 1
+            else:
+                last_best = self.best.fitness
+                stuck_counter = 0
             # goal test
             if isinstance(self.problem, KnapSack):
                 if self.knapsack_check():
                     self.solved = True
                     break
             else:
-                if self.best.fitness == 0:
+                if self.best.fitness == 0 or (stuck_counter/self.max_iter) >= STUCK_PCT:
                     self.solved = True
                     break
             eligible_parents = self.select_parents()
@@ -139,7 +149,7 @@ class SimpleGeneticAlgorithm:
             self.swap()
             self.increase_age()
         self.elapsed_time = round(time.time() - start_time, 2)
-        self.clock_ticks = self.elapsed_time*Constants.CLOCK_RATE
+        self.clock_ticks = self.elapsed_time*CLOCK_RATE
         print(f"Time elapsed {self.elapsed_time}")
         return self.best
 

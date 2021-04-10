@@ -1,6 +1,8 @@
 from psutil import cpu_freq
 
-MUTATION_RATE = 0.3
+STUCK_PCT = 0.25
+
+MUTATION_RATE = 0.7
 ELITE_RATE = 0.1
 TRUNCATION_RATE = 0.5
 
