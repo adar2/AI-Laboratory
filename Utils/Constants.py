@@ -1,7 +1,5 @@
 from psutil import cpu_freq
 
-STUCK_PCT = 0.25
-
 MUTATION_RATE = 0.7
 ELITE_RATE = 0.1
 TRUNCATION_RATE = 0.5
@@ -27,7 +25,7 @@ ANNEALING_ALPHA = 0.98
 # for Tabu Search
 INITIAL_TABU_TENURE = 10
 # Simulated Annealing Parameters
-SA_TEMPERATURE = 2000
+SA_TEMPERATURE = 150
 # ACO parameters
 # parameters explained in lab report
 ACO_ALPHA = 2
@@ -35,3 +33,4 @@ ACO_BETA = 5
 ACO_SIGMA = 3
 ACO_RO = 0.8
 ACO_TAU = 80
+STUCK_PCT = 0.25

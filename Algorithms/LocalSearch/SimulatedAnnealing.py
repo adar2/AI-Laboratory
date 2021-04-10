@@ -14,7 +14,8 @@ class SimulatedAnnealing(BaseIterativeLocalSearch):
 
     def neighbour_config(self):
         neighbourhood = random_move_neighborhood(self.current_config)
-        return choice(neighbourhood)
+        neighbourhood_costs = [self.cost(neighbour) for neighbour in neighbourhood]
+        return neighbourhood[neighbourhood_costs.index(min(neighbourhood_costs))]
 
     def calc_temp(self) -> float:
         return self.temperature * ANNEALING_ALPHA
@@ -50,7 +51,7 @@ class SimulatedAnnealing(BaseIterativeLocalSearch):
                 if self.current_config_cost < self.best_config_cost:
                     self.best_config = self.current_config
                     self.best_config_cost = self.current_config_cost
-            elif e ** (-(improvement_delta / self.temperature)) > random():
+            elif random() <= e ** (-(improvement_delta / self.temperature)):
                 self.current_config = self.proposed_config
         self.elapsed_time = round(time.time() - start_time, 2)
         self.clock_ticks = self.elapsed_time*CLOCK_RATE

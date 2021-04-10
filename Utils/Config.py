@@ -109,7 +109,7 @@ def get_algorithm(project_path):
             return ACO(problem, max_iter, pop_size)
         elif algorithm == 'TABU_SEARCH':
             return TabuSearch(problem, max_iter)
-        elif algorithm == 'Simulated_Annealing':
+        elif algorithm == 'SA':
             return SimulatedAnnealing(problem, max_iter)
         else:
             raise KeyError
