@@ -12,6 +12,11 @@ from Problems.CVRP import CVRP
 from Utils.CVRPFileParsing import parse_cvrp_file
 import Utils.Constants as Constants
 
+__import__('Algorithms.GeneticAlgorithm.FitnessFunctions')
+__import__('Algorithms.GeneticAlgorithm.MatingFunctions')
+__import__('Algorithms.GeneticAlgorithm.MutateFunctions')
+__import__('Algorithms.GeneticAlgorithm.SelectionFunctions')
+__import__('Algorithms.GeneticAlgorithm.SurvivalFunctions')
 
 def importer(name):
     components = name.split('.')
@@ -36,23 +41,23 @@ def init_config():
     }
 
     notes = ""
-    notes += "// Available Algorithms:\n"
-    algorithms = ['GA', 'PSO']
+    notes += "// Available Algorithms:\n\n"
+    algorithms = ['GA', 'PSO', 'ACO', 'TABU_SEARCH', 'SA']
     for a in algorithms:
-        notes += f'// {a}\n'
-    problems = ['STRING_MATCHING', 'NQUEENS', 'KNAPSACK']
-    notes += "// Available Problems:\n"
+        notes += f'// {a}\n\n'
+    problems = ['STRING_MATCHING', 'NQUEENS', 'KNAPSACK', 'CVRP']
+    notes += "// Available Problems:\n\n"
     for p in problems:
-        notes += f'// {p}\n'
+        notes += f'// {p}\n\n'
     types = [('FitnessFunctions', 'fitness'), ('MatingFunctions', 'crossover'), ('MutateFunctions', 'mutation'),
              ('SelectionFunctions', 'selection'), ('SurvivalFunctions', 'survival')]
     for t in types:
         module_name = t[0]
         key_word = t[1]
-        notes += f"// Available {module_name}:\n"
-        for c in dir(__import__(module_name)):
+        notes += f"// Available {module_name}:\n\n"
+        for c in dir(importer('Algorithms.GeneticAlgorithm.' + module_name)):
             if key_word in c:
-                notes += f"// {c.upper()}\n"
+                notes += f"// {c.upper()}\n\n"
     with open('config.json', 'w') as f:
         json.dump(config, f)
         f.write('\n' + notes)
@@ -75,7 +80,6 @@ def get_algorithm(project_path):
         problem = config['PROBLEM']
         target = config['TARGET']
         fitness_func = config['FITNESS_FUNC']
-        importer('Algorithms.GeneticAlgorithm.FitnessFunctions')
         fitness_func = getattr(importer('Algorithms.GeneticAlgorithm.FitnessFunctions'), fitness_func.lower())
         mating_func = config['MATING_FUNC']
         mating_func = getattr(importer('Algorithms.GeneticAlgorithm.MatingFunctions'), mating_func.lower())
@@ -94,7 +98,7 @@ def get_algorithm(project_path):
             weights = target[1]
             profits = target[2]
             problem = KnapSack(capacity, weights, profits)
-        elif problem == "CVRP":
+        elif problem == 'CVRP':
             capacity, locations = parse_cvrp_file(project_path + '\\' + target)
             problem = CVRP(capacity, locations)
         else:
