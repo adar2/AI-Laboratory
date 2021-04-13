@@ -46,9 +46,9 @@ class TabuSearch(BaseIterativeLocalSearch):
             self.tabu_list.add(current_config_hash_key)
             self.update_stuck(improvement_delta) # checks if we're stuck
             if improvement_delta > 0:
-                self.tabu_list.capacity += 1
-            elif abs(improvement_delta) > 0.05 * self.last_config_cost:
                 self.tabu_list.capacity -= 1
+            elif abs(improvement_delta) > 0.05 * self.last_config_cost:
+                self.tabu_list.capacity += 1
                 self.tabu_list.tenure += 1
             self.tabu_list.update()
         print(f'Final Cost: {self.best_config_cost}')

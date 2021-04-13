@@ -16,6 +16,8 @@ class TabuList():
 
     def __balance(self):
         while len(self._list) > self.capacity:
+            if len(self._list) == 1:
+                return
             self.__remove_oldest()
 
     def __remove_oldest(self):

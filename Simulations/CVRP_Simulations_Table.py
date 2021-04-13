@@ -101,13 +101,13 @@ if __name__ == '__main__':
         capacity, locations = parse_cvrp_file(getcwd() + files[i])
         cvrp_problem = CVRP(capacity, locations)
         for j in range(2):
-            add_ga_run()
+            #add_ga_run()
             add_ts_run()
-            add_sa_run()
-            add_aco_run()
+            #add_sa_run()
+            #add_aco_run()
             line += 1
-            workbook.save("CVRP_Simulation_GA.xls")
-        workbook.save("CVRP_Simulation_GA.xls")
+            workbook.save("CVRP_Simulation_TS.xls")
+        workbook.save("CVRP_Simulation_TS.xls")
 
 
 
