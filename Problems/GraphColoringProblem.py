@@ -1,4 +1,5 @@
-from AbstractProblem import AbstractProblem
+from Problems.AbstractProblem import AbstractProblem
+
 
 class GraphColoringProblem(AbstractProblem):
     def __init__(self, graph: dict, vertices: int, edges: int):
@@ -17,4 +18,4 @@ class GraphColoringProblem(AbstractProblem):
               f'Edge density: {self.density}')
 
     def calc_density(self):
-        return (2*self.edges) / (self.vertices * (self.vertices-1))
+        return (2 * self.edges) / (self.vertices * (self.vertices - 1))
