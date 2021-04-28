@@ -100,7 +100,7 @@ if __name__ == '__main__':
     for i in range(len(files)):
         capacity, locations = parse_cvrp_file(getcwd() + files[i])
         cvrp_problem = CVRP(capacity, locations)
-        for j in range(2):
+        for j in range(10):
             #add_ga_run()
             add_ts_run()
             #add_sa_run()
