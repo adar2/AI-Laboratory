@@ -39,13 +39,7 @@ class BaseCSPAlgorithm(ABC):
             # generate list of unassigned keys (vertices)
             unassigned_variable = [key for key in self.graph.keys() if key not in self.vertices_color_dict.keys()]
             return choice(unassigned_variable)
-
-    # return whether some assignment is consistent with variable constraints or not
-    def check_consistency(self, variable: int, color: int):
-        for constraint in self.constraints_dict[variable]:
-            if constraint in self.vertices_color_dict.keys() and self.vertices_color_dict[constraint] == color:
-                return False
-        return True
+        return heuristic()
 
     def get_highest_degree_in_graph(self):
         max_length = 0
