@@ -11,7 +11,8 @@ class BaseCSPAlgorithm(ABC):
         self.graph = problem.get_search_space()
         self.constraints_dict = problem.get_search_space()
         # start from two because we must have at least one color
-        self.current_color = 2
+        self.next_color = 2
+        self.current_color = 1
         self.color_groups_dict = {1: []}  # 1: [5,4,1] 2: 6,7,8
         self.vertices_color_dict = {}  # 1:2
 
@@ -52,8 +53,8 @@ class BaseCSPAlgorithm(ABC):
         self.vertices_color_dict.pop(vertex)
 
     def generate_another_color(self):
-        self.color_groups_dict[self.current_color] = []
-        self.current_color += 1
+        self.color_groups_dict[self.next_color] = []
+        self.next_color += 1
 
     @abstractmethod
     def run(self):
