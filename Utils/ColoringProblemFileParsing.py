@@ -11,6 +11,10 @@ def coloring_problem_file_parsing(file_name):
                 src_vertex = int(line.split(' ')[1])
                 dst_vertex = int(line.split(' ')[2])
                 graph[src_vertex].add(dst_vertex)
+    for src_vertex in graph:
+        for dst_vertex in graph[src_vertex]:
+            if src_vertex not in graph[dst_vertex]:
+                graph[dst_vertex].add(src_vertex)
     return graph, vertices, edges
 
 
