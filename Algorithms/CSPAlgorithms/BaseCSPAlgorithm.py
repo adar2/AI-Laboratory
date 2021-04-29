@@ -47,6 +47,14 @@ class BaseCSPAlgorithm(ABC):
                 return False
         return True
 
+    def get_highest_degree_in_graph(self):
+        max_length = 0
+        for current_vertex in self.graph:
+            length = len(self.graph[current_vertex])
+            if length > max_length:
+                max_length = length
+        return max_length
+
     # remove vertex from both dicts to reset its assignment
     def reset_vertex_assignment(self, vertex):
         self.color_groups_dict[self.vertices_color_dict[vertex]].remove(vertex)
