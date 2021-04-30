@@ -20,6 +20,8 @@ class BaseCSPAlgorithm(ABC):
         if vertex in self.vertices_color_dict.keys():
             self.color_groups_dict[self.vertices_color_dict[vertex]].remove(vertex)
         self.vertices_color_dict[vertex] = color
+        if color not in self.color_groups_dict:
+            self.color_groups_dict[color] = []
         self.color_groups_dict[color].append(vertex)
 
     # return true if assignment is complete false otherwise
