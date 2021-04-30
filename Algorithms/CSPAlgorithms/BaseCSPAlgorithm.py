@@ -41,7 +41,7 @@ class BaseCSPAlgorithm(ABC):
         return True
 
     # return some unassigned variable by some method/ heuristic
-    def select_unassigned_variable(self):
+    def select_unassigned_vertex(self):
         heuristic_func = mrv
         if heuristic_func is None:
             # generate list of unassigned keys (vertices)

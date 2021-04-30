@@ -42,7 +42,7 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
     def is_coloring_possible(self, current_coloring):
         self.domains_dict = self.generate_domains_dict(current_coloring)
         while not self.is_complete():
-            vertex = self.select_unassigned_variable()
+            vertex = self.select_unassigned_vertex()
             if len(self.domains_dict[vertex]) == 0:
                 return False
             color = choice(self.domains_dict[vertex])
