@@ -16,9 +16,22 @@ def minimum_remaining_values(vertices_color_dict: dict, legal_values_dict: dict,
         return highest_degree(vertices_degree, candidates)
 
 
-
-def least_constraining_value(vertex ,vertices_color_dict: dict, legal_values_dict: dict ):
-    pass
+def least_constraining_value(vertex, vertices_color_dict: dict, constraints_dict: dict, legal_values_dict: dict):
+    lcv = None
+    lcv_number_of_options = 0
+    for color in legal_values_dict[vertex]:
+        total_number_of_options = 0
+        for constraint in constraints_dict[vertex]:
+            if constraint in vertices_color_dict:
+                continue
+            available_values = len(legal_values_dict[constraint])
+            if color in legal_values_dict[constraint]:
+                available_values -= 1
+            total_number_of_options += available_values
+        if lcv is None or total_number_of_options > lcv_number_of_options:
+            lcv = color
+            lcv_number_of_options = total_number_of_options
+    return lcv
 
 
 def highest_degree(vertices_degree: dict, candidates: list):

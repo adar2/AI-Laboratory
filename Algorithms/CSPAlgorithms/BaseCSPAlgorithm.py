@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from random import choice
 from functools import partial
-from Heuristics import highest_degree as hd, minimum_remaining_values as mrv
+from Heuristics import least_constraining_value as lcv, minimum_remaining_values as mrv
 from Problems.AbstractProblem import AbstractProblem
 
 
@@ -48,6 +48,9 @@ class BaseCSPAlgorithm(ABC):
             unassigned_variable = [key for key in self.graph.keys() if key not in self.vertices_color_dict.keys()]
             return choice(unassigned_variable)
         return heuristic_func(self.vertices_color_dict, self.domains_dict, self.vertices_degree)
+
+    def select_value_for_vertex(self, vertex):
+        return lcv(vertex, self.vertices_color_dict, self.constraints_dict, self.domains_dict)
 
     def get_highest_degree_in_graph(self):
         max_length = 0

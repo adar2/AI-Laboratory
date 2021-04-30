@@ -34,18 +34,18 @@ class BackJumpingAlgorithm(BaseCSPAlgorithm):
 
     # method overriding
     def reset_vertex_assignment(self, vertex_1):
-        for vertex_2 in self.graph:
-            if vertex_1 in self.conflict_set_dict[vertex_2]:
-                flag = True  # if the current vertex is the only conflict
-                self.conflict_set_dict[vertex_2].remove(vertex_1)
-                vertex_color = self.vertices_color_dict[vertex_1]
-                # check whether the vertex_1 color is now available for vertex_2
-                for conflict in self.conflict_set_dict[vertex_2]:
-                    if self.vertices_color_dict[conflict] == vertex_color:
-                        flag = False
-                        break
-                if flag:
-                    self.domains_dict[vertex_2].append(vertex_color)
+        # for vertex_2 in self.graph:
+        #     if vertex_1 in self.conflict_set_dict[vertex_2]:
+        #         flag = True  # if the current vertex is the only conflict
+        #         self.conflict_set_dict[vertex_2].remove(vertex_1)
+        #         vertex_color = self.vertices_color_dict[vertex_1]
+        #         # check whether the vertex_1 color is now available for vertex_2
+        #         for conflict in self.conflict_set_dict[vertex_2]:
+        #             if self.vertices_color_dict[conflict] == vertex_color:
+        #                 flag = False
+        #                 break
+        #         if flag:
+        #             self.domains_dict[vertex_2].append(vertex_color)
         super().reset_vertex_assignment(vertex_1)
 
     # method overriding
@@ -77,33 +77,33 @@ class BackJumpingAlgorithm(BaseCSPAlgorithm):
               f',Number of assigned vertices : {len(self.vertices_color_dict)} '
               f', Number of colors : {len(self.color_groups_dict)}')
 
-        color = 1
-        while color <= max(self.color_groups_dict) and len(self.domains_dict[vertex]) > 0:
+        color = self.select_value_for_vertex(vertex)
 
-            if self.check_consistency(vertex, color) or vertex in self.vertices_color_dict:
-                if vertex not in self.vertices_color_dict:
-                    self.update_vertex(vertex, color)
+        if self.check_consistency(vertex, color) or vertex in self.vertices_color_dict:
+            if vertex not in self.vertices_color_dict:
+                self.update_vertex(vertex, color)
 
-                result, _, conflict_set = self.backjumping_search(depth_call + 1)
-                if result:
-                    return result, depth_call, conflict_set
+            result, _, conflict_set = self.backjumping_search(depth_call + 1)
+            if result:
+                return result, depth_call, conflict_set
 
-                # backjump until finding vertex contained in the conflict list
-                # assuming deepest vertex in the conflict set
+            # backjump until finding vertex contained in the conflict list
+            # assuming deepest vertex in the conflict set
 
-                if vertex in conflict_set:
-                    # update vertex conflict set
-                    conflict_set.remove(vertex)
-                    self.conflict_set_dict[vertex] = self.conflict_set_dict[vertex].union(conflict_set)
-                else:
-                    return result, depth_call, conflict_set
+            if vertex in conflict_set:
+                # update vertex conflict set
+                conflict_set.remove(vertex)
+                self.conflict_set_dict[vertex] = self.conflict_set_dict[vertex].union(conflict_set)
+            else:
+                return result, depth_call, conflict_set
 
-            color += 1
+        if vertex in self.vertices_color_dict:
+            self.reset_vertex_assignment(vertex)
         return False, depth_call, copy(self.conflict_set_dict[vertex])
 
 
 if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('le450_15a.col')
+    graph, vertices, edges = coloring_problem_file_parsing('huck.col')
     p = GraphColoringProblem(graph, vertices, edges)
     a = BackJumpingAlgorithm(p)
     a.run()
