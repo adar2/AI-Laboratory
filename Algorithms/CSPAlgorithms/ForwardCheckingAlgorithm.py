@@ -39,12 +39,6 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
                     temp_arcs_queue.put(neighbour)
         return not self.is_empty_domain_exists(domains_dict), domains_dict
 
-    def generate_domains_dict(self, max_coloring):
-        domains_dict = {}
-        for vertex in self.graph:
-            domains_dict[vertex] = list(range(1, max_coloring + 1))
-        return domains_dict
-
     def is_coloring_possible(self, current_coloring):
         self.domains_dict = self.generate_domains_dict(current_coloring)
         while not self.is_complete():
