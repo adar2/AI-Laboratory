@@ -2,9 +2,8 @@ from random import randint, choice, random
 from Chromosome import Chromosome
 
 
-def __is_in_conflict(vertex: int, chromosome:Chromosome, bad_edges_dict: dict):
-    bad_edges = bad_edges_dict[chromosome]
-    for edge in bad_edges:
+def __is_in_conflict(vertex: int, chromosome:Chromosome, bad_edges_list: list):
+    for edge in bad_edges_list:
         if edge[0] == vertex:
             return True
     return False
@@ -21,10 +20,10 @@ def __generate_adjacent_colors(chromosome, vertex):
     return colors
 
 
-def coloring_mutation(chromosome: Chromosome, coloring: int, bad_edges_dict: dict):
+def coloring_mutation(chromosome: Chromosome, coloring: int, bad_edges_list: list):
     for i in range(len(chromosome.data)):
         vertex = chromosome.data[i]
-        if __is_in_conflict(vertex, chromosome,bad_edges_dict):
+        if __is_in_conflict(vertex, chromosome, bad_edges_list):
             all_colors = list(range(1, coloring))
             adjacent_colors = __generate_adjacent_colors(chromosome, vertex)
             valid_colors = [color for color in all_colors if color not in adjacent_colors]

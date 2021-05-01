@@ -69,8 +69,9 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             parent_1 = choice(eligible_parents)
             parent_2 = choice(eligible_parents)
             child = self.mating_function(parent_1, parent_2)
+            child_bad_edges = self.__get_bad_edges()
             if random() < MUTATION_RATE:
-                self.mutation_function(child, current_coloring, bad_edges_dict)
+                self.mutation_function(child, current_coloring, child_bad_edges)
             self.buffer.append(child)
 
     def update_bad_edges(self):
