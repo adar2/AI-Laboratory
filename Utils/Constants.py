@@ -1,7 +1,7 @@
 from psutil import cpu_freq
 
-MUTATION_RATE = 0.7
-ELITE_RATE = 0.1
+MUTATION_RATE = 0.6
+ELITE_RATE = 0.2
 TRUNCATION_RATE = 0.5
 
 MIN_PARENT_AGE = 2
