@@ -5,7 +5,7 @@ import Algorithms.GeneticAlgorithm.MatingFunctions as MatingFunctions
 import Algorithms.GeneticAlgorithm.MutateFunctions as MutateFunctions
 import Algorithms.GeneticAlgorithm.SelectionFunctions as SelectionFunctions
 import Algorithms.GeneticAlgorithm.SurvivalFunctions as SurvivalFunctions
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
 from Algorithms.PSO.PSO import ParticleSwarmOptimization
 from Algorithms.ACO.ACO import ACO
 from Algorithms.LocalSearch.TabuSearch import TabuSearch
@@ -96,8 +96,8 @@ def get_algorithm(project_path):
         else:
             raise KeyError
         if algorithm == 'GA':
-            return SimpleGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
-                                          mating_func, mutation_func, selection_func, survival_func)
+            return GeneticAlgorithmBase(pop_size, max_iter, problem, fitness_func,
+                                        mating_func, mutation_func, selection_func, survival_func)
         elif algorithm == 'PSO':
             return ParticleSwarmOptimization(pop_size, str(target), Constants.INERTIA_MIN, Constants.INERTIA_MAX,
                                              Constants.C1, Constants.C2, max_iter, fitness_func)

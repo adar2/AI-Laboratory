@@ -3,7 +3,7 @@ from Utils.CVRPFileParsing import parse_cvrp_file, getcwd
 from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
 from Algorithms.ACO.ACO import ACO
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
 from Algorithms.GeneticAlgorithm.FitnessFunctions import cvrp_fitness as fitness_func
 from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover as mating_func
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation as mutation_func
@@ -24,8 +24,8 @@ def init_sheet(sheet):
 
 
 def add_ga_run():
-    ga_algo = SimpleGeneticAlgorithm(pop_size, max_iter, cvrp_problem, fitness_func,
-                                     mating_func, mutation_func, selection_func, survival_func)
+    ga_algo = GeneticAlgorithmBase(pop_size, max_iter, cvrp_problem, fitness_func,
+                                   mating_func, mutation_func, selection_func, survival_func)
     ga_algo.run()
     ga_sheet.write(line, 0, "GA")
     ga_sheet.write(line, 1, files[i])

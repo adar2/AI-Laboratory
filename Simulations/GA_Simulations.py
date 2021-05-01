@@ -9,7 +9,7 @@
 # - Mutation Function
 from GASimulationResult import GASimulationResult
 from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite, survival_of_the_young
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation, exchange_mutation, insertion_mutation, displacement_mutation
 from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover, \
     partially_matched_crossover
@@ -124,10 +124,10 @@ def compare_nqueens_GA_minconflicts():
     ga_2_sucess_counter = 0
     minconf_sucess_counter = 0
     for run in runs:
-        ga_1 = SimpleGeneticAlgorithm(256, 200, nqueens_for_ga, n_queens_conflicts_fitness, ordered_crossover, displacement_mutation,
-                                      SelectionFunctions.stochastic_tournament_selection, survival_of_the_elite, 0.25, 0.6)
-        ga_2 = SimpleGeneticAlgorithm(256, 200, nqueens_for_ga, n_queens_conflicts_fitness, ordered_crossover, displacement_mutation,
-                                      SelectionFunctions.stochastic_tournament_selection, survival_of_the_elite, 0.25, 0.8)
+        ga_1 = GeneticAlgorithmBase(256, 200, nqueens_for_ga, n_queens_conflicts_fitness, ordered_crossover, displacement_mutation,
+                                    SelectionFunctions.stochastic_tournament_selection, survival_of_the_elite, 0.25, 0.6)
+        ga_2 = GeneticAlgorithmBase(256, 200, nqueens_for_ga, n_queens_conflicts_fitness, ordered_crossover, displacement_mutation,
+                                    SelectionFunctions.stochastic_tournament_selection, survival_of_the_elite, 0.25, 0.8)
         ga_1.run()
         ga_2.run()
         minconf = MinConflictAlgorithm(8, 200)
@@ -213,10 +213,10 @@ def create_simulation_report():
                     for mutation_function in mutation_functions:
                         for survival_function in survival_functions:
                             for elite_rate in elite_rates:
-                                algo = SimpleGeneticAlgorithm(size, 5000, problem, n_queens_conflicts_fitness,
-                                                              mating_function, mutation_function, selection_function,
-                                                              survival_function,
-                                                              mutation_rate, elite_rate)
+                                algo = GeneticAlgorithmBase(size, 5000, problem, n_queens_conflicts_fitness,
+                                                            mating_function, mutation_function, selection_function,
+                                                            survival_function,
+                                                            mutation_rate, elite_rate)
                                 iterations_performance = []
                                 runtime_performance = []
                                 success_counter = 0

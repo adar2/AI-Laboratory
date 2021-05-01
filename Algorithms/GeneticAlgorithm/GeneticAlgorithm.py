@@ -4,9 +4,10 @@ from math import sqrt
 from Problems.KnapSack import KnapSack
 from Utils.Constants import MUTATION_RATE,ELITE_RATE,STUCK_PCT,MAX_RANDOM_AGE,MIN_PARENT_AGE,CLOCK_RATE
 from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
+from abc import ABC, abstractmethod
 
 
-class SimpleGeneticAlgorithm:
+class GeneticAlgorithmBase:
     def __init__(self, pop_size, max_iter, problem, fitness_function=None,
                  mating_function=None, mutation_function=None, selection_function=None, survival_function=None,
                  mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
@@ -112,48 +113,31 @@ class SimpleGeneticAlgorithm:
         return False
 
     # run the algorithm until max iter or match was found
+    @abstractmethod
     def run(self):
-        last_best = None
-        stuck_counter = 0
-        start_time = time.time()
-        self.init_population()
-        for i in range(self.max_iter):
-            print(f"current iteration : {i + 1}")
-            self.number_of_iterations += 1
-            self.calc_fitness()
-            self.best = min(self.population, key=lambda x: x.fitness)
-            print(f'Current Best: {self.problem.printable_data(self.best.data)}')
-            print(f'Current Best Fitness: {self.best.fitness}')
-            print(f"Clock ticks: {int((time.time() - self.current_time) * CLOCK_RATE)}")
-            self.iterations_costs.append(self.best.fitness)
-            self.current_time = time.time()
-            if last_best is None:
-                last_best = self.best.fitness
-            if last_best == self.best.fitness:
-                stuck_counter += 1
-            else:
-                last_best = self.best.fitness
-                stuck_counter = 0
-            # goal test
-            if isinstance(self.problem, KnapSack):
-                if self.knapsack_check():
-                    self.solved = True
-                    break
-            else:
-                if self.best.fitness == 0 or (stuck_counter/self.max_iter) >= STUCK_PCT:
-                    self.solved = True
-                    break
-            eligible_parents = self.select_parents()
-            if eligible_parents is None or len(eligible_parents) == 0:
-                continue
-            survivors = self.survival_function(self.population, self.elite_rate)
-            self.mate(eligible_parents, survivors)
-            self.swap()
-            self.increase_age()
+        raise NotImplementedError
+
+    def update_time_stats(self, start_time):
         self.elapsed_time = round(time.time() - start_time, 2)
-        self.clock_ticks = self.elapsed_time*CLOCK_RATE
-        print(f"Time elapsed {self.elapsed_time}")
-        return self.best
+        self.clock_ticks = self.elapsed_time * CLOCK_RATE
+
+    def is_solved_or_stuck(self, stuck_counter):
+        return self.best.fitness == 0 or (stuck_counter / self.max_iter) >= STUCK_PCT
+
+    def update_stuck_counter(self, last_best, stuck_counter):
+        if last_best is None:
+            last_best = self.best.fitness
+        if last_best == self.best.fitness:
+            stuck_counter += 1
+        else:
+            last_best = self.best.fitness
+            stuck_counter = 0
+        return stuck_counter, last_best
+
+    def print_current_state(self):
+        print(f'Current Best: {self.problem.printable_data(self.best.data)}')
+        print(f'Current Best Fitness: {self.best.fitness}')
+        print(f"Clock ticks: {int((time.time() - self.current_time) * CLOCK_RATE)}")
 
     # select parents using the selection function between all the chromosomes old enough to parent
     def select_parents(self):

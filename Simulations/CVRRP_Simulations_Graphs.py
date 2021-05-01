@@ -3,7 +3,7 @@ from Utils.CVRPFileParsing import parse_cvrp_file, getcwd
 from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
 from Algorithms.ACO.ACO import ACO
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import SimpleGeneticAlgorithm
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
 from Algorithms.GeneticAlgorithm.FitnessFunctions import cvrp_fitness as fitness_func
 from Algorithms.GeneticAlgorithm.MatingFunctions import partially_matched_crossover as mating_func
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation as mutation_func
@@ -49,8 +49,8 @@ def compare_between_iteration_numbers():
             aco_algo = ACO(cvrp_problem, max_iter, 25)
             aco_algo.run()
             aco_solutions.append(aco_algo.best_solution[1])
-            ga_algo = SimpleGeneticAlgorithm(500, max_iter, cvrp_problem, fitness_func,
-                                             mating_func, mutation_func, selection_func, survival_func)
+            ga_algo = GeneticAlgorithmBase(500, max_iter, cvrp_problem, fitness_func,
+                                           mating_func, mutation_func, selection_func, survival_func)
             ga_algo.run()
             ga_solutions.append(ga_algo.best.fitness)
         aco_file.write(f"{aco_solutions}\n")

@@ -1,6 +1,5 @@
 from BaseCSPAlgorithm import BaseCSPAlgorithm
 from Problems.AbstractProblem import AbstractProblem
-from random import choice
 from copy import copy
 from queue import Queue
 from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
@@ -23,7 +22,6 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
                 current_coloring += 1
             else:
                 print(f'Coloring with {current_coloring} colors succeeded!')
-                current_coloring -= 1
                 break
         print(f'Chromatic number: {current_coloring}')
         return current_coloring
@@ -31,8 +29,6 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
     def is_arc_consistent(self, domains_dict):
         temp_arcs_queue = self.generate_arcs_queue()
         while not temp_arcs_queue.empty():
-            # if self.is_empty_domain_exists(domains_dict):
-            #     return False, domains_dict
             current_arc = temp_arcs_queue.get()  # returns a tuple x,y
             if self.remove_incosistent_items(current_arc, domains_dict):
                 for neighbour in self.get_all_neighbours_of_vertex(current_arc[0]):
@@ -45,13 +41,13 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
             vertex = self.select_unassigned_vertex()
             if len(self.domains_dict[vertex]) == 0:
                 return False
-            color = choice(self.domains_dict[vertex])
+            color = self.select_value_for_vertex(vertex)
             success, updated_domain = self.forward_check(vertex, color, copy(self.domains_dict))
             while not success:
                 self.domains_dict[vertex].remove(color)
                 if len(self.domains_dict[vertex]) == 0:
                     return False
-                color = choice(self.domains_dict[vertex])
+                color = self.select_value_for_vertex(vertex)
                 success, updated_domain = self.forward_check(vertex, color, copy(self.domains_dict))
             self.update_vertex(vertex, color)
             self.domains_dict = updated_domain
@@ -111,7 +107,7 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
 
 
 if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('le450_15a.col')
+    graph, vertices, edges = coloring_problem_file_parsing('mulsol.i.5.col')
     problem = GraphColoringProblem(graph, vertices, edges)
     algo = ForwardCheckingAlgorithm(problem)
     algo.run()
