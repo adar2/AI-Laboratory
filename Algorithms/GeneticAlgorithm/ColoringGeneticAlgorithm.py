@@ -71,7 +71,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             parent_1 = choice(eligible_parents)
             parent_2 = choice(eligible_parents)
             child = self.mating_function(parent_1, parent_2)
-            child_bad_edges = self.__get_bad_edges()
+            child_bad_edges = self.__get_bad_edges(child)
             if random() < MUTATION_RATE:
                 self.mutation_function(child, current_coloring, child_bad_edges)
             self.buffer.append(child)
@@ -111,9 +111,23 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         print(f"Average fitness: {avg_fitness}")
         print(f"Standard Deviation: {standard_dev}")
 
+    def __get_bad_edges(self, chromosome):
+        bad_edges = []
+        data = chromosome.data
+        for vertex in range(len(data)):
+            for constraint_vertex in self.constraints_dict[vertex + 1]:
+                # avoid adding the bad edge from both sides
+                if data[vertex] == data[constraint_vertex - 1] and (constraint_vertex - 1, vertex) not in bad_edges:
+                    bad_edges.append((vertex, constraint_vertex - 1))
+        return bad_edges
+
+    def print_current_state(self):
+        print(f'Current Best: {self.current_coloring + 1}')
+        print(f'Current Best Fitness: {self.best.fitness}')
+
 
 if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('huck.col')
+    graph, vertices, edges = coloring_problem_file_parsing('le450_5a.col')
     p = GraphColoringProblem(graph, vertices, edges)
-    a = ColoringGeneticAlgorithm(50, 50, p)
+    a = ColoringGeneticAlgorithm(50, 1000, p)
     a.run()
