@@ -16,24 +16,21 @@ def __generate_adjacent_colors(chromosome, vertex):
     adjacent_vertices = graph[vertex]
     for adjacent_vertex in adjacent_vertices:
         # the color of every vertex can be found in the current coloring under index: vertex_number-1
-        colors.append(chromosome_coloring[adjacent_vertex-1])
+        colors.append(chromosome_coloring[adjacent_vertex - 1])
     return colors
 
 
-def coloring_mutation(chromosome:Chromosome, coloring:int, bad_edges_list: list):
+def coloring_mutation(chromosome: Chromosome, coloring: int, bad_edges_list: list):
     for i in range(len(chromosome.data)):
         vertex = chromosome.data[i]
         if __is_in_conflict(vertex, bad_edges_list):
-            all_colors = list(range(1,coloring))
+            all_colors = list(range(1, coloring))
             adjacent_colors = __generate_adjacent_colors(chromosome, vertex)
             valid_colors = [color for color in all_colors if color not in adjacent_colors]
             if len(valid_colors) == 0:
                 chromosome.data[i] = choice(all_colors)
             else:
                 chromosome.data[i] = choice(valid_colors)
-
-
-
 
 
 def string_mutation(chromosome):
