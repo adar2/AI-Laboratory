@@ -13,7 +13,7 @@ def __generate_adjacent_colors(chromosome, vertex):
     colors = []
     graph = chromosome.problem.get_search_space()
     chromosome_coloring = chromosome.data
-    adjacent_vertices = graph[vertex]
+    adjacent_vertices = graph[vertex + 1]
     for adjacent_vertex in adjacent_vertices:
         # the color of every vertex can be found in the current coloring under index: vertex_number-1
         colors.append(chromosome_coloring[adjacent_vertex - 1])
@@ -22,7 +22,7 @@ def __generate_adjacent_colors(chromosome, vertex):
 
 def coloring_mutation(chromosome: Chromosome, coloring: int, bad_edges_list: list):
     for i in range(len(chromosome.data)):
-        vertex = chromosome.data[i]
+        vertex = i
         if __is_in_conflict(vertex, chromosome, bad_edges_list):
             all_colors = list(range(1, coloring))
             adjacent_colors = __generate_adjacent_colors(chromosome, vertex)
