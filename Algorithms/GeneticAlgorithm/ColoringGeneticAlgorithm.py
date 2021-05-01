@@ -5,8 +5,8 @@ from Problems.GraphColoringProblem import GraphColoringProblem
 from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 from random import randint
 from Algorithms.GeneticAlgorithm.MutateFunctions import coloring_mutation
-from Algorithms.GeneticAlgorithm.MatingFunctions import single_point_crossover
-from Algorithms.GeneticAlgorithm.SelectionFunctions import truncation_selection
+from Algorithms.GeneticAlgorithm.MatingFunctions import uniform_point_crossover as imported_crossover
+from Algorithms.GeneticAlgorithm.SelectionFunctions import roulette_wheel_selection as imported_selection
 from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite
 from Algorithms.GeneticAlgorithm.FitnessFunctions import graph_coloring_fitness
 from random import random, choice
@@ -19,8 +19,8 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         super().__init__(pop_size, max_iter, problem, fitness_function, mutation_rate, elite_rate)
         self.current_coloring = self.problem.get_max_degree() + 1  # upper bound of coloring in any graph
         self.bad_edges_dict = {}
-        self.mating_function = single_point_crossover
-        self.selection_function = truncation_selection
+        self.mating_function = imported_crossover
+        self.selection_function = imported_selection
         self.survival_function = survival_of_the_elite
         self.mutation_function = coloring_mutation
         self.fitness_function = graph_coloring_fitness
@@ -109,7 +109,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             self.fitness_function(chromosome, bad_edges)
         avg_fitness, standard_dev = self.calc_stats(avg_fitness, standard_dev)
         print(f"Average fitness: {avg_fitness}")
-        print(f"Standard Deviation: {standard_dev}")
+        # print(f"Standard Deviation: {standard_dev}")
 
     def __get_bad_edges(self, chromosome):
         bad_edges = []
@@ -122,12 +122,12 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         return bad_edges
 
     def print_current_state(self):
-        print(f'Current Best: {self.current_coloring + 1}')
+        print(f'Current Coloring: {self.current_coloring}')
         print(f'Current Best Fitness: {self.best.fitness}')
 
 
 if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('le450_5a.col')
+    graph, vertices, edges = coloring_problem_file_parsing('games120.col')
     p = GraphColoringProblem(graph, vertices, edges)
     a = ColoringGeneticAlgorithm(50, 1000, p)
     a.run()
