@@ -1,5 +1,5 @@
 from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
-from Utils.Constants import MUTATION_RATE, ELITE_RATE
+from Utils.Constants import MUTATION_RATE, ELITE_RATE, STUCK_PCT
 from time import time
 from Problems.GraphColoringProblem import GraphColoringProblem
 from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
@@ -57,7 +57,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         return self.best
 
     def is_stuck(self, stuck_counter):
-        raise NotImplementedError
+        return (stuck_counter / self.max_iter) >= STUCK_PCT
 
     def coloring_mate(self, eligible_parents, survivors, current_coloring, bad_edges_dict):
         number_of_offsprings = self.pop_size - len(survivors)
@@ -69,6 +69,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             if random() < MUTATION_RATE:
                 self.mutation_function(child, current_coloring, bad_edges_dict)
             self.buffer.append(child)
+
     def update_bad_edges(self):
         for chromosome in self.population:
             bad_edges = []
