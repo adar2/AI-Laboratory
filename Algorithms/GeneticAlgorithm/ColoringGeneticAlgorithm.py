@@ -56,7 +56,9 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             self.swap()
             self.increase_age()
         self.update_time_stats(start_time)
-        print(f"Time elapsed {self.elapsed_time}")
+        print("-----------------------------------")
+        print(f"Time elapsed: {self.elapsed_time}")
+        print(f"Chromatic Number: {self.current_coloring + 1}")
         return self.best
 
     def is_stuck(self, stuck_counter):
