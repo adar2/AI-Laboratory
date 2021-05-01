@@ -1,10 +1,11 @@
-from random import shuffle, choice, random
+from random import shuffle, choice, random, randint
 from Problems.CVRP import CVRP
 from Utils.Constants import MIN_PARENT_AGE
 from Problems.KnapSack import KnapSack
 from Problems.NQueens import NQueens
 from Problems.StringMatching import StringMatching
 from Problems.AbstractProblem import AbstractProblem
+from Problems.GraphColoringProblem import GraphColoringProblem
 
 
 class Chromosome:
@@ -46,6 +47,9 @@ class Chromosome:
         elif isinstance(self.problem, CVRP):
             self.data = search_space[1:]
             shuffle(self.data)
+        elif isinstance(self.problem, GraphColoringProblem):
+            max_coloring = self.problem.get_max_degree() + 1
+            self.data = list(randint(1, max_coloring + 1) for _ in self.problem.get_search_space())
 
     # increase the chromosome age and check if its old enough to be parent
     def grow_old(self):

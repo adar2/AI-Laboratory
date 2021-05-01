@@ -12,6 +12,14 @@ class GraphColoringProblem(AbstractProblem):
     def get_search_space(self):
         return self.graph
 
+    def get_max_degree(self):
+        max_length = 0
+        for current_vertex in self.graph:
+            length = len(self.graph[current_vertex])
+            if length > max_length:
+                max_length = length
+        return max_length
+
     def printable_data(self, data: list = None):
         print(f'Number of vertices: {self.vertices}\n'
               f'Number of edges: {self.edges} \n'
