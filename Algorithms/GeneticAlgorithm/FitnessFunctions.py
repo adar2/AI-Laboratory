@@ -3,6 +3,10 @@ from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
 from Utils.UtilFunctions import cvrp_path_cost
 
 
+def graph_coloring_fitness(chromosome, bad_edges):
+    chromosome.fitness = len(bad_edges)
+
+
 def absolute_distance_fitness(chromosome):
     chromosome.fitness = 0
     target = chromosome.problem.target

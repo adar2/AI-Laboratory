@@ -8,11 +8,13 @@ from Algorithms.GeneticAlgorithm.MutateFunctions import coloring_mutation
 from Algorithms.GeneticAlgorithm.MatingFunctions import single_point_crossover
 from Algorithms.GeneticAlgorithm.SelectionFunctions import truncation_selection
 from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite
+from Algorithms.GeneticAlgorithm.FitnessFunctions import graph_coloring_fitness
 from random import random, choice
 
 
 # TODO: mutation function, choose correct operator -> single point, decreasing coloring -> implement functions, chromosome init data
 class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
+
     def __init__(self, pop_size, max_iter, problem, fitness_function=None, mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
         super().__init__(pop_size, max_iter, problem, fitness_function, mutation_rate, elite_rate)
         self.current_coloring = self.problem.get_max_degree() + 1  # upper bound of coloring in any graph
@@ -21,6 +23,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         self.selection_function = truncation_selection
         self.survival_function = survival_of_the_elite
         self.mutation_function = coloring_mutation
+        self.fitness_function = graph_coloring_fitness
         self.constraints_dict = self.problem.get_search_space()
         self.graph = self.problem.get_search_space()
 
@@ -42,9 +45,9 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             if self.is_solved():
                 self.update_coloring()
                 continue
-            if self.is_stuck(stuck_counter):
-                self.solved = True
-                break
+            # if self.is_stuck(stuck_counter):
+            #     self.solved = True
+            #     break
             eligible_parents = self.select_parents()
             if eligible_parents is None or len(eligible_parents) == 0:
                 continue
@@ -76,7 +79,8 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             data = chromosome.data
             for vertex in range(len(data)):
                 for constraint_vertex in self.constraints_dict[vertex + 1]:
-                    if data[vertex] == data[constraint_vertex - 1]:
+                    # avoid adding the bad edge from both sides
+                    if data[vertex] == data[constraint_vertex - 1] and (constraint_vertex - 1, vertex) not in bad_edges:
                         bad_edges.append((vertex, constraint_vertex - 1))
             self.bad_edges_dict[chromosome] = bad_edges
 
@@ -86,13 +90,23 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         return False
 
     def update_coloring(self):
-        self.current_coloring = -1
+        self.current_coloring -= 1
         for chromosome in self.population:
             data = chromosome.data
             for vertex in range(len(data)):
                 if data[vertex] > self.current_coloring:
                     data[vertex] = randint(1, self.current_coloring + 1)
             chromosome.data = data
+
+    def calc_fitness(self):
+        avg_fitness = 0
+        standard_dev = 0
+        for chromosome in self.population:
+            bad_edges = self.bad_edges_dict[chromosome]
+            self.fitness_function(chromosome, bad_edges)
+        avg_fitness, standard_dev = self.calc_stats(avg_fitness, standard_dev)
+        print(f"Average fitness: {avg_fitness}")
+        print(f"Standard Deviation: {standard_dev}")
 
 
 if __name__ == '__main__':
