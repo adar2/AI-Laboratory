@@ -13,13 +13,13 @@ from random import random, choice
 
 # TODO: mutation function, choose correct operator -> single point, decreasing coloring -> implement functions, chromosome init data
 class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
-    def __init__(self, pop_size, max_iter, problem, fitness_function=None, selection_function=None, survival_function=None,
-                 mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
-        super().__init__(pop_size, max_iter, problem, fitness_function, selection_function,
-                         survival_function, mutation_rate, elite_rate)
+    def __init__(self, pop_size, max_iter, problem, fitness_function=None, mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
+        super().__init__(pop_size, max_iter, problem, fitness_function, mutation_rate, elite_rate)
         self.current_coloring = self.problem.get_max_degree() + 1  # upper bound of coloring in any graph
         self.bad_edges_dict = {}
         self.mating_function = single_point_crossover
+        self.selection_function = truncation_selection
+        self.survival_function = survival_of_the_elite
         self.mutation_function = coloring_mutation
         self.constraints_dict = self.problem.get_search_space()
         self.graph = self.problem.get_search_space()

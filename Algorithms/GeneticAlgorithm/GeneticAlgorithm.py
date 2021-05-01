@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 
 
 class GeneticAlgorithmBase:
-    def __init__(self, pop_size, max_iter, problem, fitness_function=None,
+    def __init__(self, pop_size, max_iter, problem=None, fitness_function=None,
                  mating_function=None, mutation_function=None, selection_function=None, survival_function=None,
                  mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
         # population size
