@@ -1,9 +1,14 @@
-from GeneticAlgorithm import GeneticAlgorithmBase
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
 from Utils.Constants import MUTATION_RATE, ELITE_RATE
 from time import time
+from Problems.GraphColoringProblem import GraphColoringProblem
+from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
+from random import randint
+from Algorithms.GeneticAlgorithm.MutateFunctions import coloring_mutation
+from Algorithms.GeneticAlgorithm.MatingFunctions import single_point_crossover
+from Algorithms.GeneticAlgorithm.SelectionFunctions import truncation_selection
+from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite
 from random import random, choice
-from MatingFunctions import single_point_crossover
-from MutateFunctions import coloring_mutation
 
 
 # TODO: mutation function, choose correct operator -> single point, decreasing coloring -> implement functions, chromosome init data
@@ -16,6 +21,8 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         self.bad_edges_dict = {}
         self.mating_function = single_point_crossover
         self.mutation_function = coloring_mutation
+        self.constraints_dict = self.problem.get_search_space()
+        self.graph = self.problem.get_search_space()
 
     def run(self):
         last_best = None
@@ -62,3 +69,33 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             if random() < MUTATION_RATE:
                 self.mutation_function(child, current_coloring, bad_edges_dict)
             self.buffer.append(child)
+    def update_bad_edges(self):
+        for chromosome in self.population:
+            bad_edges = []
+            data = chromosome.data
+            for vertex in range(len(data)):
+                for constraint_vertex in self.constraints_dict[vertex + 1]:
+                    if data[vertex] == data[constraint_vertex - 1]:
+                        bad_edges.append((vertex, constraint_vertex - 1))
+            self.bad_edges_dict[chromosome] = bad_edges
+
+    def is_solved(self):
+        if self.best.fitness == 0:
+            return True
+        return False
+
+    def update_coloring(self):
+        self.current_coloring = -1
+        for chromosome in self.population:
+            data = chromosome.data
+            for vertex in range(len(data)):
+                if data[vertex] > self.current_coloring:
+                    data[vertex] = randint(1, self.current_coloring + 1)
+            chromosome.data = data
+
+
+if __name__ == '__main__':
+    graph, vertices, edges = coloring_problem_file_parsing('huck.col')
+    p = GraphColoringProblem(graph, vertices, edges)
+    a = ColoringGeneticAlgorithm(50, 50, p)
+    a.run()

@@ -1,4 +1,4 @@
-from BaseCSPAlgorithm import BaseCSPAlgorithm
+from Algorithms.CSPAlgorithms.BaseCSPAlgorithm import BaseCSPAlgorithm
 from Problems.AbstractProblem import AbstractProblem
 from copy import copy
 from Algorithms.CSPAlgorithms.Heuristics import minimum_remaining_values as mrv
