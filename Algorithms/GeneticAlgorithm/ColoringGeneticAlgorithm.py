@@ -6,8 +6,8 @@ from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 from random import randint
 from Algorithms.GeneticAlgorithm.MutateFunctions import coloring_mutation
 from Algorithms.GeneticAlgorithm.MatingFunctions import uniform_point_crossover as imported_crossover
-from Algorithms.GeneticAlgorithm.SelectionFunctions import roulette_wheel_selection as imported_selection
-from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite
+from Algorithms.GeneticAlgorithm.SelectionFunctions import truncation_selection as imported_selection
+from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_young as imported_survival
 from Algorithms.GeneticAlgorithm.FitnessFunctions import graph_coloring_fitness
 from random import random, choice
 
@@ -21,7 +21,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         self.bad_edges_dict = {}
         self.mating_function = imported_crossover
         self.selection_function = imported_selection
-        self.survival_function = survival_of_the_elite
+        self.survival_function = imported_survival
         self.mutation_function = coloring_mutation
         self.fitness_function = graph_coloring_fitness
         self.constraints_dict = self.problem.get_search_space()
@@ -45,9 +45,9 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             if self.is_solved():
                 self.update_coloring()
                 continue
-            # if self.is_stuck(stuck_counter):
-            #     self.solved = True
-            #     break
+            if self.is_stuck(stuck_counter):
+                self.solved = True
+                break
             eligible_parents = self.select_parents()
             if eligible_parents is None or len(eligible_parents) == 0:
                 continue
@@ -77,6 +77,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             self.buffer.append(child)
 
     def update_bad_edges(self):
+        self.bad_edges_dict.clear()
         for chromosome in self.population:
             bad_edges = []
             data = chromosome.data
@@ -127,7 +128,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
 
 
 if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('games120.col')
+    graph, vertices, edges = coloring_problem_file_parsing('le450_15a.col')
     p = GraphColoringProblem(graph, vertices, edges)
     a = ColoringGeneticAlgorithm(50, 1000, p)
     a.run()

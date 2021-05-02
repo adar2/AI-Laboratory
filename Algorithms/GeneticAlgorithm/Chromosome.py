@@ -57,6 +57,9 @@ class Chromosome:
         if self.age >= MIN_PARENT_AGE:
             self.fit_to_be_parent = True
 
+    def __str__(self):
+        return f'Fitness: {self.fitness}, data: {self.data}'
+
 
 if __name__ == '__main__':
     problem = CVRP(4, [((1, 1), 2), ((2, 2), 3), ((3, 3,), 4)])
