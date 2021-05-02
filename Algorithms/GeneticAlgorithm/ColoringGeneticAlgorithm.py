@@ -128,7 +128,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
 
 
 if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('le450_15a.col')
+    graph, vertices, edges = coloring_problem_file_parsing('le450_5a.col')
     p = GraphColoringProblem(graph, vertices, edges)
-    a = ColoringGeneticAlgorithm(50, 1000, p)
+    a = ColoringGeneticAlgorithm(50, 10000, p)
     a.run()
