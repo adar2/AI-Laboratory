@@ -1,4 +1,4 @@
-class TabuList():
+class TabuList:
     def __init__(self, initial_capacity, tenure) -> None:
         self._list = {}
         self.capacity = initial_capacity

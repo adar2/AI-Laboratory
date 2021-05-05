@@ -25,7 +25,23 @@ def CVRP_init_config(problem: CVRP):
 
 
 def coloring_init_config(problem: GraphColoringProblem):
-    raise NotImplementedError
+    graph = problem.get_search_space()
+    vertices_color_dict = {}
+    current_max_color = 1
+    colors_domain = [1]
+    for vertex in graph:
+        neighbors_colors = [vertices_color_dict[neighbor] for neighbor in graph[vertex] if
+                            neighbor in vertices_color_dict]
+        available_colors = [color for color in colors_domain if color not in neighbors_colors]
+        # if available colors list is empty increase maximum color by 1 and assign it to vertex
+        if not available_colors:
+            current_max_color += 1
+            colors_domain.append(current_max_color)
+            vertices_color_dict[vertex] = current_max_color
+            continue
+        # if the available colors list is not empty assign to vertex the first color in that list
+        vertices_color_dict[vertex] = available_colors[0]
+    return [vertex_color for vertex_color in vertices_color_dict.values()]
 
 
 def euc_distance(cords_a: tuple, cords_b: tuple):
