@@ -99,10 +99,3 @@ class BackJumpingAlgorithm(BaseCSPAlgorithm):
         if vertex in self.vertices_color_dict:
             self.reset_vertex_assignment(vertex)
         return False, copy(self.conflict_set_dict[vertex])
-
-
-if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('fpsol2.i.2.col')
-    p = GraphColoringProblem(graph, vertices, edges)
-    a = BackJumpingAlgorithm(p)
-    a.run()

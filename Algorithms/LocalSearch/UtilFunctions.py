@@ -62,7 +62,7 @@ def cvrp_path_cost(problem: CVRP, config):
     return int(sum)
 
 
-def coloring_cost(problem:GraphColoringProblem,config:list):
+def coloring_cost(problem: GraphColoringProblem, config: list):
     bad_edges = []
     graph = problem.get_search_space()
     for vertex in range(len(config)):

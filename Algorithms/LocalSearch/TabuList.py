@@ -14,7 +14,7 @@ class TabuList:
         return len(self._list)
 
     def update(self):
-        for key in self._list.keys():
+        for key in list(self._list):
             if self._list[key] > self.tenure:
                 del self._list[key]
 

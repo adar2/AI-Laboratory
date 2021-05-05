@@ -23,7 +23,8 @@ class ColoringTabuSearch(TabuSearch):
         objective_function = self.cost
         for neighbor in neighborhood:
             neighbor_cost = objective_function(neighbor)
-            if tuple(neighbor) not in self.tabu_list and neighbor_cost < objective_function(self.current_config):
+            hash_key = self.convert_to_key(neighbor)
+            if hash_key not in self.tabu_list and neighbor_cost < objective_function(self.current_config):
                 if min_neighbor is None:
                     min_neighbor = neighbor
                     min_neighbor_cost = neighbor_cost
@@ -61,7 +62,8 @@ class ColoringTabuSearch(TabuSearch):
             if self.current_config_cost == 0:
                 self.update_coloring()
                 continue
-            self.tabu_list.add(tuple(self.current_config))
+            hash_key = self.convert_to_key(self.current_config)
+            self.tabu_list.add(hash_key)
             self.update_stuck(improvement_delta)  # checks if we're stuck
             self.update_tabu_list(improvement_delta)
             print(f'Tabu List Size: {self.tabu_list.get_size()}')
@@ -90,6 +92,11 @@ class ColoringTabuSearch(TabuSearch):
     def print_current_config_state(self):
         print(f'Current Coloring: {self.current_coloring}')
         print(f'Current Cost: {self.current_config_cost}')
+
+    @staticmethod
+    def convert_to_key(config):
+        # convert to tuple of (x,y,demand)
+        return tuple(config)
 
 
 if __name__ == "__main__":

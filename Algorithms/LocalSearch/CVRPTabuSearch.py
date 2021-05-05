@@ -16,7 +16,7 @@ class CVRPTabuSearch(TabuSearch):
         min_neighbor_cost = None
         for neighbor in neighborhood:
             neighbor_cost = self.cost(neighbor)
-            neighbor_hash_key = self.__convert_to_key(neighbor)
+            neighbor_hash_key = self.convert_to_key(neighbor)
             if neighbor_hash_key not in self.tabu_list and neighbor_cost < self.current_config_cost:
                 if min_neighbor is None:
                     min_neighbor = neighbor
