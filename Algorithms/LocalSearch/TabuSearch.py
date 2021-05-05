@@ -10,10 +10,6 @@ class TabuSearch(BaseIterativeLocalSearch):
         super().__init__(problem, max_iter)
         self.tabu_list = None
 
-    @abstractmethod
-    def convert_to_key(self, config):
-        raise NotImplementedError
-
     def run(self):
         self.current_config = self.init_config()
         self.current_config_cost = self.cost(self.current_config)

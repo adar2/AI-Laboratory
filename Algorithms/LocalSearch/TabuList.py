@@ -9,6 +9,9 @@ class TabuList:
         if len(self._list) > self.capacity:
             self.__balance()
 
+    def get_size(self):
+        return len(self._list)
+
     def update(self):
         for key in self._list.keys():
             if self._list[key] > self.tenure:

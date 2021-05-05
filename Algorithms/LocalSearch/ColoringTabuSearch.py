@@ -1,8 +1,9 @@
 from Problems.GraphColoringProblem import GraphColoringProblem
 from TabuSearch import TabuSearch
 from TabuList import TabuList
+from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 from Utils.Constants import INITIAL_TABU_TENURE
-from UtilFunctions import coloring_init_config,coloring_cost
+from UtilFunctions import coloring_init_config, coloring_cost
 from Neighborhood import random_vertex_neighborhood as get_neighborhood
 from random import randint
 
@@ -15,13 +16,14 @@ class ColoringTabuSearch(TabuSearch):
 
     # get neighbours
     def neighbour_config(self) -> list:
-        neighborhood = get_neighborhood(self.problem.get_search_space(),self.current_config)
+        neighborhood = get_neighborhood(self.problem.get_search_space(), self.current_config, self.current_coloring)
+        self.states_explored += len(neighborhood)
         min_neighbor = None
         min_neighbor_cost = None
         objective_function = self.cost
         for neighbor in neighborhood:
             neighbor_cost = objective_function(neighbor)
-            if neighbor not in self.tabu_list and neighbor_cost < objective_function(self.current_config):
+            if tuple(neighbor) not in self.tabu_list and neighbor_cost < objective_function(self.current_config):
                 if min_neighbor is None:
                     min_neighbor = neighbor
                     min_neighbor_cost = neighbor_cost
@@ -36,20 +38,18 @@ class ColoringTabuSearch(TabuSearch):
 
     # Objective function (likely to vary between the 3 options)
     def cost(self, config) -> float:
-        return coloring_cost(self.problem,config)
+        return coloring_cost(self.problem, config)
 
     def run(self):
         self.current_config = self.init_config()
         self.current_coloring = max(self.current_config)
         self.current_config_cost = self.cost(self.current_config)
         self.tabu_list = TabuList(len(self.current_config) / 10, INITIAL_TABU_TENURE)
-        self.best_config = self.current_config
-        self.best_config_cost = self.cost(self.best_config)
-        self.last_config_cost = self.best_config_cost
+        self.last_config_cost = self.current_config_cost
         for i in range(self.max_iter):
             if self.is_stuck:
                 break
-            self.print_best_config_state()
+            self.print_current_config_state()
             # for stats
             self.iterations_costs.append(self.best_config_cost)
             self.proposed_config = self.current_config if self.current_config_cost == 0 else self.neighbour_config()
@@ -58,13 +58,13 @@ class ColoringTabuSearch(TabuSearch):
             self.current_config = self.proposed_config
             improvement_delta = self.last_config_cost - proposed_config_cost
             self.current_config_cost = self.cost(self.proposed_config)
-            self.update_best_config()
-            if self.best_config_cost == 0:
+            if self.current_config_cost == 0:
                 self.update_coloring()
                 continue
-            self.tabu_list.add(self.current_config)
+            self.tabu_list.add(tuple(self.current_config))
             self.update_stuck(improvement_delta)  # checks if we're stuck
             self.update_tabu_list(improvement_delta)
+            print(f'Tabu List Size: {self.tabu_list.get_size()}')
         print('--------------------------------------')
         print(f'Chromatic Coloring Found: {self.current_coloring + 1}')
         print(f'Number of states explored: {self.states_explored}')
@@ -80,9 +80,20 @@ class ColoringTabuSearch(TabuSearch):
     def reduce_current_config_coloring(self):
         new_config = []
         for vertex_color in self.current_config:
-            if vertex_color == self.current_coloring+1:
-                new_config.append(randint(1,self.current_coloring+1))
+            if vertex_color == self.current_coloring + 1:
+                new_config.append(randint(1, self.current_coloring))
             else:
                 new_config.append(vertex_color)
         self.current_config = new_config
         self.current_config_cost = self.cost(self.current_config)
+
+    def print_current_config_state(self):
+        print(f'Current Coloring: {self.current_coloring}')
+        print(f'Current Cost: {self.current_config_cost}')
+
+
+if __name__ == "__main__":
+    graph, vertices, edges = coloring_problem_file_parsing('le450_15a.col')
+    problem = GraphColoringProblem(graph, vertices, edges)
+    algo = ColoringTabuSearch(problem, 10000)
+    algo.run()
