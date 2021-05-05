@@ -1,3 +1,5 @@
+import copy
+import random
 from math import sqrt
 from Problems.CVRP import CVRP
 from Problems.GraphColoringProblem import GraphColoringProblem
@@ -60,6 +62,17 @@ def cvrp_path_cost(problem: CVRP, config):
             sum += euc_distance(truck[i][COORDINATES], truck[i + 1][COORDINATES])
         sum += euc_distance(truck[-1][COORDINATES], storage[COORDINATES])
     return int(sum)
+
+
+def maximize_color_groups_size(config: list):
+    unique_colors = set(config)
+    colors_dict = {key: 0 for key in unique_colors}
+    for vertex in config:
+        colors_dict[vertex] += 1
+    sum = 0
+    for color in colors_dict:
+        sum += colors_dict[color] ** 2
+    return sum
 
 
 def coloring_cost(problem: GraphColoringProblem, config: list):

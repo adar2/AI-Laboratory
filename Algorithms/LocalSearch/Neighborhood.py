@@ -49,24 +49,11 @@ def random_move_neighborhood(solution: list) -> list:
     return neighborhood
 
 
-def __get_valid_colors(vertex, config, graph,coloring):
-    neighbors_colors = [config[neighbor-1] for neighbor in graph[vertex+1]]
-    return [color for color in list(range(1,coloring+1)) if color not in neighbors_colors]
+def __get_valid_colors(vertex, config, graph, coloring):
+    neighbors_colors = [config[neighbor - 1] for neighbor in graph[vertex + 1]]
+    return [color for color in list(range(1, coloring + 1)) if color not in neighbors_colors]
 
 
-def random_vertex_neighborhood(graph: dict, config: list, coloring:int) -> list:
-    neighborhood = []
-    number_of_vertices = randint(2, int(sqrt(len(config))))
-    vertex_list = []
-    for i in range(number_of_vertices):
-        vertex = randint(0, len(config)-1)
-        while vertex in vertex_list:
-            vertex = randint(0, len(config)-1)
-        vertex_list.append(vertex)
-    for vertex in vertex_list:
-        valid_colors = __get_valid_colors(vertex,config,graph,coloring)
-        for color in valid_colors:
-            new_config = copy.copy(config)
-            new_config[vertex]=color
-            neighborhood.append(new_config)
-    return neighborhood
+
+
+

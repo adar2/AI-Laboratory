@@ -1,0 +1,128 @@
+from BaseIterativeLocalSearch import BaseIterativeLocalSearch
+from Problems.GraphColoringProblem import GraphColoringProblem
+from UtilFunctions import coloring_init_config
+import copy
+from random import randint, choice
+from math import sqrt
+
+from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
+
+
+class KempeChainAlgorithm(BaseIterativeLocalSearch):
+
+    def __init__(self, problem: GraphColoringProblem, max_iter: int):
+        super().__init__(problem, max_iter)
+        self.problem = problem
+        self.color_classes_dict = {}
+        self.graph = self.problem.get_search_space()
+
+    def init_config(self):
+        return coloring_init_config(self.problem)
+
+    def update_color_classes(self):
+        unique_colors = set(self.current_config)
+        self.color_classes_dict = {key: [] for key in unique_colors}
+        for vertex in range(len(self.current_config)):
+            color = self.current_config[vertex]
+            self.color_classes_dict[color].append(vertex + 1)
+
+    def neighbour_config(self) -> list:
+        neighborhood = []
+        graph = self.graph
+        config = self.current_config
+        number_of_vertices = randint(2, int(sqrt(len(config))))
+        vertex_list = []
+        for i in range(number_of_vertices):
+            random_vertex = randint(1, len(graph))
+            while random_vertex in vertex_list:
+                random_vertex = randint(1, len(graph))
+            vertex_list.append(random_vertex)
+            new_config = kempe_chain_generator(random_vertex, graph, config)
+            neighborhood.append(new_config)
+        return neighborhood
+
+    def cost(self, config) -> float:
+        unique_colors = set(config)
+        colors_dict = {key: 0 for key in unique_colors}
+        for vertex in config:
+            colors_dict[vertex] += 1
+        sum = 0
+        for color in colors_dict:
+            sum += colors_dict[color] ** 2
+        return sum
+
+    def number_of_color_classes(self):
+        sum = 0
+        for color in self.color_classes_dict:
+            if len(self.color_classes_dict[color]) > 0:
+                sum += 1
+        return sum
+
+    def kill_color(self):
+        for color in self.color_classes_dict:
+            if len(self.color_classes_dict[color]) == 1:
+                vertex = self.color_classes_dict[color][0]
+                colors_domain = list(range(1, len(self.color_classes_dict) + 1))
+                for neighbor in self.graph[vertex]:
+                    neighbor_color = self.current_config[neighbor - 1]
+                    if neighbor_color in colors_domain:
+                        colors_domain.remove(neighbor_color)
+                if len(colors_domain) > 1:
+                    colors_domain.remove(self.color_classes_dict[vertex])
+                    remaining_color = colors_domain[0]
+                    self.color_classes_dict[remaining_color].add(vertex)
+
+    def run(self):
+        self.current_config = self.init_config()
+        self.current_config_cost = self.cost(self.current_config)
+        for i in range(self.max_iter):
+            self.update_color_classes()
+            self.kill_color()
+            print(f'Best config yet {self.current_config_cost}')
+            print(f'Current color classes {self.number_of_color_classes()}')
+            neighborhood = self.neighbour_config()
+            for config in neighborhood:
+                if self.cost(config) > self.current_config_cost:
+                    self.current_config = config
+                    self.current_config_cost = self.cost(config)
+        for color in self.color_classes_dict:
+            print(f"Color class {color} , size : {self.color_classes_dict[color]}")
+
+
+def kempe_chain_generator(random_vertex, graph: dict, config: list):
+    new_config = copy.copy(config)
+    kempe_chain = [random_vertex - 1]
+    random_vertex_color = config[random_vertex - 1]
+    adjacent_vertices = [vertex for vertex in graph[random_vertex] if config[vertex - 1] != random_vertex_color]
+    adjacent_vertex = choice(adjacent_vertices)
+    kempe_chain.append(adjacent_vertex - 1)
+    adjacent_vertex_color = config[adjacent_vertex - 1]
+    random_vertex_reachable = set()
+    __get_reachable_vertices(random_vertex, graph, random_vertex_reachable)
+    adjacent_vertex_reachable = set()
+    __get_reachable_vertices(adjacent_vertex, graph, adjacent_vertex_reachable)
+    kempe_chain = list(random_vertex_reachable.union(adjacent_vertex_reachable))
+    kempe_chain = [vertex for vertex in kempe_chain if
+                   config[vertex - 1] == random_vertex_color or config[vertex - 1] == adjacent_vertex_color]
+    for vertex in kempe_chain:
+        if config[vertex - 1] == random_vertex_color:
+            new_config[vertex - 1] = adjacent_vertex_color
+        elif config[vertex - 1] == adjacent_vertex_color:
+            new_config[vertex - 1] = random_vertex_color
+    return new_config
+
+
+def __get_reachable_vertices(vertex: int, graph: dict, reachable_vertices: set) -> set:
+    for neighbor_1 in graph[vertex]:
+        if neighbor_1 in reachable_vertices:
+            continue
+        reachable_vertices.add(neighbor_1)
+        reachable_vertices = reachable_vertices.union(__get_reachable_vertices(neighbor_1, graph, reachable_vertices))
+    return reachable_vertices
+
+
+if __name__ == '__main__':
+    graph, vertices, edges = coloring_problem_file_parsing('le450_15a.col')
+    problem = GraphColoringProblem(graph, vertices, edges)
+    algo = KempeChainAlgorithm(problem, 10000)
+    algo.run()
