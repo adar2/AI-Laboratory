@@ -26,9 +26,8 @@ class TabuSearch(BaseIterativeLocalSearch):
         for i in range(self.max_iter):
             if self.is_stuck:
                 break
-            print(f"Best Config: {self.problem.printable_data(self.best_config)}")
-            print(f"Best Config Cost: {self.best_config_cost}")
-            print("-----------------")
+            self.print_best_config_state()
+            # for stats
             self.iterations_costs.append(self.best_config_cost)
             self.proposed_config = self.neighbour_config()
             proposed_config_cost = self.cost(self.proposed_config)
@@ -36,22 +35,34 @@ class TabuSearch(BaseIterativeLocalSearch):
             self.current_config = self.proposed_config
             improvement_delta = self.last_config_cost - proposed_config_cost
             self.current_config_cost = self.cost(self.proposed_config)
-            if self.current_config_cost < self.best_config_cost:
-                self.best_config = self.current_config
-                self.best_config_cost = self.current_config_cost
+            self.update_best_config()
+            # for cvrp's cities dict
             current_config_hash_key = self.convert_to_key(self.current_config)
             self.tabu_list.add(current_config_hash_key)
             self.update_stuck(improvement_delta)  # checks if we're stuck
-            if improvement_delta > 0:
-                self.tabu_list.capacity -= 1
-            elif abs(improvement_delta) > 0.05 * self.last_config_cost:
-                self.tabu_list.capacity += 1
-                self.tabu_list.tenure += 1
-            self.tabu_list.update()
+            self.update_tabu_list(improvement_delta)
         print(f'Final Cost: {self.best_config_cost}')
         self.elapsed_time = round(process_time() - start_time, 2)
         self.clock_ticks = self.elapsed_time * CLOCK_RATE
         return self.best_config_cost
+
+    def update_best_config(self):
+        if self.current_config_cost < self.best_config_cost:
+            self.best_config = self.current_config
+            self.best_config_cost = self.current_config_cost
+
+    def update_tabu_list(self, improvement_delta):
+        if improvement_delta > 0:
+            self.tabu_list.capacity -= 1
+        elif abs(improvement_delta) > 0.05 * self.last_config_cost:
+            self.tabu_list.capacity += 1
+            self.tabu_list.tenure += 1
+        self.tabu_list.update()
+
+    def print_best_config_state(self):
+        print(f"Best Config: {self.problem.printable_data(self.best_config)}")
+        print(f"Best Config Cost: {self.best_config_cost}")
+        print("-----------------")
 
     def update_stuck(self, improvement_delta):
         if improvement_delta == 0:
