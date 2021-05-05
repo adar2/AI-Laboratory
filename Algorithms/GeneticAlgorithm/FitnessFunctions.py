@@ -1,6 +1,6 @@
 import random
 from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
-from Utils.UtilFunctions import cvrp_path_cost
+from Algorithms.LocalSearch.UtilFunctions import cvrp_path_cost
 
 
 def graph_coloring_fitness(chromosome, bad_edges):

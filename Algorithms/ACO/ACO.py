@@ -1,7 +1,7 @@
 import random
 import time
 from Utils.Constants import COORDINATES, DEMAND, ACO_ALPHA, ACO_BETA, ACO_TAU, ACO_RO, ACO_SIGMA,STUCK_PCT
-from Utils.UtilFunctions import euc_distance
+from Algorithms.LocalSearch.UtilFunctions import euc_distance
 from Utils.Constants import CLOCK_RATE
 
 
