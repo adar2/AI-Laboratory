@@ -6,6 +6,7 @@ class TabuList:
 
     def add(self, item):
         self._list[item] = 0
+        self.update_tenure()
         if len(self._list) > self.capacity:
             self.__balance()
 
@@ -31,3 +32,7 @@ class TabuList:
 
     def __getitem__(self, item):
         return self._list[item]
+
+    def update_tenure(self):
+        for item in self._list:
+            self._list[item] = self._list[item]+1
