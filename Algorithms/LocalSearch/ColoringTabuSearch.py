@@ -1,9 +1,9 @@
-from Problems.AbstractProblem import AbstractProblem
 from Problems.GraphColoringProblem import GraphColoringProblem
 from TabuSearch import TabuSearch
 from TabuList import TabuList
 from Utils.Constants import INITIAL_TABU_TENURE
 from UtilFunctions import coloring_init_config,coloring_cost
+from Neighborhood import random_vertex_neighborhood as get_neighborhood
 from random import randint
 
 
@@ -15,7 +15,20 @@ class ColoringTabuSearch(TabuSearch):
 
     # get neighbours
     def neighbour_config(self) -> list:
-        pass
+        neighborhood = get_neighborhood(self.problem.get_search_space(),self.current_config)
+        min_neighbor = None
+        min_neighbor_cost = None
+        objective_function = self.cost
+        for neighbor in neighborhood:
+            neighbor_cost = objective_function(neighbor)
+            if neighbor not in self.tabu_list and neighbor_cost < objective_function(self.current_config):
+                if min_neighbor is None:
+                    min_neighbor = neighbor
+                    min_neighbor_cost = neighbor_cost
+                elif neighbor_cost < min_neighbor_cost:
+                    min_neighbor = neighbor
+                    min_neighbor_cost = neighbor_cost
+        return min_neighbor if min_neighbor is not None else self.current_config
 
     # greedy algorithm for base config
     def init_config(self):

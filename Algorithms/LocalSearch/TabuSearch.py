@@ -1,13 +1,12 @@
 from Algorithms.LocalSearch.BaseIterativeLocalSearch import BaseIterativeLocalSearch
-from Problems.AbstractProblem import AbstractProblem
 from Algorithms.LocalSearch.TabuList import TabuList
-from Utils.Constants import INITIAL_TABU_TENURE, COORDINATES, CLOCK_RATE, STUCK_PCT
+from Utils.Constants import INITIAL_TABU_TENURE, CLOCK_RATE, STUCK_PCT
 from time import process_time
 from abc import abstractmethod
 
 
 class TabuSearch(BaseIterativeLocalSearch):
-    def __init__(self, problem: AbstractProblem, max_iter: int):
+    def __init__(self, problem, max_iter: int):
         super().__init__(problem, max_iter)
         self.tabu_list = None
 

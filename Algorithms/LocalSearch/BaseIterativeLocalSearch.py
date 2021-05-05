@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-from Problems.AbstractProblem import AbstractProblem
 
 
 class BaseIterativeLocalSearch(ABC):
-    def __init__(self, problem: AbstractProblem, max_iter: int):
+    def __init__(self, problem, max_iter: int):
         super().__init__()
         self.problem = problem
         self.max_iter = max_iter
