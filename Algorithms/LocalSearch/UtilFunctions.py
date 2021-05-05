@@ -60,3 +60,14 @@ def cvrp_path_cost(problem: CVRP, config):
             sum += euc_distance(truck[i][COORDINATES], truck[i + 1][COORDINATES])
         sum += euc_distance(truck[-1][COORDINATES], storage[COORDINATES])
     return int(sum)
+
+
+def coloring_cost(problem:GraphColoringProblem,config:list):
+    bad_edges = []
+    graph = problem.get_search_space()
+    for vertex in range(len(config)):
+        for constraint_vertex in graph[vertex + 1]:
+            # avoid adding the bad edge from both sides
+            if config[vertex] == config[constraint_vertex - 1] and (constraint_vertex - 1, vertex) not in bad_edges:
+                bad_edges.append((vertex, constraint_vertex - 1))
+    return len(bad_edges)

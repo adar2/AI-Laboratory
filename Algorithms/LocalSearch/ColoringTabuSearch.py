@@ -3,7 +3,7 @@ from Problems.GraphColoringProblem import GraphColoringProblem
 from TabuSearch import TabuSearch
 from TabuList import TabuList
 from Utils.Constants import INITIAL_TABU_TENURE
-from UtilFunctions import coloring_init_config
+from UtilFunctions import coloring_init_config,coloring_cost
 from random import randint
 
 
@@ -23,7 +23,7 @@ class ColoringTabuSearch(TabuSearch):
 
     # Objective function (likely to vary between the 3 options)
     def cost(self, config) -> float:
-        pass
+        return coloring_cost(self.problem,config)
 
     def run(self):
         self.current_config = self.init_config()
