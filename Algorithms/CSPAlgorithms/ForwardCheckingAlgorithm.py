@@ -105,9 +105,3 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
         self.arcs_queue = self.generate_arcs_queue()
         self.domains_dict = self.generate_domains_dict(coloring)
 
-
-if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('mulsol.i.5.col')
-    problem = GraphColoringProblem(graph, vertices, edges)
-    algo = ForwardCheckingAlgorithm(problem)
-    algo.run()

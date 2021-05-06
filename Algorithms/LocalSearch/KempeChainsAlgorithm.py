@@ -134,9 +134,3 @@ class KempeChainAlgorithm(BaseIterativeLocalSearch):
                 self.__get_reachable_vertices(neighbor_1, reachable_vertices, color_2, color_1)
         return reachable_vertices
 
-
-if __name__ == '__main__':
-    graph1, vertices, edges = coloring_problem_file_parsing('le450_15a.col')
-    problem = GraphColoringProblem(graph1, vertices, edges)
-    algo = KempeChainAlgorithm(problem, 10000)
-    algo.run()
