@@ -9,11 +9,17 @@ from UtilFunctions import cvrp_path_cost, CVRP_init_config
 
 
 class SimulatedAnnealing(BaseIterativeLocalSearch):
+    def init_config(self):
+        pass
+
     def __init__(self, problem: AbstractProblem, max_iter: int):
         super().__init__(problem, max_iter)
         self.temperature = SA_TEMPERATURE
         self.cost = cvrp_path_cost
         self.init_config = CVRP_init_config
+
+    def cost(self, config) -> float:
+        return cvrp_path_cost(self.problem,config)
 
     def neighbour_config(self):
         neighbourhood = random_move_neighborhood(self.current_config)

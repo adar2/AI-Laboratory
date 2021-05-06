@@ -4,6 +4,7 @@ from UtilFunctions import coloring_init_config
 import copy
 from random import randint, choice
 from math import sqrt
+from Utils.Constants import STUCK_PCT
 
 from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 
@@ -15,7 +16,6 @@ class KempeChainAlgorithm(BaseIterativeLocalSearch):
         self.problem = problem
         self.color_classes_dict = {}
         self.graph = self.problem.get_search_space()
-        self.reachable_dict = {}
 
     def init_config(self):
         return coloring_init_config(self.problem)
@@ -27,6 +27,14 @@ class KempeChainAlgorithm(BaseIterativeLocalSearch):
             color = self.current_config[vertex]
             self.color_classes_dict[color].append(vertex + 1)
 
+    def updated_stuck(self, updated):
+        if not updated:
+            self.iterations_stuck += 1
+        else:
+            self.iterations_stuck = 0
+        if self.iterations_stuck >= STUCK_PCT * self.max_iter:
+            self.is_stuck = True
+
     def neighbour_config(self) -> list:
         neighborhood = []
         graph = self.graph
@@ -35,7 +43,7 @@ class KempeChainAlgorithm(BaseIterativeLocalSearch):
         vertex_list = []
         for i in range(number_of_vertices):
             random_vertex = randint(1, len(graph))
-            while random_vertex in vertex_list:
+            while random_vertex in vertex_list or not self.graph[random_vertex]:
                 random_vertex = randint(1, len(graph))
             vertex_list.append(random_vertex)
             new_config = self.kempe_chain_generator(random_vertex, config)
@@ -59,7 +67,7 @@ class KempeChainAlgorithm(BaseIterativeLocalSearch):
                 sum += 1
         return sum
 
-    def kill_color(self):
+    def remove_color(self):
         for color in self.color_classes_dict:
             if len(self.color_classes_dict[color]) == 1:
                 vertex = self.color_classes_dict[color][0]
@@ -75,32 +83,25 @@ class KempeChainAlgorithm(BaseIterativeLocalSearch):
                     self.color_classes_dict[remaining_color].append(vertex)
                     self.color_classes_dict[color].remove(vertex)
 
-    def is_complete(self,config):
-        if len(config) != self.problem.vertices:
-            return False
-        # check that indeed no constraints are violated
-        for vertex_1 in self.graph:
-            for vertex_2 in self.graph[vertex_1]:
-                if config[vertex_1 - 1] == config[vertex_2 - 1]:
-                    return False
-        return True
-
     def run(self):
         self.current_config = self.init_config()
         self.current_config_cost = self.cost(self.current_config)
         for i in range(self.max_iter):
+            if self.is_stuck:
+                break
+            updated = False
             self.update_color_classes()
-            self.kill_color()
+            self.remove_color()
             print(f'Best config yet {self.current_config_cost}')
             print(f'Current color classes {self.number_of_color_classes()}')
             neighborhood = self.neighbour_config()
             for config in neighborhood:
                 if self.cost(config) > self.current_config_cost:
+                    updated = True
                     self.current_config = config
                     self.current_config_cost = self.cost(config)
-        for color in self.color_classes_dict:
-            print(f"Color class {color} , size : {self.color_classes_dict[color]}")
-        print(f'The Config has passed the test? : {self.is_complete(self.current_config)}')
+            self.updated_stuck(updated)
+        print(f'The chromatic color found for current problem : {len(self.color_classes_dict)}')
 
     def kempe_chain_generator(self, random_vertex, config: list):
         new_config = copy.copy(config)
@@ -109,40 +110,33 @@ class KempeChainAlgorithm(BaseIterativeLocalSearch):
                              config[vertex - 1] != random_vertex_color]
         adjacent_vertex = choice(adjacent_vertices)
         adjacent_vertex_color = config[adjacent_vertex - 1]
-        if random_vertex not in self.reachable_dict:
-            random_vertex_reachable = set()
-            self.__get_reachable_vertices(random_vertex, random_vertex_reachable)
-            self.reachable_dict[random_vertex] = random_vertex_reachable
-        else:
-            random_vertex_reachable = self.reachable_dict[random_vertex]
-        if adjacent_vertex not in self.reachable_dict:
-            adjacent_vertex_reachable = set()
-            self.__get_reachable_vertices(adjacent_vertex, adjacent_vertex_reachable)
-            self.reachable_dict[adjacent_vertex] = adjacent_vertex_reachable
-        else:
-            adjacent_vertex_reachable = self.reachable_dict[adjacent_vertex]
+        kempe_chain = [random_vertex, adjacent_vertex]
+        random_vertex_reachable = set(kempe_chain)
+        self.__get_reachable_vertices(random_vertex, random_vertex_reachable, color_1=random_vertex_color,
+                                      color_2=adjacent_vertex_color)
+        adjacent_vertex_reachable = set(kempe_chain)
+        self.__get_reachable_vertices(adjacent_vertex, adjacent_vertex_reachable, color_1=adjacent_vertex_color,
+                                      color_2=random_vertex_color)
         kempe_chain = list(random_vertex_reachable | adjacent_vertex_reachable)
-        kempe_chain = [vertex for vertex in kempe_chain if
-                       config[vertex - 1] == random_vertex_color or config[vertex - 1] == adjacent_vertex_color]
         for vertex in kempe_chain:
             if config[vertex - 1] == random_vertex_color:
                 new_config[vertex - 1] = adjacent_vertex_color
             elif config[vertex - 1] == adjacent_vertex_color:
                 new_config[vertex - 1] = random_vertex_color
-        self.is_complete(new_config)
         return new_config
 
-    def __get_reachable_vertices(self, vertex: int, reachable_vertices: set) -> set:
+    def __get_reachable_vertices(self, vertex: int, reachable_vertices: set, color_1: int, color_2: int) -> set:
         for neighbor_1 in self.graph[vertex]:
             if neighbor_1 in reachable_vertices:
                 continue
-            reachable_vertices.add(neighbor_1)
-            reachable_vertices = reachable_vertices.union(self.__get_reachable_vertices(neighbor_1, reachable_vertices))
+            if self.current_config[neighbor_1 - 1] == color_2:
+                reachable_vertices.add(neighbor_1)
+                self.__get_reachable_vertices(neighbor_1, reachable_vertices, color_2, color_1)
         return reachable_vertices
 
 
 if __name__ == '__main__':
     graph1, vertices, edges = coloring_problem_file_parsing('le450_15a.col')
     problem = GraphColoringProblem(graph1, vertices, edges)
-    algo = KempeChainAlgorithm(problem, 1000)
+    algo = KempeChainAlgorithm(problem, 10000)
     algo.run()
