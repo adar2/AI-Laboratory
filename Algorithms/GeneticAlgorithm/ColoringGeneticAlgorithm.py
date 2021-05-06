@@ -3,7 +3,7 @@ from random import random, choice
 from time import time
 
 from Algorithms.GeneticAlgorithm.FitnessFunctions import graph_coloring_fitness
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
+from Algorithms.GeneticAlgorithm.GeneticAlgorithmBase import GeneticAlgorithmBase
 from Algorithms.GeneticAlgorithm.MatingFunctions import uniform_point_crossover as imported_crossover
 from Algorithms.GeneticAlgorithm.MutateFunctions import coloring_mutation
 from Algorithms.GeneticAlgorithm.SelectionFunctions import truncation_selection as imported_selection

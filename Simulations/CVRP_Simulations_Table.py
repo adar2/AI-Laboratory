@@ -3,7 +3,7 @@ from Utils.CVRPFileParsing import parse_cvrp_file, getcwd
 from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
 from Algorithms.ACO.ACO import ACO
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
+from Algorithms.GeneticAlgorithm.GeneticAlgorithmBase import GeneticAlgorithmBase
 from Algorithms.GeneticAlgorithm.FitnessFunctions import cvrp_fitness as fitness_func
 from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover as mating_func
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation as mutation_func

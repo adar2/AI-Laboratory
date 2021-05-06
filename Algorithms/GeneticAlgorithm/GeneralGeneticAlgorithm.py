@@ -1,4 +1,4 @@
-from GeneticAlgorithm import GeneticAlgorithmBase
+from Algorithms.GeneticAlgorithm.GeneticAlgorithmBase import GeneticAlgorithmBase
 from Utils.Constants import MUTATION_RATE, ELITE_RATE
 from time import time
 from Problems.KnapSack import KnapSack

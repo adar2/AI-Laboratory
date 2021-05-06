@@ -9,7 +9,7 @@
 # - Mutation Function
 from GASimulationResult import GASimulationResult
 from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite, survival_of_the_young
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
+from Algorithms.GeneticAlgorithm.GeneticAlgorithmBase import GeneticAlgorithmBase
 from Algorithms.GeneticAlgorithm.MutateFunctions import inversion_mutation, exchange_mutation, insertion_mutation, displacement_mutation
 from Algorithms.GeneticAlgorithm.MatingFunctions import ordered_crossover, \
     partially_matched_crossover

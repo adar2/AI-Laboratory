@@ -1,5 +1,6 @@
-from copy import deepcopy
-from random import choice
+from copy import deepcopy, copy
+from random import choice, randint
+from math import sqrt
 
 
 def __relocate(solution: list, customer: tuple) -> list:
@@ -47,6 +48,19 @@ def __get_valid_colors(vertex, config, graph, coloring):
     return [color for color in list(range(1, coloring + 1)) if color not in neighbors_colors]
 
 
-
-
-
+def random_vertex_neighborhood(graph: dict, config: list, coloring: int) -> list:
+    neighborhood = []
+    number_of_vertices = randint(2, int(sqrt(len(config))))
+    vertex_list = []
+    for i in range(number_of_vertices):
+        vertex = randint(0, len(config) - 1)
+        while vertex in vertex_list:
+            vertex = randint(0, len(config) - 1)
+        vertex_list.append(vertex)
+    for vertex in vertex_list:
+        valid_colors = __get_valid_colors(vertex, config, graph, coloring)
+        for color in valid_colors:
+            new_config = copy(config)
+            new_config[vertex] = color
+            neighborhood.append(new_config)
+    return neighborhood

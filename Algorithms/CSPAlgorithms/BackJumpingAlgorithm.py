@@ -54,6 +54,7 @@ class BackJumpingAlgorithm(BaseCSPAlgorithm):
                 self.domains_dict[constraint_vertex].remove(color)
 
     def run(self):
+        print('Executing ...')
         highest_degree = self.get_highest_degree_in_graph()
         while self.current_color < highest_degree:
             self.reset()
@@ -69,9 +70,6 @@ class BackJumpingAlgorithm(BaseCSPAlgorithm):
             return True, set()  # stop the algorithm and return
 
         vertex = self.select_unassigned_vertex()
-        print(f'Current vertex : {vertex} '
-              f',Number of assigned vertices : {len(self.vertices_color_dict)} '
-              f', Number of colors : {len(self.color_groups_dict)}')
 
         color = self.select_value_for_vertex(vertex)
 

@@ -1,25 +1,26 @@
 import json
 import os.path
+
 import Algorithms.GeneticAlgorithm.FitnessFunctions as FitnessFunctions
 import Algorithms.GeneticAlgorithm.MatingFunctions as MatingFunctions
 import Algorithms.GeneticAlgorithm.MutateFunctions as MutateFunctions
 import Algorithms.GeneticAlgorithm.SelectionFunctions as SelectionFunctions
 import Algorithms.GeneticAlgorithm.SurvivalFunctions as SurvivalFunctions
+import Utils.Constants as Constants
+from Algorithms.ACO.ACO import ACO
 from Algorithms.CSPAlgorithms.BackJumpingAlgorithm import BackJumpingAlgorithm
 from Algorithms.CSPAlgorithms.ForwardCheckingAlgorithm import ForwardCheckingAlgorithm
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
+from Algorithms.GeneticAlgorithm.GeneralGeneticAlgorithm import GeneralGeneticAlgorithm
 from Algorithms.LocalSearch.KempeChainsAlgorithm import KempeChainsAlgorithm
-from Algorithms.PSO.PSO import ParticleSwarmOptimization
-from Algorithms.ACO.ACO import ACO
-from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
-from Problems.StringMatching import StringMatching
-from Problems.NQueens import NQueens
-from Problems.KnapSack import KnapSack
+from Algorithms.LocalSearch.TabuSearch import TabuSearch
+from Algorithms.PSO.PSO import ParticleSwarmOptimization
 from Problems.CVRP import CVRP
 from Problems.GraphColoringProblem import GraphColoringProblem
+from Problems.KnapSack import KnapSack
+from Problems.NQueens import NQueens
+from Problems.StringMatching import StringMatching
 from Utils.CVRPFileParsing import parse_cvrp_file
-import Utils.Constants as Constants
 from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 
 
@@ -39,10 +40,10 @@ def init_config():
 
     notes = ""
     notes += "// Available Algorithms:\n\n"
-    algorithms = ['GA', 'PSO', 'ACO', 'TABU_SEARCH', 'SA']
+    algorithms = ['GA', 'PSO', 'ACO', 'TABU_SEARCH', 'SA', 'BACKJUMPING', 'FORWARD_CHECKING', 'KEMPE_CHAINS' ]
     for a in algorithms:
         notes += f'// {a}\n\n'
-    problems = ['STRING_MATCHING', 'NQUEENS', 'KNAPSACK', 'CVRP']
+    problems = ['STRING_MATCHING', 'NQUEENS', 'KNAPSACK', 'CVRP', 'GRAPH_COLORING']
     notes += "// Available Problems:\n\n"
     for p in problems:
         notes += f'// {p}\n\n'
@@ -104,8 +105,8 @@ def get_algorithm(project_path):
         else:
             raise KeyError
         if algorithm == 'GA':
-            return GeneticAlgorithmBase(pop_size, max_iter, problem, fitness_func,
-                                        mating_func, mutation_func, selection_func, survival_func)
+            return GeneralGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
+                                           mating_func, mutation_func, selection_func, survival_func)
         elif algorithm == 'PSO':
             return ParticleSwarmOptimization(pop_size, str(target), Constants.INERTIA_MIN, Constants.INERTIA_MAX,
                                              Constants.C1, Constants.C2, max_iter, fitness_func)
