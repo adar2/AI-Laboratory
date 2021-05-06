@@ -1,10 +1,10 @@
 import random
 import time
+from abc import abstractmethod
 from math import sqrt
-from Problems.KnapSack import KnapSack
-from Utils.Constants import MUTATION_RATE,ELITE_RATE,STUCK_PCT,MAX_RANDOM_AGE,MIN_PARENT_AGE,CLOCK_RATE
+
 from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
-from abc import ABC, abstractmethod
+from Utils.Constants import MUTATION_RATE, ELITE_RATE, STUCK_PCT, MAX_RANDOM_AGE, MIN_PARENT_AGE, CLOCK_RATE
 
 
 class GeneticAlgorithmBase:

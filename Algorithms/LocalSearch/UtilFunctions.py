@@ -1,6 +1,5 @@
-import copy
-import random
 from math import sqrt
+
 from Problems.CVRP import CVRP
 from Problems.GraphColoringProblem import GraphColoringProblem
 from Utils.Constants import COORDINATES

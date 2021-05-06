@@ -1,7 +1,5 @@
-import copy
-from random import choice, randint
 from copy import deepcopy
-from math import sqrt
+from random import choice
 
 
 def __relocate(solution: list, customer: tuple) -> list:
@@ -13,11 +11,6 @@ def __relocate(solution: list, customer: tuple) -> list:
         temp_solution = deepcopy(solution)
         temp_solution.remove(customer)
         temp_solution = temp_solution[:i] + [customer] + temp_solution[i:]
-        # temp_solution.insert(i, customer)
-        # if i < customer_index:
-        #     del temp_solution[customer_index + 1]
-        # else:
-        #     del temp_solution[customer_index - 1]
         results.append(temp_solution)
     return results
 

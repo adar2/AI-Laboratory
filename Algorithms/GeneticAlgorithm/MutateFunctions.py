@@ -1,5 +1,5 @@
 from random import randint, choice, random
-from Chromosome import Chromosome
+from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
 
 
 def __is_in_conflict(vertex: int, chromosome:Chromosome, bad_edges_list: list):

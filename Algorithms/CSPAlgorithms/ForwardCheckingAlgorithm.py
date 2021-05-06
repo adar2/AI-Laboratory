@@ -1,9 +1,8 @@
-from BaseCSPAlgorithm import BaseCSPAlgorithm
-from Problems.AbstractProblem import AbstractProblem
 from copy import copy
 from queue import Queue
-from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
-from Problems.GraphColoringProblem import GraphColoringProblem
+
+from Algorithms.CSPAlgorithms.BaseCSPAlgorithm import BaseCSPAlgorithm
+from Problems.AbstractProblem import AbstractProblem
 
 
 class ForwardCheckingAlgorithm(BaseCSPAlgorithm):

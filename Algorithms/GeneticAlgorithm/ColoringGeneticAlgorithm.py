@@ -1,21 +1,20 @@
-from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
-from Utils.Constants import MUTATION_RATE, ELITE_RATE, STUCK_PCT
-from time import time
-from Problems.GraphColoringProblem import GraphColoringProblem
-from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 from random import randint
-from Algorithms.GeneticAlgorithm.MutateFunctions import coloring_mutation
+from random import random, choice
+from time import time
+
+from Algorithms.GeneticAlgorithm.FitnessFunctions import graph_coloring_fitness
+from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
 from Algorithms.GeneticAlgorithm.MatingFunctions import uniform_point_crossover as imported_crossover
+from Algorithms.GeneticAlgorithm.MutateFunctions import coloring_mutation
 from Algorithms.GeneticAlgorithm.SelectionFunctions import truncation_selection as imported_selection
 from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_young as imported_survival
-from Algorithms.GeneticAlgorithm.FitnessFunctions import graph_coloring_fitness
-from random import random, choice
+from Utils.Constants import MUTATION_RATE, ELITE_RATE, STUCK_PCT
 
 
-# TODO: mutation function, choose correct operator -> single point, decreasing coloring -> implement functions, chromosome init data
 class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
 
-    def __init__(self, pop_size, max_iter, problem, fitness_function=None, mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
+    def __init__(self, pop_size, max_iter, problem, fitness_function=None, mutation_rate=MUTATION_RATE,
+                 elite_rate=ELITE_RATE):
         super().__init__(pop_size, max_iter, problem, fitness_function, mutation_rate, elite_rate)
         self.current_coloring = self.problem.get_max_degree() + 1  # upper bound of coloring in any graph
         self.bad_edges_dict = {}
@@ -125,10 +124,3 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
     def print_current_state(self):
         print(f'Current Coloring: {self.current_coloring}')
         print(f'Current Best Fitness: {self.best.fitness}')
-
-
-if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('le450_5a.col')
-    p = GraphColoringProblem(graph, vertices, edges)
-    a = ColoringGeneticAlgorithm(50, 10000, p)
-    a.run()

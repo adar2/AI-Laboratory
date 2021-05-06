@@ -1,11 +1,11 @@
-from Problems.GraphColoringProblem import GraphColoringProblem
-from TabuSearch import TabuSearch
-from TabuList import TabuList
-from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
-from Utils.Constants import INITIAL_TABU_TENURE
-from UtilFunctions import coloring_init_config, coloring_cost
-from Neighborhood import random_vertex_neighborhood as get_neighborhood
 from random import randint
+
+from Neighborhood import random_vertex_neighborhood as get_neighborhood
+from Problems.GraphColoringProblem import GraphColoringProblem
+from TabuList import TabuList
+from TabuSearch import TabuSearch
+from UtilFunctions import coloring_init_config, coloring_cost
+from Utils.Constants import INITIAL_TABU_TENURE
 
 
 class ColoringTabuSearch(TabuSearch):

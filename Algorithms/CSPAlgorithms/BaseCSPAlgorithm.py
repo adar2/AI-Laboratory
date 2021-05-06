@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from random import choice
-from functools import partial
-from Heuristics import least_constraining_value as lcv, minimum_remaining_values as mrv
+
+from Algorithms.CSPAlgorithms.Heuristics import least_constraining_value as lcv, minimum_remaining_values as mrv
 from Problems.AbstractProblem import AbstractProblem
 
 

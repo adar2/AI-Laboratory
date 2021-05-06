@@ -5,7 +5,7 @@ from Algorithms.LocalSearch.Neighborhood import random_move_neighborhood
 from Algorithms.LocalSearch.BaseIterativeLocalSearch import BaseIterativeLocalSearch
 from Problems.AbstractProblem import AbstractProblem
 from Utils.Constants import ANNEALING_ALPHA, SA_TEMPERATURE,CLOCK_RATE, STUCK_PCT
-from UtilFunctions import cvrp_path_cost, CVRP_init_config
+from Algorithms.LocalSearch.UtilFunctions import cvrp_path_cost, CVRP_init_config
 
 
 class SimulatedAnnealing(BaseIterativeLocalSearch):

@@ -18,5 +18,3 @@ def coloring_problem_file_parsing(file_name):
     return graph, vertices, edges
 
 
-if __name__ == '__main__':
-    coloring_problem_file_parsing('../Algorithms/LocalSearch/le450_5a.col')

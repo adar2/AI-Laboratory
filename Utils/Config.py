@@ -5,7 +5,10 @@ import Algorithms.GeneticAlgorithm.MatingFunctions as MatingFunctions
 import Algorithms.GeneticAlgorithm.MutateFunctions as MutateFunctions
 import Algorithms.GeneticAlgorithm.SelectionFunctions as SelectionFunctions
 import Algorithms.GeneticAlgorithm.SurvivalFunctions as SurvivalFunctions
+from Algorithms.CSPAlgorithms.BackJumpingAlgorithm import BackJumpingAlgorithm
+from Algorithms.CSPAlgorithms.ForwardCheckingAlgorithm import ForwardCheckingAlgorithm
 from Algorithms.GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithmBase
+from Algorithms.LocalSearch.KempeChainsAlgorithm import KempeChainsAlgorithm
 from Algorithms.PSO.PSO import ParticleSwarmOptimization
 from Algorithms.ACO.ACO import ACO
 from Algorithms.LocalSearch.TabuSearch import TabuSearch
@@ -14,8 +17,10 @@ from Problems.StringMatching import StringMatching
 from Problems.NQueens import NQueens
 from Problems.KnapSack import KnapSack
 from Problems.CVRP import CVRP
+from Problems.GraphColoringProblem import GraphColoringProblem
 from Utils.CVRPFileParsing import parse_cvrp_file
 import Utils.Constants as Constants
+from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 
 
 def init_config():
@@ -93,6 +98,9 @@ def get_algorithm(project_path):
         elif problem == 'CVRP':
             capacity, locations = parse_cvrp_file(project_path + '\\' + target)
             problem = CVRP(capacity, locations)
+        elif problem == 'GRAPH_COLORING':
+            graph, vertices, edges = coloring_problem_file_parsing(project_path + '\\' + target)
+            problem = GraphColoringProblem(graph, vertices, edges)
         else:
             raise KeyError
         if algorithm == 'GA':
@@ -107,6 +115,12 @@ def get_algorithm(project_path):
             return TabuSearch(problem, max_iter)
         elif algorithm == 'SA':
             return SimulatedAnnealing(problem, max_iter)
+        elif algorithm == 'BACKJUMPING':
+            return BackJumpingAlgorithm(problem)
+        elif algorithm == 'FORWARD_CHECKING':
+            return ForwardCheckingAlgorithm(problem)
+        elif algorithm == 'KEMPE_CHAINS':
+            return KempeChainsAlgorithm(problem, max_iter)
         else:
             raise KeyError
     except KeyError as e:

@@ -1,15 +1,14 @@
-from BaseIterativeLocalSearch import BaseIterativeLocalSearch
-from Problems.GraphColoringProblem import GraphColoringProblem
-from UtilFunctions import coloring_init_config
 import copy
-from random import randint, choice
 from math import sqrt
+from random import randint, choice
+
+from Algorithms.LocalSearch.BaseIterativeLocalSearch import BaseIterativeLocalSearch
+from Problems.GraphColoringProblem import GraphColoringProblem
+from Algorithms.LocalSearch.UtilFunctions import coloring_init_config
 from Utils.Constants import STUCK_PCT
 
-from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 
-
-class KempeChainAlgorithm(BaseIterativeLocalSearch):
+class KempeChainsAlgorithm(BaseIterativeLocalSearch):
 
     def __init__(self, problem: GraphColoringProblem, max_iter: int):
         super().__init__(problem, max_iter)

@@ -1,10 +1,7 @@
+from copy import copy
+
 from Algorithms.CSPAlgorithms.BaseCSPAlgorithm import BaseCSPAlgorithm
 from Problems.AbstractProblem import AbstractProblem
-from copy import copy
-from Algorithms.CSPAlgorithms.Heuristics import minimum_remaining_values as mrv
-# --------------- TESTING PURPOSE ---------------------
-from Problems.GraphColoringProblem import GraphColoringProblem
-from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 
 
 class BackJumpingAlgorithm(BaseCSPAlgorithm):

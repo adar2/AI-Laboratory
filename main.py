@@ -1,6 +1,4 @@
 import os
-from Utils.Config import get_algorithm
-import os
 
 from Utils.Config import get_algorithm
 

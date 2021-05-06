@@ -1,6 +1,3 @@
-from os import getcwd
-
-
 def parse_cvrp_file(file_path):
     capacity = 0
     locations = 1
