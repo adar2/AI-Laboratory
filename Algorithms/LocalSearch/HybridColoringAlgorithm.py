@@ -77,9 +77,9 @@ class HybridColoringAlgorithm(BaseIterativeLocalSearch):
             if neighbor_cost < self.current_config_cost:
                 self.current_config = neighbor
                 self.current_config_cost = neighbor_cost
-            # if self.is_complete(self.current_config):
-            #     print(f"found legal coloring with {self.current_coloring} colors")
-            #     self.reduce_current_config_coloring()
+            if self.is_complete(self.current_config):
+                print(f"found legal coloring with {self.current_coloring} colors")
+                self.reduce_current_config_coloring()
         print(f"Chromatic number is : {self.current_coloring + 1}")
 
     def reduce_current_config_coloring(self):

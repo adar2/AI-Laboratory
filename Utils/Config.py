@@ -10,7 +10,10 @@ import Utils.Constants as Constants
 from Algorithms.ACO.ACO import ACO
 from Algorithms.CSPAlgorithms.BackJumpingAlgorithm import BackJumpingAlgorithm
 from Algorithms.CSPAlgorithms.ForwardCheckingAlgorithm import ForwardCheckingAlgorithm
+from Algorithms.GeneticAlgorithm.ColoringGeneticAlgorithm import ColoringGeneticAlgorithm
 from Algorithms.GeneticAlgorithm.GeneralGeneticAlgorithm import GeneralGeneticAlgorithm
+from Algorithms.LocalSearch.CVRPTabuSearch import CVRPTabuSearch
+from Algorithms.LocalSearch.ColoringTabuSearch import ColoringTabuSearch
 from Algorithms.LocalSearch.KempeChainsAlgorithm import KempeChainsAlgorithm
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
 from Algorithms.LocalSearch.TabuSearch import TabuSearch
@@ -105,6 +108,9 @@ def get_algorithm(project_path):
         else:
             raise KeyError
         if algorithm == 'GA':
+            if isinstance(problem, GraphColoringProblem):
+                return ColoringGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
+                                           mating_func, mutation_func, selection_func, survival_func)
             return GeneralGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
                                            mating_func, mutation_func, selection_func, survival_func)
         elif algorithm == 'PSO':
@@ -113,7 +119,9 @@ def get_algorithm(project_path):
         elif algorithm == 'ACO':
             return ACO(problem, max_iter, pop_size)
         elif algorithm == 'TABU_SEARCH':
-            return TabuSearch(problem, max_iter)
+            if isinstance(problem,GraphColoringProblem):
+                return ColoringTabuSearch(problem,max_iter)
+            return CVRPTabuSearch(problem, max_iter)
         elif algorithm == 'SA':
             return SimulatedAnnealing(problem, max_iter)
         elif algorithm == 'BACKJUMPING':

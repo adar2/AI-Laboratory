@@ -64,3 +64,22 @@ def random_vertex_neighborhood(graph: dict, config: list, coloring: int) -> list
             new_config[vertex] = color
             neighborhood.append(new_config)
     return neighborhood
+
+
+def non_feasible_random_vertex_neighborhood(graph: dict, config: list, coloring: int) -> list:
+    neighborhood = []
+    number_of_vertices = randint(2, int(sqrt(len(config))))
+    vertex_list = []
+    for i in range(number_of_vertices):
+        vertex = randint(0, len(config) - 1)
+        while vertex in vertex_list:
+            vertex = randint(0, len(config) - 1)
+        vertex_list.append(vertex)
+    for vertex in vertex_list:
+        color = randint(1, coloring)
+        while color == config[vertex]:
+            color = randint(1, coloring)
+        new_config = copy(config)
+        new_config[vertex] = color
+        neighborhood.append(new_config)
+    return neighborhood
