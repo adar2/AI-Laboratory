@@ -95,7 +95,7 @@ class HybridColoringAlgorithm(BaseIterativeLocalSearch):
 
 
 if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('le450_5a.col')
+    graph, vertices, edges = coloring_problem_file_parsing('../../le450_5a.col')
     problem = GraphColoringProblem(graph, vertices, edges)
     algo = HybridColoringAlgorithm(problem, 1000)
     algo.run()

@@ -1,10 +1,10 @@
 from random import randint
 
-from Neighborhood import random_vertex_neighborhood as get_neighborhood
+from Algorithms.LocalSearch.Neighborhood import random_vertex_neighborhood as get_neighborhood
 from Problems.GraphColoringProblem import GraphColoringProblem
-from TabuList import TabuList
-from TabuSearch import TabuSearch
-from UtilFunctions import coloring_init_config, coloring_cost
+from Algorithms.LocalSearch.TabuList import TabuList
+from Algorithms.LocalSearch.TabuSearch import TabuSearch
+from Algorithms.LocalSearch.UtilFunctions import coloring_init_config, coloring_cost
 from Utils.Constants import INITIAL_TABU_TENURE
 
 

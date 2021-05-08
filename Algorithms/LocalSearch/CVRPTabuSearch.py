@@ -1,7 +1,7 @@
-from TabuSearch import TabuSearch
+from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Problems.CVRP import CVRP
 from Algorithms.LocalSearch.Neighborhood import random_move_neighborhood as get_neighborhood
-from UtilFunctions import cvrp_path_cost, CVRP_init_config
+from Algorithms.LocalSearch.UtilFunctions import cvrp_path_cost, CVRP_init_config
 from Utils.Constants import COORDINATES
 
 

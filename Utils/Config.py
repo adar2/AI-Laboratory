@@ -110,7 +110,7 @@ def get_algorithm(project_path):
         if algorithm == 'GA':
             if isinstance(problem, GraphColoringProblem):
                 return ColoringGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
-                                           mating_func, mutation_func, selection_func, survival_func)
+                                                mating_func, mutation_func)
             return GeneralGeneticAlgorithm(pop_size, max_iter, problem, fitness_func,
                                            mating_func, mutation_func, selection_func, survival_func)
         elif algorithm == 'PSO':
