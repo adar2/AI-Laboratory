@@ -14,6 +14,7 @@ from Algorithms.GeneticAlgorithm.ColoringGeneticAlgorithm import ColoringGenetic
 from Algorithms.GeneticAlgorithm.GeneralGeneticAlgorithm import GeneralGeneticAlgorithm
 from Algorithms.LocalSearch.CVRPTabuSearch import CVRPTabuSearch
 from Algorithms.LocalSearch.ColoringTabuSearch import ColoringTabuSearch
+from Algorithms.LocalSearch.HybridColoringAlgorithm import HybridColoringAlgorithm
 from Algorithms.LocalSearch.KempeChainsAlgorithm import KempeChainsAlgorithm
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
 from Algorithms.LocalSearch.TabuSearch import TabuSearch
@@ -43,7 +44,7 @@ def init_config():
 
     notes = ""
     notes += "// Available Algorithms:\n\n"
-    algorithms = ['GA', 'PSO', 'ACO', 'TABU_SEARCH', 'SA', 'BACKJUMPING', 'FORWARD_CHECKING', 'KEMPE_CHAINS' ]
+    algorithms = ['GA', 'PSO', 'ACO', 'TABU_SEARCH', 'SA', 'BACKJUMPING', 'FORWARD_CHECKING', 'KEMPE_CHAINS','HYBRID_COLORING']
     for a in algorithms:
         notes += f'// {a}\n\n'
     problems = ['STRING_MATCHING', 'NQUEENS', 'KNAPSACK', 'CVRP', 'GRAPH_COLORING']
@@ -119,8 +120,8 @@ def get_algorithm(project_path):
         elif algorithm == 'ACO':
             return ACO(problem, max_iter, pop_size)
         elif algorithm == 'TABU_SEARCH':
-            if isinstance(problem,GraphColoringProblem):
-                return ColoringTabuSearch(problem,max_iter)
+            if isinstance(problem, GraphColoringProblem):
+                return ColoringTabuSearch(problem, max_iter)
             return CVRPTabuSearch(problem, max_iter)
         elif algorithm == 'SA':
             return SimulatedAnnealing(problem, max_iter)
@@ -130,6 +131,8 @@ def get_algorithm(project_path):
             return ForwardCheckingAlgorithm(problem)
         elif algorithm == 'KEMPE_CHAINS':
             return KempeChainsAlgorithm(problem, max_iter)
+        elif algorithm == 'HYBRID_COLORING':
+            return HybridColoringAlgorithm(problem, max_iter)
         else:
             raise KeyError
     except KeyError as e:
