@@ -128,4 +128,3 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
     def print_current_state(self):
         print(f'Current Coloring: {self.current_coloring}')
         print(f'Current Best Fitness: {self.best.fitness}')
-

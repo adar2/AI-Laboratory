@@ -1,8 +1,6 @@
 from Algorithms.LocalSearch.BaseIterativeLocalSearch import BaseIterativeLocalSearch
 from Algorithms.LocalSearch.Neighborhood import random_vertex_neighborhood as get_neighborhood
 from Algorithms.LocalSearch.UtilFunctions import coloring_init_config
-from Problems.GraphColoringProblem import GraphColoringProblem
-from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 from random import randint
 from time import process_time
 
