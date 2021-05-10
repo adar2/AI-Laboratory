@@ -1,7 +1,7 @@
 import copy
 from math import sqrt
 from random import randint, choice
-
+from time import process_time
 from Algorithms.LocalSearch.BaseIterativeLocalSearch import BaseIterativeLocalSearch
 from Problems.GraphColoringProblem import GraphColoringProblem
 from Algorithms.LocalSearch.UtilFunctions import coloring_init_config
@@ -15,6 +15,7 @@ class KempeChainsAlgorithm(BaseIterativeLocalSearch):
         self.problem = problem
         self.color_classes_dict = {}
         self.graph = self.problem.get_search_space()
+        self.states_explored = 0
 
     def init_config(self):
         return coloring_init_config(self.problem)
@@ -47,6 +48,7 @@ class KempeChainsAlgorithm(BaseIterativeLocalSearch):
             vertex_list.append(random_vertex)
             new_config = self.kempe_chain_generator(random_vertex, config)
             neighborhood.append(new_config)
+        self.states_explored += len(neighborhood)
         return neighborhood
 
     def cost(self, config) -> float:
@@ -83,16 +85,18 @@ class KempeChainsAlgorithm(BaseIterativeLocalSearch):
                     self.color_classes_dict[color].remove(vertex)
 
     def run(self):
+        print("Executing...")
         self.current_config = self.init_config()
         self.current_config_cost = self.cost(self.current_config)
+        start_time = process_time()
         for i in range(self.max_iter):
             if self.is_stuck:
                 break
             updated = False
             self.update_color_classes()
             self.remove_color()
-            print(f'Best config yet {self.current_config_cost}')
-            print(f'Current color classes {self.number_of_color_classes()}')
+            # print(f'Best config yet {self.current_config_cost}')
+            # print(f'Current number of color classes: {self.number_of_color_classes()}')
             neighborhood = self.neighbour_config()
             for config in neighborhood:
                 if self.cost(config) > self.current_config_cost:
@@ -100,7 +104,12 @@ class KempeChainsAlgorithm(BaseIterativeLocalSearch):
                     self.current_config = config
                     self.current_config_cost = self.cost(config)
             self.updated_stuck(updated)
-        print(f'The chromatic color found for current problem : {len(self.color_classes_dict)}')
+        self.elapsed_time = round(process_time()-start_time,2)
+        print("---------------------")
+        print(f'Chromatic number found: {len(self.color_classes_dict)}')
+        print(f'Number of states explored: {self.states_explored}')
+        print(f"Time elapsed: {self.elapsed_time}")
+        return len(self.color_classes_dict)
 
     def kempe_chain_generator(self, random_vertex, config: list):
         new_config = copy.copy(config)

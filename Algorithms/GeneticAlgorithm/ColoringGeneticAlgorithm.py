@@ -25,18 +25,20 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         self.fitness_function = graph_coloring_fitness
         self.constraints_dict = self.problem.get_search_space()
         self.graph = self.problem.get_search_space()
+        self.states_explored = None
 
     def run(self):
         last_best = None
         stuck_counter = 0
         start_time = time()
         self.init_population()
+        print("Executing....")
         for i in range(self.max_iter):
             self.number_of_iterations += 1
             self.update_bad_edges()
             self.calc_fitness()
             self.best = min(self.population, key=lambda x: x.fitness)
-            self.print_current_state()
+            # self.print_current_state()
             self.iterations_costs.append(self.best.fitness)
             self.current_time = time()
             stuck_counter, last_best = self.update_stuck_counter(last_best, stuck_counter)
@@ -55,10 +57,10 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             self.swap()
             self.increase_age()
         self.update_time_stats(start_time)
-        print("-----------------------------------")
+        print("---------------------")
+        print(f"Chromatic number found: {self.current_coloring + 1}")
         print(f"Time elapsed: {self.elapsed_time}")
-        print(f"Chromatic Number: {self.current_coloring + 1}")
-        return self.best
+        return self.current_coloring + 1
 
     def is_stuck(self, stuck_counter):
         return (stuck_counter / self.max_iter) >= STUCK_PCT
@@ -93,6 +95,7 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
         return False
 
     def update_coloring(self):
+        print(f"Found legal coloring using {self.current_coloring} colors")
         self.current_coloring -= 1
         for chromosome in self.population:
             data = chromosome.data
@@ -102,13 +105,14 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
             chromosome.data = data
 
     def calc_fitness(self):
-        avg_fitness = 0
-        standard_dev = 0
         for chromosome in self.population:
             bad_edges = self.bad_edges_dict[chromosome]
             self.fitness_function(chromosome, bad_edges)
-        avg_fitness, standard_dev = self.calc_stats(avg_fitness, standard_dev)
-        print(f"Average fitness: {avg_fitness}")
+        # calculate fitness stats
+        # avg_fitness = 0
+        # standard_dev = 0
+        # avg_fitness, standard_dev = self.calc_stats(avg_fitness, standard_dev)
+        # print(f"Average fitness: {avg_fitness}")
         # print(f"Standard Deviation: {standard_dev}")
 
     def __get_bad_edges(self, chromosome):
@@ -124,3 +128,4 @@ class ColoringGeneticAlgorithm(GeneticAlgorithmBase):
     def print_current_state(self):
         print(f'Current Coloring: {self.current_coloring}')
         print(f'Current Best Fitness: {self.best.fitness}')
+
