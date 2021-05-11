@@ -1,4 +1,4 @@
-Lab 1 project
+AI Laboratory Project Submission
 ----------
 Submitters:
 Ronnie Shafran - ronnieshafran@gmail.com
@@ -8,6 +8,7 @@ Setup:
 The program's .exe file can be found in dist/main.
 To use our program, you are given a configuration file in JSON format - config.json.
 The Config file has to be kept in the same folder as the EXE file.
+Inside the JSON file you can find all available options and their respective syntax.
 
 Running Instructions:
 1. Set up your desired configuration in config.json. All available parameters are listed below the object itself.
