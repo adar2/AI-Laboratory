@@ -20,6 +20,7 @@ class BaseCSPAlgorithm(ABC):
         self.domains_dict = None
         # init dict of vertices with their degree
         self.vertices_degree = {vertex: len(self.graph[vertex]) for vertex in self.graph}
+        self.elapsed_time = None
 
     def update_vertex(self, vertex: int, color: int):
         if vertex in self.vertices_color_dict:

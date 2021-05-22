@@ -1,4 +1,5 @@
 from random import randint
+from time import process_time
 
 from Algorithms.LocalSearch.Neighborhood import random_vertex_neighborhood as get_neighborhood
 from Problems.GraphColoringProblem import GraphColoringProblem
@@ -47,10 +48,12 @@ class ColoringTabuSearch(TabuSearch):
         self.current_config_cost = self.cost(self.current_config)
         self.tabu_list = TabuList(len(self.current_config) / 10, INITIAL_TABU_TENURE)
         self.last_config_cost = self.current_config_cost
+        print("Executing...")
+        start_time = process_time()
         for i in range(self.max_iter):
             if self.is_stuck:
                 break
-            self.print_current_config_state()
+            # self.print_current_config_state()
             # for stats
             self.iterations_costs.append(self.best_config_cost)
             self.proposed_config = self.current_config if self.current_config_cost == 0 else self.neighbour_config()
@@ -66,10 +69,11 @@ class ColoringTabuSearch(TabuSearch):
             self.tabu_list.add(hash_key)
             self.update_stuck(improvement_delta)  # checks if we're stuck
             self.update_tabu_list(improvement_delta)
-            print(f'Tabu List Size: {self.tabu_list.get_size()}')
-        print('--------------------------------------')
-        print(f'Chromatic Coloring Found: {self.current_coloring + 1}')
+        self.elapsed_time = round(process_time()-start_time, 2)
+        print("---------------------")
+        print(f'Chromatic number found: {self.current_coloring + 1}')
         print(f'Number of states explored: {self.states_explored}')
+        print(f"Time elapsed: {self.elapsed_time}")
         return self.current_coloring + 1
 
     def update_coloring(self):
@@ -97,4 +101,3 @@ class ColoringTabuSearch(TabuSearch):
     def convert_to_key(config):
         # convert to tuple of (x,y,demand)
         return tuple(config)
-

@@ -8,6 +8,7 @@ class GraphColoringProblem(AbstractProblem):
         self.vertices = vertices
         self.edges = edges
         self.density = self.calc_density()
+        self.printable_data()
 
     def get_search_space(self):
         return self.graph

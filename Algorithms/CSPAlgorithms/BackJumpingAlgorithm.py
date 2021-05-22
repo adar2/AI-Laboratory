@@ -2,12 +2,14 @@ from copy import copy
 
 from Algorithms.CSPAlgorithms.BaseCSPAlgorithm import BaseCSPAlgorithm
 from Problems.AbstractProblem import AbstractProblem
+from time import process_time
 
 
 class BackJumpingAlgorithm(BaseCSPAlgorithm):
     def __init__(self, problem: AbstractProblem):
         super().__init__(problem)
         self.conflict_set_dict = None
+        self.states_explored = 0
 
     def reset(self):
         self.conflict_set_dict = {key: set() for key in self.graph.keys()}
@@ -55,6 +57,7 @@ class BackJumpingAlgorithm(BaseCSPAlgorithm):
 
     def run(self):
         print('Executing ...')
+        start_time = process_time()
         highest_degree = self.get_highest_degree_in_graph()
         while self.current_color < highest_degree:
             self.reset()
@@ -62,7 +65,12 @@ class BackJumpingAlgorithm(BaseCSPAlgorithm):
                 # solution found break
                 break
             self.generate_another_color()
-        print(f'Chromatic number found for the current graph is : {len(self.color_groups_dict)}')
+        self.elapsed_time = round(process_time()-start_time,2)
+        print("---------------------")
+        print(f'Chromatic number found: {len(self.color_groups_dict)}')
+        print(f'Number of states explored: {self.states_explored}')
+        print(f"Time elapsed: {self.elapsed_time}")
+        return len(self.color_groups_dict)
 
     def backjumping_search(self):
         # check whether all vertices has been assigned with color
@@ -72,6 +80,8 @@ class BackJumpingAlgorithm(BaseCSPAlgorithm):
         vertex = self.select_unassigned_vertex()
 
         color = self.select_value_for_vertex(vertex)
+
+        self.states_explored += 1
 
         if self.check_consistency(vertex, color):
             if vertex not in self.vertices_color_dict:

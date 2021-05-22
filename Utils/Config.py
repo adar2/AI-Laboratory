@@ -51,12 +51,12 @@ def init_config():
     notes += "// Available Problems:\n\n"
     for p in problems:
         notes += f'// {p}\n\n'
-    types = [('FitnessFunctions', 'fitness'), ('MatingFunctions', 'crossover'), ('MutateFunctions', 'mutation'),
-             ('SelectionFunctions', 'selection'), ('SurvivalFunctions', 'survival')]
+    types = [(FitnessFunctions, 'fitness'), (MatingFunctions, 'crossover'), (MutateFunctions, 'mutation'),
+             (SelectionFunctions, 'selection'), (SurvivalFunctions, 'survival')]
     for t in types:
         module_name = t[0]
         key_word = t[1]
-        notes += f"// Available {module_name}:\n\n"
+        notes += f"// Available {module_name.__name__.split('.')[-1]}:\n\n"
         for c in dir(module_name):
             if key_word in c:
                 notes += f"// {c.upper()}\n\n"

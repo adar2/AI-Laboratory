@@ -1,6 +1,6 @@
 from copy import copy
 from queue import Queue
-
+from time import process_time
 from Algorithms.CSPAlgorithms.BaseCSPAlgorithm import BaseCSPAlgorithm
 from Problems.AbstractProblem import AbstractProblem
 
@@ -11,18 +11,24 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
         self.max_coloring = self.get_highest_degree_in_graph() + 1
         self.arcs_queue = self.generate_arcs_queue()
         self.domains_dict = self.generate_domains_dict(self.max_coloring)
+        self.states_explored = 0
 
     def run(self):
+        start_time = process_time()
         current_coloring = 2
         while current_coloring < self.max_coloring:
             self.reset(current_coloring)
             if not self.is_coloring_possible(current_coloring):
-                print(f'Coloring with {current_coloring} colors FAILED!')
+                # print(f'Coloring with {current_coloring} colors FAILED!')
                 current_coloring += 1
             else:
-                print(f'Coloring with {current_coloring} colors succeeded!')
+                # print(f'Coloring with {current_coloring} colors succeeded!')
                 break
-        print(f'Chromatic number: {current_coloring}')
+        print("---------------------")
+        print(f'Chromatic number found: {current_coloring}')
+        print(f'Number of states explored: {self.states_explored}')
+        print(f"Time elapsed: {self.elapsed_time}")
+        self.elapsed_time = round(process_time()-start_time,2)
         return current_coloring
 
     def is_arc_consistent(self, domains_dict):
@@ -54,6 +60,7 @@ class ForwardCheckingAlgorithm(BaseCSPAlgorithm):
 
     def forward_check(self, vertex, color, copied_domains_dict):
         self.update_vertex(vertex, color)
+        self.states_explored += 1
         copied_domains_dict[vertex] = [color]
         success, updated_domain = self.is_arc_consistent(copied_domains_dict)
         self.reset_vertex_assignment(vertex)

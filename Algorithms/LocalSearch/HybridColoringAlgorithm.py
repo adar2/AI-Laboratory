@@ -1,9 +1,10 @@
 from Algorithms.LocalSearch.BaseIterativeLocalSearch import BaseIterativeLocalSearch
 from Algorithms.LocalSearch.Neighborhood import random_vertex_neighborhood as get_neighborhood
 from Algorithms.LocalSearch.UtilFunctions import coloring_init_config
-from Problems.GraphColoringProblem import GraphColoringProblem
-from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
 from random import randint
+from time import process_time
+
+from Utils.Constants import STUCK_PCT
 
 
 class HybridColoringAlgorithm(BaseIterativeLocalSearch):
@@ -70,20 +71,32 @@ class HybridColoringAlgorithm(BaseIterativeLocalSearch):
         self.current_config = self.init_config()
         self.current_coloring = max(self.current_config)
         self.current_config_cost = self.cost(self.current_config)
+        start_time = process_time()
+        print("Executing...")
         for i in range(self.max_iter):
-            print(f'Current config, {self.current_config_cost}')
+            if self.is_stuck:
+                break
+            # print(f'Current config objective function value: {self.current_config_cost}')
             neighbor = self.neighbour_config()
             neighbor_cost = self.cost(neighbor)
+            improvement_delta = self.current_config_cost - neighbor_cost
+            self.update_stuck(improvement_delta)
             if neighbor_cost < self.current_config_cost:
                 self.current_config = neighbor
                 self.current_config_cost = neighbor_cost
             if self.is_complete(self.current_config):
                 print(f"found legal coloring with {self.current_coloring} colors")
                 self.reduce_current_config_coloring()
-        print(f"Chromatic number is : {self.current_coloring + 1}")
+        self.elapsed_time = round(process_time() - start_time, 2)
+        print("---------------------")
+        print(f"Chromatic number found: {self.current_coloring + 1}")
+        print(f'Number of states explored: {self.states_explored}')
+        print(f"Time elapsed: {self.elapsed_time}")
+        return self.current_coloring + 1
 
     def reduce_current_config_coloring(self):
         self.current_coloring -= 1
+        self.iterations_stuck = 0
         new_config = []
         for vertex_color in self.current_config:
             if vertex_color == self.current_coloring + 1:
@@ -93,9 +106,10 @@ class HybridColoringAlgorithm(BaseIterativeLocalSearch):
         self.current_config = new_config
         self.current_config_cost = self.cost(self.current_config)
 
-
-if __name__ == '__main__':
-    graph, vertices, edges = coloring_problem_file_parsing('../../le450_5a.col')
-    problem = GraphColoringProblem(graph, vertices, edges)
-    algo = HybridColoringAlgorithm(problem, 1000)
-    algo.run()
+    def update_stuck(self, improvement_delta):
+        if improvement_delta == 0:
+            self.iterations_stuck += 1
+        else:
+            self.iterations_stuck = 0
+        if self.iterations_stuck >= STUCK_PCT * self.max_iter:
+            self.is_stuck = True
