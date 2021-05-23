@@ -1,13 +1,13 @@
-from Problems.AbstractProblem import AbstractProblem
+from Problems.AbstarctSearchProblem import AbstractSearchProblem
 
 
-class MultiKnapsack(AbstractProblem):
+class MultiKnapsack(AbstractSearchProblem):
     def __init__(self, capacities_list: list, weights_list: list, profits_dict: dict):
         super().__init__()
         self.profits_dict = profits_dict
         self.weights_list = weights_list
         self.capacities_list = capacities_list
-        self.number_of_knapsacks = len(weights_list)
+        self.number_of_knapsacks = len(self.weights_list)
 
     # should get list of each knapsack's current weight. Finally, the last item of the list should be a list of all items currently
     # chosen
@@ -17,5 +17,13 @@ class MultiKnapsack(AbstractProblem):
         print('\n')
         print(f'Items in knapsacks:\n {data[-1]}\n')
 
-    def get_search_space(self):
+    # this should sort all items by density and return a sorted list of items
+    def get_sorted_configs(self):
         pass
+
+    def calc_upper_bound(self, config):
+        pass
+
+
+
+
