@@ -1,35 +1,77 @@
 from Algorithms.DiscreteOptimizationSearch.SearchNode import SearchNode
 from Problems.AbstarctSearchProblem import AbstractSearchProblem
+from Problems.MultiKnapsack import MultiKnapsack
+from Utils.MultiKnapSackParsing import multiknapsack_problem_file_parsing
 
 
 class LeastDiscrepancySearch:
 
     def __init__(self, problem: AbstractSearchProblem) -> None:
         super().__init__()
+        self.upper_bound = None
+        self.discrepancy = 0
         self.problem = problem
+        self.root = self.problem.get_initial_config()
+        self.max_discrepancy = len(problem.get_initial_config())
         self.initial_items_list = problem.get_sorted_configs()
 
     def create_node(self, config, discrepancy=0, item_to_expand=0):
-        child_discrepancy = 0 if discrepancy == 0 else discrepancy + 1
-        child_config = config
-        child_upper_bound = self.problem.calc_upper_bound(config)
-        child_capacity = self.problem.calc_remaining_capacity(config)
-        child_value = self.problem.calc_value(config)
-        child_item_to_expand = item_to_expand
-        return SearchNode(child_config,child_upper_bound,child_capacity,child_value,child_discrepancy,child_item_to_expand)
+        # child_discrepancy = 0 if discrepancy == 0 else discrepancy + 1
+        # child_config = config
+        # child_upper_bound = self.problem.calc_upper_bound(config)
+        # child_capacity = self.problem.calc_remaining_capacity(config)
+        # child_value = self.problem.calc_value(config)
+        # child_item_to_expand = item_to_expand
+        # return SearchNode(child_config, child_upper_bound, child_capacity, child_value, child_discrepancy,
+        #                   child_item_to_expand)
+        capacity = self.problem.calc_remaining_capacity(config)
+        value = self.problem.calc_value(config)
+        return SearchNode(config, capacity, value)
 
     def run(self):
         discrepancy_wave = 0
         solution = None
+        best = 0
+        best_sol = None
+        root_node = self.create_node(self.root)
         # TODO: find upper bound of discrepancy?
-        while True:
-            solution = self.least_discrepancy_search(discrepancy_wave)
+        while discrepancy_wave < self.max_discrepancy:
+            print(f'Current discrepancy {discrepancy_wave}')
+            solution = self.least_discrepancy_search(root_node, discrepancy_wave)
+            # is there actually reason that the solution will be none ??
             if solution is not None:
-                break
+                if solution.value > best:
+                    best = solution.value
+                    best_sol = solution
+                # break
             discrepancy_wave += 1
         return solution
 
-    def least_discrepancy_search(self, discrepancy_wave):
-        raise NotImplementedError
+    def least_discrepancy_search(self, current_node, discrepancy):
+        if current_node.capacity < 0:  # prune this node and sub tree
+            return None
+        candidates = [self.create_node(config) for config in self.problem.expand(current_node.config)]
+        if len(candidates) == 0:
+            print(f'Current node config: {current_node.config} , {current_node.value}')
+            return current_node
+        left_child_node = candidates[0]
+        right_child_node = candidates[1]
+        if discrepancy == 0:
+            return self.least_discrepancy_search(left_child_node, discrepancy)
+        else:
+            left_result = self.least_discrepancy_search(left_child_node, discrepancy)
+            right_result = self.least_discrepancy_search(right_child_node, discrepancy - 1)
+            if right_result is None and left_result is None:
+                return None
+            elif right_result is None:
+                return left_result
+            elif left_result is None:
+                return right_result
+            return right_result if right_result.value > left_result.value else left_result
 
 
+if __name__ == '__main__':
+    profits_dict, capacities, weights = multiknapsack_problem_file_parsing('HP1.DAT')
+    problem = MultiKnapsack(capacities, weights, profits_dict)
+    algo = LeastDiscrepancySearch(problem)
+    algo.run()

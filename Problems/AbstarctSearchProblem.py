@@ -24,3 +24,7 @@ class AbstractSearchProblem(ABC):
     @abstractmethod
     def calc_value(self, config):
         raise NotImplementedError
+
+    @abstractmethod
+    def expand(self, config) -> list:
+        raise NotImplementedError

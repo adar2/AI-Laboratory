@@ -21,7 +21,7 @@ def multiknapsack_problem_file_parsing(file_name):
         for i in range(num_of_knapsacks):
             profits_dict[i] = []
             for _ in range(num_of_objects):
-                profits_dict[i].append(data[index])
+                profits_dict[i].append(int(data[index]))
                 index += 1
 
-        return profits_dict, capacities, weights
+    return profits_dict, capacities, weights
