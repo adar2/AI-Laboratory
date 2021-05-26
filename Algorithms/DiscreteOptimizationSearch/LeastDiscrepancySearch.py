@@ -2,7 +2,7 @@ from Algorithms.DiscreteOptimizationSearch.SearchNode import SearchNode
 from Problems.AbstarctSearchProblem import AbstractSearchProblem
 from Problems.MultiKnapsack import MultiKnapsack
 from Utils.MultiKnapSackParsing import multiknapsack_problem_file_parsing
-
+from time import time
 
 class LeastDiscrepancySearch:
 
@@ -14,53 +14,51 @@ class LeastDiscrepancySearch:
         self.root = self.problem.get_initial_config()
         self.max_discrepancy = len(problem.get_initial_config())
         self.initial_items_list = problem.get_sorted_configs()
+        self.best_solution = None
 
     def create_node(self, config, discrepancy=0, item_to_expand=0):
-        # child_discrepancy = 0 if discrepancy == 0 else discrepancy + 1
-        # child_config = config
-        # child_upper_bound = self.problem.calc_upper_bound(config)
-        # child_capacity = self.problem.calc_remaining_capacity(config)
-        # child_value = self.problem.calc_value(config)
-        # child_item_to_expand = item_to_expand
-        # return SearchNode(child_config, child_upper_bound, child_capacity, child_value, child_discrepancy,
-        #                   child_item_to_expand)
-        capacity = self.problem.calc_remaining_capacity(config)
+        capacity = self.problem.calc_remaining_capacity(config)[0]
+        if capacity < 0:
+            return None
+        estimation = self.problem.calc_upper_bound(config)
         value = self.problem.calc_value(config)
-        return SearchNode(config, capacity, value)
+        return SearchNode(config, capacity, value, estimation)
 
     def run(self):
+        start_time = time()
         discrepancy_wave = 0
-        solution = None
-        best = 0
-        best_sol = None
         root_node = self.create_node(self.root)
         # TODO: find upper bound of discrepancy?
         while discrepancy_wave < self.max_discrepancy:
+            self.upper_bound = None
             print(f'Current discrepancy {discrepancy_wave}')
             solution = self.least_discrepancy_search(root_node, discrepancy_wave)
             # is there actually reason that the solution will be none ??
             if solution is not None:
-                if solution.value > best:
-                    best = solution.value
-                    best_sol = solution
-                # break
+                print('found solution')
+                if self.best_solution is None or solution.value > self.best_solution.value:
+                    self.best_solution = solution
+                    # break
             discrepancy_wave += 1
-        return solution
+        print(f'Best solution {self.best_solution.config} , score : {self.best_solution.value}')
+        print(f'Run time: {time() - start_time}')
 
     def least_discrepancy_search(self, current_node, discrepancy):
-        if current_node.capacity < 0:  # prune this node and sub tree
+        if self.upper_bound and current_node.upper_bound < self.upper_bound:  # prune this node and sub tree
             return None
         candidates = [self.create_node(config) for config in self.problem.expand(current_node.config)]
         if len(candidates) == 0:
-            print(f'Current node config: {current_node.config} , {current_node.value}')
+            # print(f'Current node config: {current_node.config} , {current_node.value}')
+            if not self.upper_bound or current_node.value > self.upper_bound:
+                self.upper_bound = current_node.value
             return current_node
         left_child_node = candidates[0]
         right_child_node = candidates[1]
         if discrepancy == 0:
-            return self.least_discrepancy_search(left_child_node, discrepancy)
+            return self.least_discrepancy_search(left_child_node, discrepancy) if left_child_node else None
         else:
-            left_result = self.least_discrepancy_search(left_child_node, discrepancy)
-            right_result = self.least_discrepancy_search(right_child_node, discrepancy - 1)
+            right_result = self.least_discrepancy_search(right_child_node, discrepancy - 1) if right_child_node else None
+            left_result = self.least_discrepancy_search(left_child_node, discrepancy) if left_child_node else None
             if right_result is None and left_result is None:
                 return None
             elif right_result is None:
@@ -71,7 +69,11 @@ class LeastDiscrepancySearch:
 
 
 if __name__ == '__main__':
-    profits_dict, capacities, weights = multiknapsack_problem_file_parsing('HP1.DAT')
+    profits_dict, capacities, weights = multiknapsack_problem_file_parsing('FLEI.DAT')
     problem = MultiKnapsack(capacities, weights, profits_dict)
     algo = LeastDiscrepancySearch(problem)
     algo.run()
+# or (
+#                 self.best_solution and current_node.upper_bound < self.best_solution.value)
+
+# Best solution [1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0]
