@@ -13,7 +13,8 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
                  mutation_function=exchange_mutation,
                  selection_function=deterministic_tournament_selection, survival_function=survival_of_the_elite,
                  mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
-        super().__init__(pop_size, max_iter, problem, fitness_function, mating_function, mutation_function, selection_function,
+        super().__init__(pop_size, max_iter, problem, fitness_function, mating_function, mutation_function,
+                         selection_function,
                          survival_function, mutation_rate, elite_rate)
         self.fronts = {}
 
@@ -107,6 +108,27 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
             current_front += 1
 
     def assign_crowding_factor(self):
+
+        objective_attributes = ['route_objective', 'trucks_objective']
+
+        for chromosome in self.population:
+            chromosome.crowding_distance = 0
+
+        for objective in objective_attributes:
+            sorted(self.population, key=lambda x: x.__getattribute__(objective))
+
+            self.population[0].crowding_distance = float("inf")
+            self.population[len(self.population) - 1] = float("inf")
+
+            for i in range(1, len(self.population) - 1):
+                # distance(i) = distance(i) + ((o(i+1) -o(i-1)) / (o(max) -o(min))
+                self.population[i].crowding_distance += \
+                    (self.population[i + 1].__getattribute__(objective) +
+                     self.population[i - 1].__getattribute__(objective)) / \
+                    (self.population[len(self.population) - 1].__getattribute__(objective)
+                     - self.population[0].__getattribute__(objective))
+
+    def assign_fronts(self):
         pass
 
     # assign a fitness function proportional to both of the objective funtions
