@@ -59,9 +59,3 @@ class Chromosome:
 
     def __str__(self):
         return f'Fitness: {self.fitness}, data: {self.data}'
-
-
-if __name__ == '__main__':
-    problem = CVRP(4, [((1, 1), 2), ((2, 2), 3), ((3, 3,), 4)])
-    c = Chromosome(problem)
-    print(c)

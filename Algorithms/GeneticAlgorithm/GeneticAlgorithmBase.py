@@ -64,9 +64,9 @@ class GeneticAlgorithmBase:
         standard_dev = 0
         for chromosome in self.population:
             self.fitness_function(chromosome)
-        avg_fitness, standard_dev = self.calc_stats(avg_fitness, standard_dev)
-        print(f"Average fitness: {avg_fitness}")
-        print(f"Standard Deviation: {standard_dev}")
+        # avg_fitness, standard_dev = self.calc_stats(avg_fitness, standard_dev)
+        # print(f"Average fitness: {avg_fitness}")
+        # print(f"Standard Deviation: {standard_dev}")
 
     # calculate desired stats: currently generational average and standard deviation
     def calc_stats(self, avg_fitness, standard_dev):

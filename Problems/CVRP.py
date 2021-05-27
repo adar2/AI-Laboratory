@@ -30,6 +30,7 @@ class CVRP(AbstractProblem):
             printable_data += f"\nTruck {i + 1}: {printable_trucks_list[i]}"
         return printable_data
 
+    # number of trucks = number of lists in data list
     def generate_truck_partition(self, locations: list):
         data = [[]]
         index = 0
