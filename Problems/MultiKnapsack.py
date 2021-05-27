@@ -11,6 +11,7 @@ class MultiKnapsack(AbstractSearchProblem):
         self.capacities_list = capacities_list
         self.number_of_knapsacks = len(self.capacities_list)
         self.sorted_indices = self.get_sorted_configs()
+        self.remaining_capacity_dict = {}  # caching
 
     # should get list of each knapsack's current weight. Finally, the last item of the list should be a list of all items currently
     # chosen
@@ -56,18 +57,11 @@ class MultiKnapsack(AbstractSearchProblem):
             knapsack_index = remaining_capacity_list.index(remaining_capacity)
             config_copy[item_index] = None
             remaining_capacity, remaining_capacity_list = self.calc_remaining_capacity(config_copy)
-            # for knapsack_index in range(len(remaining_capacity_list)):
-            #     knapsack_capacity = remaining_capacity_list[knapsack_index]
-            #     after_reduction = knapsack_capacity - self.weights_dict[knapsack_index][item_index]
-            #     if after_reduction > 0:
-            #         continue
-            #     else:
             knapsack_capacity = remaining_capacity_list[knapsack_index]
             estimation = self.calc_value(config_copy)
             fraction = (knapsack_capacity / self.weights_dict[knapsack_index][real_index]) * self.profits_list[
-                item_index]
+                real_index]
             estimation += fraction
-            # break
         return estimation
 
     # return a blank list of items
@@ -76,15 +70,18 @@ class MultiKnapsack(AbstractSearchProblem):
 
     # also need to figure out if capacity is a number or a list (probably a list)
     def calc_remaining_capacity(self, config):
-        capacities_copy = copy.copy(self.capacities_list)
-        for item_index in range(len(config)):
-            if config[item_index] is None:
-                break
-            elif config[item_index] == 1:
-                real_index = self.sorted_indices[item_index]
-                for j in range(len(capacities_copy)):
-                    capacities_copy[j] -= self.weights_dict[j][real_index]
-        return min(capacities_copy), capacities_copy
+        immutable_config = tuple(config)
+        if immutable_config not in self.remaining_capacity_dict:
+            capacities_copy = copy.copy(self.capacities_list)
+            for item_index in range(len(config)):
+                if config[item_index] is None:
+                    break
+                elif config[item_index] == 1:
+                    real_index = self.sorted_indices[item_index]
+                    for j in range(len(capacities_copy)):
+                        capacities_copy[j] -= self.weights_dict[j][real_index]
+            self.remaining_capacity_dict[immutable_config] = min(capacities_copy), capacities_copy
+        return self.remaining_capacity_dict[immutable_config]
 
     def calc_value(self, config):
         value = 0

@@ -4,6 +4,7 @@ from Problems.MultiKnapsack import MultiKnapsack
 from Utils.MultiKnapSackParsing import multiknapsack_problem_file_parsing
 from time import time
 
+
 class LeastDiscrepancySearch:
 
     def __init__(self, problem: AbstractSearchProblem) -> None:
@@ -57,7 +58,8 @@ class LeastDiscrepancySearch:
         if discrepancy == 0:
             return self.least_discrepancy_search(left_child_node, discrepancy) if left_child_node else None
         else:
-            right_result = self.least_discrepancy_search(right_child_node, discrepancy - 1) if right_child_node else None
+            right_result = self.least_discrepancy_search(right_child_node,
+                                                         discrepancy - 1) if right_child_node else None
             left_result = self.least_discrepancy_search(left_child_node, discrepancy) if left_child_node else None
             if right_result is None and left_result is None:
                 return None
