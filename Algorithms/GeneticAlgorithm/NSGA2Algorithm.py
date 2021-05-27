@@ -5,6 +5,8 @@ from Algorithms.GeneticAlgorithm.NSGAChromosome import NSGAChromosome
 from Algorithms.GeneticAlgorithm.SelectionFunctions import deterministic_tournament_selection
 from Algorithms.GeneticAlgorithm.SurvivalFunctions import survival_of_the_elite
 from Algorithms.LocalSearch.UtilFunctions import cvrp_path_cost
+from Problems.CVRP import CVRP
+from Utils.CVRPFileParsing import parse_cvrp_file
 from Utils.Constants import MUTATION_RATE, ELITE_RATE
 
 
@@ -27,7 +29,6 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
         self.buffer = list(self.population)
 
     def run(self):
-        last_best = None
         stuck_counter = 0
         self.init_population()
         for i in range(self.max_iter):
@@ -35,9 +36,9 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
             self.calc_fitness()
             self.best = min(self.population, key=lambda chromosome: chromosome.fitness)
             # goal test
-            if self.is_solved_or_stuck(stuck_counter):
-                self.solved = True
-                break
+            # if self.is_solved_or_stuck(stuck_counter):
+            #     self.solved = True
+            #     break
             eligible_parents = self.select_parents()
             if eligible_parents is None or len(eligible_parents) == 0:
                 continue
@@ -53,7 +54,11 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
 
     # number of fronts, best configuration of smallest front
     def print_current_state(self):
-        super().print_current_state()
+        print("------------------------")
+        print(f'Fronts: {len(self.fronts)}')
+        print(f'Best = {self.best.data}, from front {self.best.front}')
+        print(f'Best stats:\n trucks obj: {self.best.truck_objective} \n route obj: {self.best.route_objectve}')
+        print("------------------------")
 
     # Set front/crowding for each chromosome and then calc its fitness
     def calc_fitness(self):
@@ -66,14 +71,14 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
         # get the fitness of each chrom
         self.assign_objectives_fitness()
         # self.pop = sorted_list
-        self.sort_population()
+        sorted(self.population, key=lambda chromosome: chromosome.fitness)
 
     # assign each chromosome with trucks objective and route objective
     def fast_nondominated_sorting(self):
         for chromosome in self.population:
 
             # reset data structures and fields
-            chromosome.dominated_chromosome_list.clear()
+            chromosome.dominated_chromosomes_list.clear()
             chromosome.domination_counter = 0
             self.fronts.clear()
 
@@ -84,7 +89,7 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
                     continue
                 # if this chromosome dominates the second (> = dominates but really it's values are smaller)
                 if chromosome > second_chromosome:
-                    chromosome.dominated_chromosome_list.append(second_chromosome)
+                    chromosome.dominated_chromosomes_list.add(second_chromosome)
                 elif second_chromosome > chromosome:
                     chromosome.domination_counter += 1
             if chromosome.domination_counter == 0:
@@ -92,6 +97,7 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
                     self.fronts[1] = [chromosome]
                 else:
                     self.fronts[1].append(chromosome)
+
         # fill the fronts
         current_front = 1
         while current_front in self.fronts:
@@ -99,12 +105,12 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
             next_front_chromosomes = []
             for chromosome in current_front_chromosomes:
                 chromosome.front = current_front
-                for dominated_chromosome in chromosome.dominated_chromosome_list:
+                for dominated_chromosome in chromosome.dominated_chromosomes_list:
                     dominated_chromosome.domination_counter -= 1
                     if dominated_chromosome.domination_counter == 0:
                         next_front_chromosomes.append(dominated_chromosome)
             if len(next_front_chromosomes) > 0:
-                self.fronts[current_front+1] = next_front_chromosomes
+                self.fronts[current_front + 1] = next_front_chromosomes
             current_front += 1
 
     def assign_crowding_factor(self):
@@ -118,7 +124,7 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
             sorted(self.population, key=lambda x: x.__getattribute__(objective))
 
             self.population[0].crowding_distance = float("inf")
-            self.population[len(self.population) - 1] = float("inf")
+            self.population[len(self.population) - 1].crowding_distance = float("inf")
 
             for i in range(1, len(self.population) - 1):
                 # distance(i) = distance(i) + ((o(i+1) -o(i-1)) / (o(max) -o(min))
@@ -128,17 +134,23 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
                     (self.population[len(self.population) - 1].__getattribute__(objective)
                      - self.population[0].__getattribute__(objective))
 
-    def assign_fronts(self):
-        pass
-
     # assign a fitness function proportional to both of the objective funtions
     def assign_objectives_fitness(self):
-        pass
+        fitness_counter = 0
+        for front in self.fronts.values():
+            sorted(front, key=lambda chromosome: chromosome.crowding_distance, reverse=True)
+            for chromosome in front:
+                chromosome.fitness = fitness_counter
+                fitness_counter += 1
 
     def assign_objective_functions_value(self):
         for chromosome in self.population:
             chromosome.route_objective = cvrp_path_cost(self.problem, chromosome.data)
             chromosome.truck_objective = len(self.problem.generate_truck_partition(chromosome.data))
 
-    def sort_population(self):
-        pass
+
+if __name__ == '__main__':
+    capacities, location = parse_cvrp_file('E-n22-k4.txt')
+    cvrp_problem = CVRP(capacities, location)
+    algo = NSGA2Algorithm(100, 1000, cvrp_problem)
+    algo.run()
