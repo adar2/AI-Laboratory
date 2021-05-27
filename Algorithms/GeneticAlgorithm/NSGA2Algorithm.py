@@ -9,8 +9,10 @@ from Utils.Constants import MUTATION_RATE, ELITE_RATE
 
 
 class NSGA2Algorithm(GeneticAlgorithmBase):
-    def __init__(self, pop_size, max_iter, problem=None, fitness_function=None, mating_function=uniform_point_crossover, mutation_function=exchange_mutation,
-                 selection_function=deterministic_tournament_selection, survival_function=survival_of_the_elite, mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
+    def __init__(self, pop_size, max_iter, problem=None, fitness_function=None, mating_function=uniform_point_crossover,
+                 mutation_function=exchange_mutation,
+                 selection_function=deterministic_tournament_selection, survival_function=survival_of_the_elite,
+                 mutation_rate=MUTATION_RATE, elite_rate=ELITE_RATE):
         super().__init__(pop_size, max_iter, problem, fitness_function, mating_function, mutation_function, selection_function,
                          survival_function, mutation_rate, elite_rate)
         self.fronts = {}
@@ -67,12 +69,44 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
 
     # assign each chromosome with trucks objective and route objective
     def fast_nondominated_sorting(self):
-        self.assign_fronts()
+        for chromosome in self.population:
+
+            # reset data structures and fields
+            chromosome.dominated_chromosome_list.clear()
+            chromosome.domination_counter = 0
+            self.fronts.clear()
+
+            # compare with any other chromosome
+            for second_chromosome in self.population:
+                # don't compare with yourself
+                if chromosome == second_chromosome:
+                    continue
+                # if this chromosome dominates the second (> = dominates but really it's values are smaller)
+                if chromosome > second_chromosome:
+                    chromosome.dominated_chromosome_list.append(second_chromosome)
+                elif second_chromosome > chromosome:
+                    chromosome.domination_counter += 1
+            if chromosome.domination_counter == 0:
+                if 1 not in self.fronts:
+                    self.fronts[1] = [chromosome]
+                else:
+                    self.fronts[1].append(chromosome)
+        # fill the fronts
+        current_front = 1
+        while current_front in self.fronts:
+            current_front_chromosomes = self.fronts[current_front]
+            next_front_chromosomes = []
+            for chromosome in current_front_chromosomes:
+                chromosome.front = current_front
+                for dominated_chromosome in chromosome.dominated_chromosome_list:
+                    dominated_chromosome.domination_counter -= 1
+                    if dominated_chromosome.domination_counter == 0:
+                        next_front_chromosomes.append(dominated_chromosome)
+            if len(next_front_chromosomes) > 0:
+                self.fronts[current_front+1] = next_front_chromosomes
+            current_front += 1
 
     def assign_crowding_factor(self):
-        pass
-
-    def assign_fronts(self):
         pass
 
     # assign a fitness function proportional to both of the objective funtions
@@ -81,11 +115,8 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
 
     def assign_objective_functions_value(self):
         for chromosome in self.population:
-            chromosome.route_objective = cvrp_path_cost(self.problem,chromosome.data)
+            chromosome.route_objective = cvrp_path_cost(self.problem, chromosome.data)
             chromosome.truck_objective = len(self.problem.generate_truck_partition(chromosome.data))
 
     def sort_population(self):
         pass
-
-
-
