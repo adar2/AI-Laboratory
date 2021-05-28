@@ -2,6 +2,7 @@ from copy import deepcopy
 from random import randint, choice
 
 from Algorithms.GeneticAlgorithm.Chromosome import Chromosome
+from Algorithms.GeneticAlgorithm.NSGAChromosome import NSGAChromosome
 
 
 def single_point_crossover(parent_1: Chromosome, parent_2: Chromosome):
@@ -30,6 +31,35 @@ def uniform_point_crossover(parent_1: Chromosome, parent_2: Chromosome):
     return child
 
 
+def nsga_pmx_crossover(parent_1: NSGAChromosome, parent_2: NSGAChromosome):
+    target_size = len(parent_1.data)
+    index = randint(0, target_size - 1)
+    num_1 = parent_1.data[index]
+    num_2 = parent_2.data[index]
+    offspring_1_data, offspring_2_data = __generate_offsprings(num_1, num_2, parent_1, parent_2)
+    return NSGAChromosome(parent_1.problem, choice([offspring_1_data, offspring_2_data]))
+
+
+def nsga_ox_crossover(parent_1: NSGAChromosome, parent_2: NSGAChromosome):
+    target_size = len(parent_1.data)
+    parent_2_clone = deepcopy(parent_2)
+    child_data = [None] * target_size
+    start_index = randint(0, target_size - 1)
+    end_index = randint(start_index, target_size - 1)
+    for i in range(start_index, end_index + 1):
+        child_data[i] = parent_1.data[i]
+    items_to_remove = []
+    for item in parent_2_clone.data:
+        if item in child_data:
+            items_to_remove.append(item)
+    parent_2_clone.data = [item for item in parent_2_clone.data if item not in items_to_remove]
+    for i in range(len(child_data)):
+        if child_data[i] is None:
+            child_data[i] = parent_2_clone.data[0]
+            del parent_2_clone.data[0]
+    return NSGAChromosome(parent_1.problem, child_data)
+
+
 def ordered_crossover(parent_1: Chromosome, parent_2: Chromosome):
     target_size = len(parent_1.data)
     parent_2_clone = deepcopy(parent_2)
@@ -43,7 +73,6 @@ def ordered_crossover(parent_1: Chromosome, parent_2: Chromosome):
         if item in child_data:
             items_to_remove.append(item)
     parent_2_clone.data = [item for item in parent_2_clone.data if item not in items_to_remove]
-    # TODO: make sure it still works for NQUEENS problem
     for i in range(len(child_data)):
         if child_data[i] is None:
             child_data[i] = parent_2_clone.data[0]
