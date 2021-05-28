@@ -25,16 +25,15 @@ class LeastDiscrepancySearch:
         return SearchNode(config, capacity, value, estimation)
 
     def run(self):
+        print('Executing ...')
         start_time = time()
         discrepancy_wave = 0
         root_node = self.create_node(self.root)
         while discrepancy_wave < self.max_discrepancy:
-            self.upper_bound = None
             print(f'Current discrepancy {discrepancy_wave}')
+            self.upper_bound = None
             solution = self.least_discrepancy_search(root_node, discrepancy_wave)
-            # is there actually reason that the solution will be none ??
             if solution is not None:
-                print('found solution')
                 if self.best_solution is None or solution.value > self.best_solution.value:
                     self.best_solution = solution
                     # break
@@ -70,11 +69,7 @@ class LeastDiscrepancySearch:
 
 
 if __name__ == '__main__':
-    profits_dict, capacities, weights = multiknapsack_problem_file_parsing('FLEI.DAT')
+    profits_dict, capacities, weights = multiknapsack_problem_file_parsing('SENTO2.DAT')
     problem = MultiKnapsack(capacities, weights, profits_dict)
     algo = LeastDiscrepancySearch(problem)
     algo.run()
-# or (
-#                 self.best_solution and current_node.upper_bound < self.best_solution.value)
-
-# Best solution [1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0]

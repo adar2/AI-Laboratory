@@ -1,5 +1,6 @@
 import copy
 
+from Algorithms.LocalSearch.UtilFunctions import CVRP_init_config
 from Problems.AbstarctSearchProblem import AbstractSearchProblem
 from Problems.CVRP import CVRP
 from Utils.Constants import DEMAND
@@ -11,10 +12,11 @@ class CVRPSearchProblem(AbstractSearchProblem):
         self.cvrp_problem = cvrp_problem
         self.locations = self.cvrp_problem.locations
         self.capacity = self.cvrp_problem.capacity
-        self.remaining_cities = [self.locations.index(location) for location in self.locations][1:]
+        initial_config = CVRP_init_config(cvrp_problem)
+        self.remaining_cities = [self.locations.index(location) for location in initial_config[1:]]
 
     def get_initial_config(self):
-        return [None]*len(self.remaining_cities)
+        return [None] * len(self.remaining_cities)
 
     def get_sorted_configs(self):
         pass
@@ -22,7 +24,7 @@ class CVRPSearchProblem(AbstractSearchProblem):
     def calc_upper_bound(self, config):
         upper_bound = 0
         for i in range(len(config)):
-            if config[i] is None:
+            if config[i] is None or config[i] == 0:
                 upper_bound += 1
         return upper_bound
 
@@ -31,7 +33,7 @@ class CVRPSearchProblem(AbstractSearchProblem):
         for i in range(len(config)):
             if config[i] == 1:
                 capacity -= self.locations[self.remaining_cities[i]][DEMAND]
-        return capacity,0
+        return capacity, 0
 
     def calc_value(self, config):
         value = 0
