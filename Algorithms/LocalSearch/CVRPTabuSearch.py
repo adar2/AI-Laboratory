@@ -2,6 +2,8 @@ from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Problems.CVRP import CVRP
 from Algorithms.LocalSearch.Neighborhood import random_move_neighborhood as get_neighborhood
 from Algorithms.LocalSearch.UtilFunctions import cvrp_path_cost, CVRP_init_config
+from Problems.CVRPSearchProblem import CVRPSearchProblem
+from Utils.CVRPFileParsing import parse_cvrp_file
 from Utils.Constants import COORDINATES
 
 
@@ -38,5 +40,3 @@ class CVRPTabuSearch(TabuSearch):
         for location in config:
             hash_key.append(self.problem.cities_dict[location[COORDINATES]])
         return tuple(hash_key)
-
-

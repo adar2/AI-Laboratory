@@ -173,7 +173,7 @@ class NSGA2Algorithm(GeneticAlgorithmBase):
 
 
 if __name__ == '__main__':
-    capacities, location = parse_cvrp_file('E-n101-k14.txt')
+    capacities, location = parse_cvrp_file('E-n22-k4.txt')
     cvrp_problem = CVRP(capacities, location)
     algo = NSGA2Algorithm(100, 10000, cvrp_problem)
     algo.run()

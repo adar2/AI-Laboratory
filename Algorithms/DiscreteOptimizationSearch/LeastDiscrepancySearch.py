@@ -16,7 +16,7 @@ class LeastDiscrepancySearch:
         self.max_discrepancy = len(problem.get_initial_config())
         self.best_solution = None
 
-    def create_node(self, config, discrepancy=0, item_to_expand=0):
+    def create_node(self, config):
         capacity = self.problem.calc_remaining_capacity(config)[0]
         if capacity < 0:
             return None
@@ -28,7 +28,6 @@ class LeastDiscrepancySearch:
         start_time = time()
         discrepancy_wave = 0
         root_node = self.create_node(self.root)
-        # TODO: find upper bound of discrepancy?
         while discrepancy_wave < self.max_discrepancy:
             self.upper_bound = None
             print(f'Current discrepancy {discrepancy_wave}')
@@ -42,6 +41,7 @@ class LeastDiscrepancySearch:
             discrepancy_wave += 1
         print(f'Best solution {self.best_solution.config} , score : {self.best_solution.value}')
         print(f'Run time: {time() - start_time}')
+        return self.best_solution.config
 
     def least_discrepancy_search(self, current_node, discrepancy):
         if self.upper_bound and current_node.upper_bound < self.upper_bound:  # prune this node and sub tree
