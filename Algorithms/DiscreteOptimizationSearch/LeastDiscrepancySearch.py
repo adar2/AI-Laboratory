@@ -14,7 +14,6 @@ class LeastDiscrepancySearch:
         self.problem = problem
         self.root = self.problem.get_initial_config()
         self.max_discrepancy = len(problem.get_initial_config())
-        self.initial_items_list = problem.get_sorted_configs()
         self.best_solution = None
 
     def create_node(self, config, discrepancy=0, item_to_expand=0):
