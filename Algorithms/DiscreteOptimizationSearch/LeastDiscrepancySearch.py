@@ -1,8 +1,7 @@
+from time import time
+
 from Algorithms.DiscreteOptimizationSearch.SearchNode import SearchNode
 from Problems.AbstarctSearchProblem import AbstractSearchProblem
-from Problems.MultiKnapsack import MultiKnapsack
-from Utils.MultiKnapSackParsing import multiknapsack_problem_file_parsing
-from time import time
 
 
 class LeastDiscrepancySearch:
@@ -30,7 +29,6 @@ class LeastDiscrepancySearch:
         discrepancy_wave = 0
         root_node = self.create_node(self.root)
         while discrepancy_wave < self.max_discrepancy:
-            print(f'Current discrepancy {discrepancy_wave}')
             self.upper_bound = None
             solution = self.least_discrepancy_search(root_node, discrepancy_wave)
             if solution is not None:
@@ -39,7 +37,6 @@ class LeastDiscrepancySearch:
                     # break
             discrepancy_wave += 1
         print(f'Best solution {self.best_solution.config} , score : {self.best_solution.value}')
-        print(f'Run time: {time() - start_time}')
         return self.best_solution.config
 
     def least_discrepancy_search(self, current_node, discrepancy):
@@ -47,7 +44,6 @@ class LeastDiscrepancySearch:
             return None
         candidates = [self.create_node(config) for config in self.problem.expand(current_node.config)]
         if len(candidates) == 0:
-            # print(f'Current node config: {current_node.config} , {current_node.value}')
             if not self.upper_bound or current_node.value > self.upper_bound:
                 self.upper_bound = current_node.value
             return current_node
@@ -67,9 +63,3 @@ class LeastDiscrepancySearch:
                 return right_result
             return right_result if right_result.value > left_result.value else left_result
 
-
-if __name__ == '__main__':
-    profits_dict, capacities, weights = multiknapsack_problem_file_parsing('SENTO2.DAT')
-    problem = MultiKnapsack(capacities, weights, profits_dict)
-    algo = LeastDiscrepancySearch(problem)
-    algo.run()

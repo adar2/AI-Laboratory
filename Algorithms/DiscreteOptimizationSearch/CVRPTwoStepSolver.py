@@ -1,8 +1,6 @@
 from Algorithms.DiscreteOptimizationSearch.LeastDiscrepancySearch import LeastDiscrepancySearch
 from Algorithms.LocalSearch.UtilFunctions import euc_distance
-from Problems.CVRP import CVRP
 from Problems.CVRPSearchProblem import CVRPSearchProblem
-from Utils.CVRPFileParsing import parse_cvrp_file
 from Utils.Constants import COORDINATES
 
 
@@ -49,7 +47,7 @@ class CVRPTwoStepSolver:
             route = best
         return best
 
-    def solve(self):
+    def run(self):
         total_distance = 0
         init_config = self.problem.get_initial_config()
         while len(init_config) > 0:
@@ -58,17 +56,7 @@ class CVRPTwoStepSolver:
             current_truck = self.problem.update_remaining_locations(current_truck)
             self.trucks.append(current_truck)
             init_config = self.problem.get_initial_config()
-            print('New truck has assigned')
         for truck_route in self.trucks:
             improved_cost = self.cost(self.two_opt(truck_route))
             total_distance += improved_cost
-            print('2-opt calculated for truck..')
         print(f'Total cost : {total_distance} , number of trucks : {len(self.trucks)}')
-
-
-if __name__ == '__main__':
-    capacity, locations = parse_cvrp_file('E-n76-k8.txt')
-    problem = CVRP(capacity, locations)
-    problem1 = CVRPSearchProblem(problem)
-    algo = CVRPTwoStepSolver(problem1)
-    algo.solve()

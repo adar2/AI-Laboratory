@@ -10,22 +10,27 @@ import Utils.Constants as Constants
 from Algorithms.ACO.ACO import ACO
 from Algorithms.CSPAlgorithms.BackJumpingAlgorithm import BackJumpingAlgorithm
 from Algorithms.CSPAlgorithms.ForwardCheckingAlgorithm import ForwardCheckingAlgorithm
+from Algorithms.DiscreteOptimizationSearch.CVRPTwoStepSolver import CVRPTwoStepSolver
+from Algorithms.DiscreteOptimizationSearch.LeastDiscrepancySearch import LeastDiscrepancySearch
 from Algorithms.GeneticAlgorithm.ColoringGeneticAlgorithm import ColoringGeneticAlgorithm
 from Algorithms.GeneticAlgorithm.GeneralGeneticAlgorithm import GeneralGeneticAlgorithm
+from Algorithms.GeneticAlgorithm.NSGA2Algorithm import NSGA2Algorithm
 from Algorithms.LocalSearch.CVRPTabuSearch import CVRPTabuSearch
 from Algorithms.LocalSearch.ColoringTabuSearch import ColoringTabuSearch
 from Algorithms.LocalSearch.HybridColoringAlgorithm import HybridColoringAlgorithm
 from Algorithms.LocalSearch.KempeChainsAlgorithm import KempeChainsAlgorithm
 from Algorithms.LocalSearch.SimulatedAnnealing import SimulatedAnnealing
-from Algorithms.LocalSearch.TabuSearch import TabuSearch
 from Algorithms.PSO.PSO import ParticleSwarmOptimization
 from Problems.CVRP import CVRP
+from Problems.CVRPSearchProblem import CVRPSearchProblem
 from Problems.GraphColoringProblem import GraphColoringProblem
 from Problems.KnapSack import KnapSack
+from Problems.MultiKnapsack import MultiKnapsack
 from Problems.NQueens import NQueens
 from Problems.StringMatching import StringMatching
 from Utils.CVRPFileParsing import parse_cvrp_file
 from Utils.ColoringProblemFileParsing import coloring_problem_file_parsing
+from Utils.MultiKnapSackParsing import multiknapsack_problem_file_parsing
 
 
 def init_config():
@@ -44,10 +49,11 @@ def init_config():
 
     notes = ""
     notes += "// Available Algorithms:\n\n"
-    algorithms = ['GA', 'PSO', 'ACO', 'TABU_SEARCH', 'SA', 'BACKJUMPING', 'FORWARD_CHECKING', 'KEMPE_CHAINS','HYBRID_COLORING']
+    algorithms = ['GA', 'PSO', 'ACO', 'TABU_SEARCH', 'SA', 'BACKJUMPING', 'FORWARD_CHECKING', 'KEMPE_CHAINS',
+                  'HYBRID_COLORING', 'LDS', 'NSGA', 'CVRPTwoStepSolver']
     for a in algorithms:
         notes += f'// {a}\n\n'
-    problems = ['STRING_MATCHING', 'NQUEENS', 'KNAPSACK', 'CVRP', 'GRAPH_COLORING']
+    problems = ['STRING_MATCHING', 'NQUEENS', 'KNAPSACK', 'CVRP', 'GRAPH_COLORING', 'MULTI_KNAPSACK']
     notes += "// Available Problems:\n\n"
     for p in problems:
         notes += f'// {p}\n\n'
@@ -106,6 +112,9 @@ def get_algorithm(project_path):
         elif problem == 'GRAPH_COLORING':
             graph, vertices, edges = coloring_problem_file_parsing(project_path + '\\' + target)
             problem = GraphColoringProblem(graph, vertices, edges)
+        elif problem == 'MULTI_KNAPSACK':
+            profits_dict, capacities, weights = multiknapsack_problem_file_parsing(project_path + '\\' + target)
+            problem = MultiKnapsack(capacities, weights, profits_dict)
         else:
             raise KeyError
         if algorithm == 'GA':
@@ -133,8 +142,15 @@ def get_algorithm(project_path):
             return KempeChainsAlgorithm(problem, max_iter)
         elif algorithm == 'HYBRID_COLORING':
             return HybridColoringAlgorithm(problem, max_iter)
+        elif algorithm == 'NSGA':
+            return NSGA2Algorithm(pop_size, max_iter, problem)
+        elif algorithm == 'LDS':
+            return LeastDiscrepancySearch(problem)
+        elif algorithm == 'CVRPTwoStepSolver':
+            new_problem = CVRPSearchProblem(problem)
+            return CVRPTwoStepSolver(new_problem)
         else:
             raise KeyError
-    except KeyError as e:
+    except KeyError:
         print("Unknown configuration")
         return None
