@@ -1,0 +1,94 @@
+{
+  "ALGORITHM": "CVRPTwoStepSolver",
+  "POP_SIZE": "100",
+  "MAX_ITER": "1000",
+  "PROBLEM": "CVRP",
+  "TARGET": "E-n22-k4.txt",
+  "FITNESS_FUNC": "CVRP_FITNESS",
+  "MATING_FUNC": "ORDERED_CROSSOVER",
+  "MUTATION_FUNC": "INVERSION_MUTATION",
+  "SELECTION_FUNC": "DETERMINISTIC_TOURNAMENT_SELECTION",
+  "SURVIVAL_FUNC": "SURVIVAL_OF_THE_ELITE"
+}
+// Available Algorithms:
+
+// GA
+
+// PSO
+
+// ACO
+
+// TABU_SEARCH
+
+// SA
+
+// Available Problems:
+
+// STRING_MATCHING // "TARGET" should be some,e.g: "TARGET": "Hello world!"
+
+// NQUEENS	// "TARGET" should be string representing an int,e.g "TARGET": "10"
+
+// KNAPSACK	// "TARGET" should be in python list format (no apostrophes), e.g [165, [23, 31, 29, 44], [92, 57, 49, 68]] , first index is max capacity , second index is list of weights and the third index is list of values.
+
+// CVRP // "TARGET" should be the file name of the problem , i.e : E-n22-k4.txt , the files should be at root of the project.
+
+// Available FitnessFunctions:
+
+// ABSOLUTE_DISTANCE_FITNESS
+
+// BULLSEYE_FITNESS
+
+// CVRP_FITNESS
+
+// KNAPSACK_CLOSEST_FITNESS
+
+// N_QUEENS_CONFLICTS_FITNESS
+
+// PSO_DISTANCE_FITNESS
+
+// Available MatingFunctions:
+
+// MULTI_POINT_CROSSOVER
+
+// ORDERED_CROSSOVER
+
+// PARTIALLY_MATCHED_CROSSOVER
+
+// SINGLE_POINT_CROSSOVER
+
+// UNIFORM_POINT_CROSSOVER
+
+// Available MutateFunctions:
+
+// DISPLACEMENT_MUTATION
+
+// EXCHANGE_MUTATION
+
+// FLIP_MUTATION
+
+// INSERTION_MUTATION
+
+// INVERSION_MUTATION
+
+// STOCHASTIC_FLIP_MUTATION
+
+// STRING_MUTATION
+
+// Available SelectionFunctions:
+
+// DETERMINISTIC_TOURNAMENT_SELECTION
+
+// ROULETTE_WHEEL_SELECTION
+
+// STOCHASTIC_TOURNAMENT_SELECTION
+
+// STOCHASTIC_UNIVERSAL_SAMPLING_SELECTION
+
+// TRUNCATION_SELECTION
+
+// Available SurvivalFunctions:
+
+// SURVIVAL_OF_THE_ELITE
+
+// SURVIVAL_OF_THE_YOUNG
+
