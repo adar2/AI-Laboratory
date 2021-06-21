@@ -145,7 +145,8 @@ def get_algorithm(project_path):
         elif algorithm == 'NSGA':
             return NSGA2Algorithm(pop_size, max_iter, problem)
         elif algorithm == 'LDS':
-            return LeastDiscrepancySearch(problem)
+            new_problem = CVRPSearchProblem(problem)
+            return LeastDiscrepancySearch(new_problem)
         elif algorithm == 'CVRPTwoStepSolver':
             new_problem = CVRPSearchProblem(problem)
             return CVRPTwoStepSolver(new_problem)
