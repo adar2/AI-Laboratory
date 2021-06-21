@@ -22,6 +22,20 @@
 
 // SA
 
+// BACKJUMPING
+
+// FORWARD_CHECKING
+
+// KEMPE_CHAINS
+
+// HYBRID_COLORING
+
+// LDS
+
+// NSGA
+
+// CVRPTwoStepSolver
+
 // Available Problems:
 
 // STRING_MATCHING // "TARGET" should be some,e.g: "TARGET": "Hello world!"
@@ -32,6 +46,10 @@
 
 // CVRP // "TARGET" should be the file name of the problem , i.e : E-n22-k4.txt , the files should be at root of the project.
 
+// GRAPH_COLORING
+
+// MULTI_KNAPSACK
+
 // Available FitnessFunctions:
 
 // ABSOLUTE_DISTANCE_FITNESS
@@ -39,6 +57,8 @@
 // BULLSEYE_FITNESS
 
 // CVRP_FITNESS
+
+// GRAPH_COLORING_FITNESS
 
 // KNAPSACK_CLOSEST_FITNESS
 
@@ -50,6 +70,10 @@
 
 // MULTI_POINT_CROSSOVER
 
+// NSGA_OX_CROSSOVER
+
+// NSGA_PMX_CROSSOVER
+
 // ORDERED_CROSSOVER
 
 // PARTIALLY_MATCHED_CROSSOVER
@@ -59,6 +83,8 @@
 // UNIFORM_POINT_CROSSOVER
 
 // Available MutateFunctions:
+
+// COLORING_MUTATION
 
 // DISPLACEMENT_MUTATION
 
